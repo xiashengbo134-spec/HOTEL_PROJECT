@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+*.log
+.env
+.env.*
+.vscode/
+.DS_Store
+
+05_ERP_Admin/node_modules/
+05_ERP_Admin/dist/
+05_ERP_Admin/web/node_modules/
+05_ERP_Admin/web/dist/
+
+*.sqlite
