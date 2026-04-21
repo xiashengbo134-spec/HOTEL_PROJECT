@@ -1,10 +1,9 @@
-import { Button, Typography } from 'antd'
+﻿import { Button, Tag, Typography } from 'antd'
 import { useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import { authStorage } from './auth/storage'
 import AdminLayout, { type AdminMenuKey } from './components/layout/AdminLayout'
 import AppPage from './pages/AppPage'
-import LoginPage from './pages/LoginPage'
 import TenantPage from './pages/TenantPage'
 import UserPage from './pages/UserPage'
 
@@ -25,10 +24,18 @@ const pageTitleMap: Record<AdminMenuKey, string> = {
   tenant: '租户管理',
 }
 
+const demoUser = {
+  userId: 0,
+  uid: 'demo_admin',
+  username: '演示管理员',
+  tenantId: 'demo',
+  roleCode: 'super_admin',
+}
+
 function App() {
   const navigate = useNavigate()
   const [selectedKey, setSelectedKey] = useState<AdminMenuKey>('tenant')
-  const user = authStorage.getUser()
+  const user = authStorage.getUser() ?? demoUser
 
   const content = useMemo(() => {
     if (selectedKey === 'tenant') return <TenantPage />
@@ -44,17 +51,20 @@ function App() {
       contentTitle={pageTitleMap[selectedKey]}
     >
       <div style={{ marginBottom: 12, textAlign: 'right' }}>
+        <Tag color="processing" style={{ marginRight: 12 }}>
+          演示模式
+        </Tag>
         <Typography.Text style={{ marginRight: 12 }}>
-          当前用户：{user?.username} ({user?.tenantId ?? 'global'})
+          当前用户：{user.username} ({user.tenantId ?? 'global'})
         </Typography.Text>
         <Button
           size="small"
           onClick={() => {
             authStorage.clear()
-            navigate('/login', { replace: true })
+            navigate('/', { replace: true })
           }}
         >
-          退出登录
+          重置演示状态
         </Button>
       </div>
       {content}
@@ -63,11 +73,8 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
-      <Route
-        path="/"
-        element={authStorage.getToken() ? adminContent : <Navigate to="/login" replace />}
-      />
+      <Route path="/login" element={<Navigate to="/" replace />} />
+      <Route path="/" element={adminContent} />
     </Routes>
   )
 }
