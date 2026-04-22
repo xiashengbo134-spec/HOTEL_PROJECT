@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>订单全链路日志系统 - 分类与时序双视图版</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.6.1/dist/index.css" />
+  <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/element-plus@2.6.1/dist/index.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@element-plus/icons-vue@2.3.1/dist/index.iife.min.js"></script>
+  <style>
+    body { margin: 0; background-color: #F3F4F6; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
+    [v-cloak] { display: none; }
+    .el-table, .el-tabs__item, .el-button, .el-tag, .el-input, .el-timeline-item__content { font-size: 14px !important; }
+    .el-drawer__header { margin-bottom: 0 !important; padding: 20px 24px; border-bottom: 1px solid #E5E7EB; background: #FFF; font-weight: bold; font-size: 18px; }
+    .el-drawer__body { padding: 0 !important; background-color: #F8FAFC; }
+    .type-item { border-left: 4px solid transparent; transition: all 0.2s; position: relative; margin-bottom: 2px; }
+    .type-item:hover { background-color: #F1F5F9; }
+    .type-item.active { background-color: #E6F4FF; border-left-color: #1890FF; font-weight: bold; color: #1890FF; }
+    .timeline-card { transition: all 0.2s; border: 1px solid transparent; }
+    .timeline-card.active { background-color: #E6F4FF; border-color: #93C5FD; }
+    .timeline-card:hover:not(.active) { background-color: #F1F5F9; }
+    .json-container { background-color: #1E293B; border-radius: 8px; padding: 20px; position: relative; margin: 10px 0; border: 1px solid #334155; }
+    pre { font-family: "JetBrains Mono", Consolas, monospace; font-size: 14px; color: #A7F3D0; line-height: 1.6; margin: 0; white-space: pre-wrap; }
+    .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <div id="app" v-cloak class="h-screen flex items-center justify-center">
+    <div class="text-center">
+      <el-button type="primary" size="large" @click="visible = true" class="px-12 h-14 text-lg shadow-lg">
+        打开日志控制台
+      </el-button>
+    </div>
+
+    <el-drawer v-model="visible" title="全链路追踪日志" size="1200px" destroy-on-close>
+      <div class="flex flex-col h-full bg-white">
+        <div class="px-6 border-b bg-white shrink-0">
+          <el-tabs v-model="activeTab">
+            <el-tab-pane label="阶段日志" name="phase"></el-tab-pane>
+            <el-tab-pane label="业务日志" name="business"></el-tab-pane>
+          </el-tabs>
+        </div>
+
+        <div class="flex flex-1 overflow-hidden bg-[#F8FAFC]">
+          <div v-if="activeTab === 'phase'" class="w-[360px] border-r bg-white overflow-y-auto custom-scroll p-6 shrink-0">
+            <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-6">执行流转时间轴</div>
+            <el-timeline>
+              <el-timeline-item 
+                v-for="block in phaseBlocks" :key="block.id"
+                :timestamp="block.time" 
+                :type="block.hasError ? 'danger' : (block.isProcessing ? 'warning' : 'success')"
+                :icon="block.hasError ? 'CircleCloseFilled' : (block.isProcessing ? 'Loading' : 'SuccessFilled')"
+                placement="top"
+              >
+                <div 
+                  class="timeline-card p-3 rounded-lg cursor-pointer"
+                  :class="selectedPhaseId === block.id ? 'active' : 'bg-gray-50'"
+                  @click="selectedPhaseId = block.id"
+                >
+                  <div class="flex justify-between items-center mb-1">
+                    <span class="font-bold" :class="block.hasError ? 'text-red-500' : 'text-gray-800'">
+                      {{ block.title }}
+                    </span>
+                    <el-tag size="small" type="info" round>{{ block.count }}</el-tag>
+                  </div>
+                  <div class="text-xs text-gray-500 font-mono">{{ block.phase }}</div>
+                </div>
+              </el-timeline-item>
+            </el-timeline>
+          </div>
+
+          <div v-if="activeTab === 'business'" class="w-[240px] border-r bg-white overflow-y-auto custom-scroll shrink-0 py-4">
+            <div class="px-6 text-gray-400 font-bold text-xs uppercase tracking-widest mb-4">业务模块分类</div>
+            <div 
+              v-for="type in businessTypes" :key="type.name"
+              class="type-item px-6 py-4 cursor-pointer flex justify-between items-center"
+              :class="selectedBusinessType === type.name ? 'active' : 'text-gray-700'"
+              @click="selectedBusinessType = type.name"
+            >
+              <span>{{ type.name }}</span>
+              <span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full">{{ type.count }}</span>
+            </div>
+          </div>
+
+          <div class="flex-1 p-6 overflow-y-auto custom-scroll">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 min-h-full flex flex-col">
+              <div class="p-5 border-b bg-gray-50 flex justify-between items-center rounded-t-xl shrink-0">
+                <div>
+                  <span class="font-bold text-gray-800 text-lg">
+                    {{ activeTab === 'phase' ? currentPhaseSelection?.title : selectedBusinessType + '日志明细' }}
+                  </span>
+                  <span v-if="activeTab === 'phase'" class="ml-3 text-sm text-gray-400 font-mono">ID: {{ currentPhaseSelection?.id }}</span>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span class="text-sm text-gray-500">共 {{ rightSideLogs.length }} 条记录</span>
+                </div>
+              </div>
+
+              <div class="flex-1 overflow-auto p-4">
+                <el-table :data="rightSideLogs" style="width: 100%" stripe border>
+                  <el-table-column type="expand">
+                    <template #default="{ row }">
+                      <div class="px-8 py-4">
+                        <div v-if="row.json" class="json-container">
+                          <el-button type="primary" size="small" class="absolute right-4 top-4" link @click="copyJson(row.json)">
+                            <el-icon class="mr-1"><CopyDocument /></el-icon> 复制内容
+                          </el-button>
+                          <pre>{{ row.json }}</pre>
+                        </div>
+                        <div v-else class="text-center py-10 text-gray-300 italic text-[14px]">
+                          该日志节点无详细报文载荷
+                        </div>
+                      </div>
+                    </template>
+                  </el-table-column>
+                  
+                  <el-table-column prop="time" label="记录时间" width="180">
+                    <template #default="{ row }"><span class="font-mono text-gray-600">{{ row.time }}</span></template>
+                  </el-table-column>
+                  
+                  <el-table-column prop="content" label="日志内容" min-width="280">
+                    <template #default="{ row }">
+                      <span :class="row.isError ? 'text-red-500 font-bold' : 'text-gray-800'">{{ row.content }}</span>
+                    </template>
+                  </el-table-column>
+                  
+                  <el-table-column prop="result" label="执行结果" width="180">
+                     <template #default="{ row }">
+                       <span :class="row.isError ? 'text-red-600' : 'text-green-600'">{{ row.result }}</span>
+                     </template>
+                  </el-table-column>
+                  
+                  <el-table-column prop="operator" label="操作人" width="100"></el-table-column>
+                </el-table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </el-drawer>
+  </div>
+
+  <script>
+    const { createApp, ref, computed, watch } = Vue;
+    const app = createApp({
+      setup() {
+        const visible = ref(true);
+        const activeTab = ref('phase');
+        const selectedPhaseId = ref('');
+        const selectedBusinessType = ref('试单');
+
+        const rawLogs = [
+          { id: 1, time: '2026-04-21 15:30:23', phase: 'VALIDATE', businessType: '试单', title: '可定检查', content: '试单请求已发送', result: '试单成功', operator: '系统', isError: false },
+          { id: 2, time: '2026-04-21 15:30:38', phase: 'ORDER_CREATE', businessType: '下单', title: '创建订单', content: '中台单据落库完成', result: '下单完成', operator: '系统', isError: false },
+          { id: 3, time: '2026-04-21 15:30:42', phase: 'PURCHASE_INQUIRY', businessType: '采购', title: '采购询价', content: '供应商接口询价', result: '询价返回成功', operator: '系统', isError: false },
+          { id: 4, time: '2026-04-21 15:30:46', phase: 'PURCHASE_TASK_CREATE', businessType: '采购', title: '采购任务创建', content: '发起首次采购', result: '任务创建成功', operator: '系统', isError: false },
+          { id: 5, time: '2026-04-21 15:30:53', phase: 'PURCHASE_TASK_PAY', businessType: '采购', title: '采购任务支付', content: '支付链路请求', result: '支付失败: 设备不可用', operator: '系统', isError: true, json: '{"code": "11181000", "msg": "暂无可用支付设备"}' },
+          { id: 6, time: '2026-04-21 15:31:00', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', title: '采购任务取消', content: '由于支付失败自动取消', result: '取消成功', operator: '系统', isError: false },
+          { id: 7, time: '2026-04-21 15:31:50', phase: 'PURCHASE_TASK_CREATE', businessType: '采购', title: '采购任务创建', content: '手动触发重试采购', result: '重试任务发起', operator: '系统', isError: false },
+          { id: 8, time: '2026-04-21 15:31:54', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', title: '采购任务轮询', content: '查询供应商出票状态', result: 'UNPAID', operator: '系统', isError: false },
+          { id: 9, time: '2026-04-21 15:31:57', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', title: '采购任务轮询', content: '查询供应商出票状态', result: 'SUCCESS', operator: '系统', isError: false },
+          { id: 10, time: '2026-04-21 15:38:00', phase: 'ORDER_AFTERSALE_CREATE', businessType: '取消/售后', title: '创建售后任务', content: '用户发起退改', result: '成功', operator: '张三', isError: false },
+          { id: 11, time: '2026-04-21 15:38:05', phase: 'ORDER_CANCEL', businessType: '取消/售后', title: '订单取消', content: '拦截订单履约', result: '订单已拦截', operator: '系统', isError: false }
+        ];
+
+        const phaseBlocks = computed(() => {
+          const blocks = [];
+          let current = null;
+          rawLogs.forEach(log => {
+            if (!current || current.phase !== log.phase) {
+              current = {
+                id: 'blk_' + log.id,
+                phase: log.phase,
+                title: log.title,
+                time: log.time,
+                count: 1,
+                hasError: false,
+                isProcessing: log.phase.includes('QUERY'),
+                logs: [log]
+              };
+              blocks.push(current);
+            } else {
+              current.count++;
+              current.time = log.time;
+              current.logs.push(log);
+            }
+            if (log.isError) current.hasError = true;
+          });
+          return blocks;
+        });
+
+        const currentPhaseSelection = computed(() => phaseBlocks.value.find(b => b.id === selectedPhaseId.value));
+
+        watch(phaseBlocks, (val) => {
+          if (val.length > 0 && !selectedPhaseId.value) selectedPhaseId.value = val[0].id;
+        }, { immediate: true });
+
+        const businessTypes = computed(() => {
+          const typeMap = {};
+          rawLogs.forEach(log => {
+            if (!typeMap[log.businessType]) {
+              typeMap[log.businessType] = { name: log.businessType, count: 0, logs: [] };
+            }
+            typeMap[log.businessType].count++;
+            typeMap[log.businessType].logs.push(log);
+          });
+          const order = ['试单', '下单', '采购', '取消/售后'];
+          return order.map(name => typeMap[name]).filter(Boolean);
+        });
+
+        const currentBusinessSelection = computed(() => businessTypes.value.find(t => t.name === selectedBusinessType.value));
+
+        const rightSideLogs = computed(() => {
+          if (activeTab.value === 'phase') {
+            return currentPhaseSelection.value ? currentPhaseSelection.value.logs : [];
+          }
+          return currentBusinessSelection.value ? currentBusinessSelection.value.logs : [];
+        });
+
+        const copyJson = (text) => {
+          navigator.clipboard.writeText(text);
+          ElementPlus.ElMessage.success('报文内容已成功复制');
+        };
+
+        return {
+          visible, activeTab,
+          selectedPhaseId, phaseBlocks, currentPhaseSelection,
+          selectedBusinessType, businessTypes,
+          rightSideLogs, copyJson
+        };
+      }
+    });
+
+    for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+      app.component(key, component);
+    }
+    app.use(ElementPlus);
+    app.mount('#app');
+  </script>
+</body>
+</html>
