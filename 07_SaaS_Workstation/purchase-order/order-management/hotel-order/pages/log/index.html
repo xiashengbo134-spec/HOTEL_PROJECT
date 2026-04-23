@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>订单日志 - 1400px 高密度排版版</title>
+  <title>订单日志</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-plus@2.6.1/dist/index.css" />
   <script src="https://cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.prod.js"></script>
@@ -12,21 +12,24 @@
     body { margin: 0; background-color: #F3F4F6; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 14px; }
     [v-cloak] { display: none; }
     
-    .el-table, .el-tabs__item, .el-button, .el-tag, .el-timeline-item__content { font-size: 14px !important; }
-    .el-drawer__header { margin-bottom: 0 !important; padding: 20px 24px; border-bottom: 1px solid #E5E7EB; background: #FFF; font-weight: bold; font-size: 18px; }
+    .el-table, .el-tabs__item, .el-button, .el-timeline-item__content { font-family: "PingFang SC", sans-serif !important; font-size: 14px !important; }
+    
+    .el-drawer__header { margin-bottom: 0 !important; padding: 20px 24px; border-bottom: 1px solid #E5E7EB; background: #FFF; }
     .el-drawer__body { padding: 0 !important; background-color: #F8FAFC; }
 
-    /* ====== 核心密度优化 ====== */
-    /* 强制压缩时间轴节点之间的垂直默认间距 */
-    .el-timeline-item { padding-bottom: 12px !important; } 
-    /* 调整时间轴左侧圆点的大小和位置使其更紧凑 */
-    .el-timeline-item__node--normal { width: 10px; height: 10px; left: -1px; top: 4px; }
-    .el-timeline-item__wrapper { top: -2px; }
+    .drawer-title { font-family: "PingFang SC", sans-serif; font-weight: 600; font-size: 20px; color: #1E293B; }
 
-    /* 时间轴卡片 */
-    .timeline-card { transition: all 0.2s; border: 1px solid transparent; }
-    .timeline-card.active { background-color: #E6F4FF; border-color: #93C5FD; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .timeline-card:hover:not(.active) { background-color: #F1F5F9; }
+    /* ====== 时间轴：恢复实心图标风格，微调大小使其饱满 ====== */
+    .el-timeline-item { padding-bottom: 8px !important; } 
+    .el-timeline-item__node--normal { width: 14px; height: 14px; left: -1px; top: 14px; }
+    .el-timeline-item__icon { font-size: 13px; }
+    .el-timeline-item__tail { left: 5px; border-left: 2px solid #E2E8F0; top: 16px; }
+    .el-timeline-item__wrapper { padding-left: 22px; top: 0px; }
+
+    /* ====== 卡片交互与边框 ====== */
+    .timeline-row { transition: all 0.2s; }
+    .timeline-row.active { background-color: #F0F9FF; border-color: #BAE6FD; box-shadow: 0 2px 4px rgba(56, 189, 248, 0.1); }
+    .timeline-row:hover:not(.active) { background-color: #F8FAFC; border-color: #E2E8F0; }
 
     /* JSON 展开区 */
     .json-container { background-color: #1E293B; border-radius: 8px; padding: 16px; position: relative; margin: 8px 0; border: 1px solid #334155; }
@@ -40,64 +43,73 @@
   <div id="app" v-cloak class="h-screen flex items-center justify-center">
     <div class="text-center">
       <el-button type="primary" size="large" @click="visible = true" class="px-12 h-14 text-lg shadow-lg">
-        打开 1400px 订单排查日志 (高密度版)
+        打开 1400px 订单日志 (经典实心版)
       </el-button>
     </div>
 
-    <el-drawer v-model="visible" title="订单日志 - 杭州西湖万豪酒店 (单号: HTL202604228899)" size="1400px" destroy-on-close>
+    <el-drawer v-model="visible" size="1400px" destroy-on-close>
+      <template #header>
+        <div class="drawer-title">订单日志 <span class="text-gray-500 font-normal text-[16px] ml-2">- 杭州西湖万豪酒店 (单号: HTL202604228899)</span></div>
+      </template>
+
       <div class="flex flex-col h-full bg-white">
         
         <div class="px-6 border-b bg-white shrink-0">
           <el-tabs v-model="activeTab">
-            <el-tab-pane label="阶段日志 (时序阻断)" name="phase"></el-tab-pane>
-            <el-tab-pane label="业务日志 (类型筛选)" name="business"></el-tab-pane>
+            <el-tab-pane label="阶段日志 (时序追踪)" name="phase"></el-tab-pane>
+            <el-tab-pane label="业务日志 (分类筛选)" name="business"></el-tab-pane>
           </el-tabs>
         </div>
 
         <div class="flex flex-1 overflow-hidden bg-[#F8FAFC]">
           
           <div v-if="activeTab === 'phase'" class="w-[600px] border-r bg-white overflow-y-auto custom-scroll p-6 shrink-0 flex-none">
-            <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-4 flex justify-between items-center">
+            <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-6 flex justify-between items-center">
               <span>业务流转时间轴</span>
-              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded">{{ phaseBlocks.length }} 个节点</span>
+              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded">共 {{ totalLogsCount }} 条底层日志</span>
             </div>
             
             <el-timeline>
               <el-timeline-item 
                 v-for="block in phaseBlocks" :key="block.id"
-                :timestamp="block.time" 
                 :type="block.themeColor"
                 :icon="block.themeIcon"
-                placement="top"
+                hide-timestamp
               >
                 <div 
-                  class="timeline-card px-3.5 py-2.5 rounded-lg cursor-pointer flex flex-col gap-1.5"
-                  :class="selectedPhaseId === block.id ? 'active' : 'bg-white border-gray-100 shadow-sm'"
+                  class="timeline-row p-3.5 rounded-lg cursor-pointer flex flex-col border bg-white"
+                  :class="selectedPhaseId === block.id ? 'active border-blue-300' : 'border-gray-100'"
                   @click="selectedPhaseId = block.id"
                 >
                   <div class="flex justify-between items-center">
-                    <span class="font-bold text-[15px] text-gray-800 tracking-wide">
-                      {{ block.title }}
-                    </span>
                     
-                    <el-tag :type="block.themeColor" :effect="block.themeColor === 'info' ? 'plain' : 'dark'" size="small" class="border-0 font-bold shrink-0">
-                      {{ block.statusText }}
-                    </el-tag>
-                  </div>
-                  
-                  <div class="flex justify-between items-center text-[12px] mt-0.5">
-                    <span class="font-mono text-gray-400 truncate mr-4">
-                      {{ block.type === 'BATCH' ? `关联单号: ${block.taskId}` : block.subtitle }}
-                    </span>
-                    
-                    <div class="flex items-center gap-3 text-gray-400 shrink-0 justify-end">
-                      <span v-if="block.type === 'BATCH'" class="bg-gray-50 px-1.5 py-0.5 rounded border border-gray-100">
-                        {{ block.count }} 条记录
+                    <div class="flex items-center">
+                      <span class="w-[155px] text-black font-mono font-bold text-[13.5px] shrink-0 tracking-tight">
+                        {{ block.time }}
                       </span>
-                      <span class="flex items-center gap-1 font-medium">
-                        <el-icon><Avatar /></el-icon> {{ block.operator }}
+                      <span class="font-bold text-[14.5px] text-gray-800">
+                        {{ block.title }}
                       </span>
                     </div>
+
+                    <div class="flex items-center gap-5 shrink-0">
+                      <span class="text-[14px] text-gray-400 font-mono font-bold bg-gray-50 px-1.5 py-0.5 rounded" title="日志条数">
+                        {{ block.count }}
+                      </span>
+                      
+                      <span class="text-[12.5px] text-gray-500 flex items-center gap-1">
+                        <el-icon><Avatar /></el-icon> {{ block.operator }}
+                      </span>
+                      
+                      <span class="font-bold text-[13.5px] w-[45px] text-right" :class="block.textColorClass">
+                        {{ block.statusText }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div v-if="block.type === 'BATCH'" class="flex justify-between items-center mt-2.5 text-[12.5px]">
+                    <span class="text-gray-500 font-mono">单号: {{ block.taskId }}</span>
+                    <span class="text-gray-500 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded">当前阶段: {{ block.latestPhaseName }}</span>
                   </div>
 
                 </div>
@@ -105,38 +117,35 @@
             </el-timeline>
           </div>
 
-          <div v-if="activeTab === 'business'" class="w-[600px] border-r bg-white overflow-y-auto custom-scroll shrink-0 flex-none py-4">
-            <div class="px-6 text-gray-400 font-bold text-xs uppercase tracking-widest mb-4">业务分类</div>
+          <div v-if="activeTab === 'business'" class="w-[200px] border-r bg-white overflow-y-auto custom-scroll shrink-0 flex-none py-4">
+            <div class="px-6 text-gray-400 font-bold text-xs uppercase tracking-widest mb-4">分类筛选</div>
             <div 
               v-for="type in businessTypes" :key="type.name"
-              class="px-6 py-4 cursor-pointer flex justify-between items-center border-l-4 border-transparent hover:bg-gray-50"
+              class="px-6 py-4 cursor-pointer flex flex-col gap-2 border-l-4 border-transparent hover:bg-gray-50"
               :class="selectedBusinessType === type.name ? 'bg-blue-50 border-blue-500 font-bold text-blue-600' : 'text-gray-700'"
               @click="selectedBusinessType = type.name"
             >
               <span>{{ type.name }}</span>
-              <span class="bg-gray-100 text-gray-500 text-xs px-2 py-0.5 rounded-full border border-gray-200">{{ type.count }}</span>
+              <span class="text-xs text-gray-400 font-normal">{{ type.count }} 条记录</span>
             </div>
           </div>
 
-          <div class="w-[800px] p-6 overflow-y-auto custom-scroll flex-none">
+          <div :class="activeTab === 'phase' ? 'w-[800px]' : 'flex-1'" class="p-6 overflow-y-auto custom-scroll shrink-0 flex-none">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 min-h-full flex flex-col">
               
               <div class="p-5 border-b bg-gray-50 flex justify-between items-center rounded-t-xl shrink-0">
                 <div class="flex items-center gap-3">
                   <span class="font-bold text-gray-800 text-[16px] flex items-center">
-                    <el-icon v-if="activeTab === 'phase' && currentPhaseSelection?.type === 'BATCH'" class="mr-2 text-blue-500"><FolderOpened /></el-icon>
                     {{ activeTab === 'phase' ? currentPhaseSelection?.title : selectedBusinessType + ' 日志明细' }}
                   </span>
                   
-                  <el-tag 
+                  <span 
                     v-if="activeTab === 'phase'"
-                    :type="currentPhaseSelection?.themeColor" 
-                    :effect="currentPhaseSelection?.themeColor === 'info' ? 'plain' : 'dark'" 
-                    size="small" 
-                    class="border-0 font-bold"
+                    class="font-bold text-[14px]" 
+                    :class="currentPhaseSelection?.textColorClass"
                   >
                     {{ currentPhaseSelection?.statusText }}
-                  </el-tag>
+                  </span>
                 </div>
                 
                 <div class="text-[13px] text-gray-500 font-mono">
@@ -162,8 +171,13 @@
                     </template>
                   </el-table-column>
                   
-                  <el-table-column prop="time" label="时间" width="100">
-                    <template #default="{ row }"><span class="font-mono text-gray-600">{{ row.time.split(' ')[1] }}</span></template>
+                  <el-table-column prop="time" label="精确时间" width="165">
+                    <template #default="{ row }">
+                      <div class="font-mono text-[12px] text-gray-500 flex flex-col">
+                        <span>{{ row.time.split(' ')[0] }}</span>
+                        <span class="text-gray-800 font-bold">{{ row.time.split(' ')[1] }}</span>
+                      </div>
+                    </template>
                   </el-table-column>
                   
                   <el-table-column label="阶段 (Phase) / 执行内容" min-width="320">
@@ -175,13 +189,13 @@
                     </template>
                   </el-table-column>
                   
-                  <el-table-column prop="result" label="执行结果" width="200">
+                  <el-table-column prop="result" label="执行结果" width="180">
                      <template #default="{ row }">
                        <span :class="row.isError ? 'text-red-600 font-bold' : 'text-emerald-600'">{{ row.result }}</span>
                      </template>
                   </el-table-column>
                   
-                  <el-table-column prop="operator" label="操作人" width="100"></el-table-column>
+                  <el-table-column prop="operator" label="操作人" width="90"></el-table-column>
                 </el-table>
               </div>
             </div>
@@ -193,7 +207,7 @@
   </div>
 
   <script>
-    const { createApp, ref, computed, watch } = Vue;
+    const { createApp, ref, computed, watch, nextTick } = Vue;
     const app = createApp({
       setup() {
         const visible = ref(true);
@@ -240,7 +254,46 @@
           { id: 28, time: '2026-04-22 17:01:15', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', phaseName: '采购任务轮询', content: '查询供应商出票状态', result: 'PTG采购单查询成功(9999111228473599): UNPAID', operator: '系统', isError: false }
         ];
 
-        // ==== 阻断式聚合逻辑 ====
+        const totalLogsCount = computed(() => rawLogs.length);
+
+        // ==== 核心：恢复实心图标逻辑 (SuccessFilled, CircleCloseFilled) ====
+        const applyThemeColor = (batch) => {
+            if (batch.hasError) {
+                batch.statusText = '失败';
+                batch.themeColor = 'danger';
+                batch.themeIcon = 'CircleCloseFilled'; 
+                batch.textColorClass = 'text-red-500';
+            } else {
+                if (batch.type === 'BATCH') {
+                    const lastLog = batch.logs[batch.logs.length - 1];
+                    if (lastLog.phase.includes('QUERY')) {
+                        batch.statusText = '进行中';
+                        batch.themeColor = 'primary';
+                        batch.themeIcon = 'Loading'; 
+                        batch.textColorClass = 'text-blue-500';
+                    } else {
+                        batch.statusText = '成功';
+                        batch.themeColor = 'success';
+                        batch.themeIcon = 'SuccessFilled'; 
+                        batch.textColorClass = 'text-emerald-500';
+                    }
+                } else {
+                    batch.statusText = '成功';
+                    batch.themeColor = 'success';
+                    batch.themeIcon = 'SuccessFilled';
+                    batch.textColorClass = 'text-emerald-500';
+                }
+            }
+            
+            // 被宏观动作中断，只要没有错误，就是成功
+            if (batch.isInterrupted && !batch.hasError) {
+                batch.statusText = '成功';
+                batch.themeColor = 'success';
+                batch.themeIcon = 'SuccessFilled';
+                batch.textColorClass = 'text-emerald-500';
+            }
+        };
+
         const phaseBlocks = computed(() => {
           const blocks = [];
           let currentBatch = null;
@@ -253,82 +306,65 @@
             if (match) extractedId = match[0];
 
             if (!isMicro) {
-              if (currentBatch) {
-                if (currentBatch.hasError) {
-                    currentBatch.statusText = '失败';
-                    currentBatch.themeColor = 'danger';
-                    currentBatch.themeIcon = 'CircleCloseFilled';
-                } else {
-                    currentBatch.statusText = '已中断';
-                    currentBatch.themeColor = 'info';
-                    currentBatch.themeIcon = 'Warning';
-                }
-                currentBatch = null; 
+              if (currentBatch && currentBatch.type === 'MACRO' && currentBatch.subtitle === log.phase) {
+                  currentBatch.logs.push(log);
+                  currentBatch.count++;
+                  currentBatch.time = log.time;
+                  currentBatch.latestPhaseName = log.phaseName;
+                  if (log.isError) currentBatch.hasError = true;
+              } else {
+                  if (currentBatch) {
+                      currentBatch.isInterrupted = true;
+                      applyThemeColor(currentBatch);
+                  }
+                  
+                  currentBatch = {
+                    type: 'MACRO', id: 'macro_' + log.id,
+                    title: log.phaseName, subtitle: log.phase,
+                    time: log.time, count: 1, hasError: log.isError,
+                    operator: log.operator,
+                    latestPhaseName: log.phaseName,
+                    isInterrupted: false,
+                    logs: [log]
+                  };
+                  applyThemeColor(currentBatch);
+                  blocks.push(currentBatch);
               }
-              blocks.push({
-                type: 'MACRO', id: 'macro_' + log.id,
-                title: log.phaseName, subtitle: log.phase,
-                time: log.time, count: 1, hasError: log.isError,
-                operator: log.operator, // 宏观事件操作人
-                statusText: log.isError ? '失败' : '成功',
-                themeColor: log.isError ? 'danger' : 'success',
-                themeIcon: log.isError ? 'CircleCloseFilled' : 'SuccessFilled',
-                logs: [log]
-              });
             } 
             else {
-              if (currentBatch) {
-                currentBatch.logs.push(log);
-                currentBatch.count++;
-                currentBatch.time = log.time;
-                if (log.isError) currentBatch.hasError = true;
-                if (extractedId && currentBatch.taskId === '未知单号') {
-                    currentBatch.taskId = extractedId;
-                }
+              if (currentBatch && currentBatch.type === 'BATCH' && currentBatch.taskId === (extractedId || currentBatch.taskId)) {
+                  currentBatch.logs.push(log);
+                  currentBatch.count++;
+                  currentBatch.time = log.time;
+                  currentBatch.latestPhaseName = log.phaseName;
+                  if (log.isError) currentBatch.hasError = true;
+                  if (extractedId && currentBatch.taskId === '未知单号') currentBatch.taskId = extractedId;
               } else {
-                currentBatch = {
-                  type: 'BATCH', id: 'batch_' + log.id, 
-                  taskId: extractedId || '未知单号',
-                  title: '采购任务', 
-                  time: log.time, count: 1, hasError: log.isError,
-                  statusText: '进行中', themeColor: 'primary', themeIcon: 'Loading',
-                  logs: [log]
-                };
-                blocks.push(currentBatch);
+                  if (currentBatch) {
+                      currentBatch.isInterrupted = true;
+                      applyThemeColor(currentBatch);
+                  }
+                  
+                  currentBatch = {
+                    type: 'BATCH', id: 'batch_' + log.id, 
+                    taskId: extractedId || '未知单号',
+                    title: '采购任务', 
+                    time: log.time, count: 1, hasError: log.isError,
+                    latestPhaseName: log.phaseName,
+                    isInterrupted: false,
+                    logs: [log]
+                  };
+                  applyThemeColor(currentBatch);
+                  blocks.push(currentBatch);
               }
             }
           });
 
-          // 评估最后一个批次
-          if (currentBatch) {
-            // 聚合批次内所有操作人，去重展示
-            const operators = [...new Set(currentBatch.logs.map(l => l.operator))];
-            currentBatch.operator = operators.join(' / ');
+          if (currentBatch) applyThemeColor(currentBatch);
 
-            if (currentBatch.hasError) {
-                currentBatch.statusText = '失败';
-                currentBatch.themeColor = 'danger';
-                currentBatch.themeIcon = 'CircleCloseFilled';
-            } else {
-                const lastLog = currentBatch.logs[currentBatch.logs.length - 1];
-                if (lastLog.phase.includes('QUERY')) {
-                    currentBatch.statusText = '进行中';
-                    currentBatch.themeColor = 'primary';
-                    currentBatch.themeIcon = 'Loading';
-                } else {
-                    currentBatch.statusText = '成功';
-                    currentBatch.themeColor = 'success';
-                    currentBatch.themeIcon = 'SuccessFilled';
-                }
-            }
-          }
-
-          // 补偿之前已被切断的批次操作人计算
           blocks.forEach(block => {
-             if (block.type === 'BATCH') {
-                 const operators = [...new Set(block.logs.map(l => l.operator))];
-                 block.operator = operators.join(' / ');
-             }
+             const ops = [...new Set(block.logs.map(l => l.operator))];
+             block.operator = ops.find(o => o !== '系统') || '系统';
           });
 
           return blocks;
@@ -356,7 +392,9 @@
         });
 
         watch(phaseBlocks, (val) => {
-          if (val.length > 0 && !selectedPhaseId.value) selectedPhaseId.value = val[0].id;
+          if (val.length > 0 && !selectedPhaseId.value) {
+            nextTick(() => { selectedPhaseId.value = val[0].id; });
+          }
         }, { immediate: true });
 
         const copyJson = (text) => {
@@ -365,7 +403,7 @@
         };
 
         return {
-          visible, activeTab, 
+          visible, activeTab, totalLogsCount,
           selectedPhaseId, phaseBlocks, currentPhaseSelection,
           selectedBusinessType, businessTypes, 
           rightSideLogs, copyJson
