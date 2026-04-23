@@ -38,6 +38,11 @@ jobs:
         working-directory: 05_ERP_Admin/web
         run: npm run build
 
+      - name: Copy 07_SaaS_Workstation to Pages artifact
+        run: |
+          mkdir -p 05_ERP_Admin/web/dist/07_SaaS_Workstation
+          cp -R 07_SaaS_Workstation/. 05_ERP_Admin/web/dist/07_SaaS_Workstation/
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
