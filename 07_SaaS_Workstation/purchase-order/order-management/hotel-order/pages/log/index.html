@@ -18,6 +18,12 @@
     .el-drawer__body { padding: 0 !important; background-color: #F8FAFC; }
 
     .drawer-title { font-family: "PingFang SC", sans-serif; font-weight: 600; font-size: 20px; color: #1E293B; }
+    .summary-bar { background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); }
+    .summary-label { color: #64748B; font-size: 11px; line-height: 1; }
+    .summary-value { color: #0F172A; font-size: 13px; font-weight: 600; line-height: 1.25; }
+    .summary-chip { background: rgba(255,255,255,0.82); border: 1px solid #E2E8F0; }
+    .summary-id-icon { color: #94A3B8; cursor: pointer; transition: color 0.2s; }
+    .summary-id-icon:hover { color: #475569; }
 
     /* ====== 时间轴：恢复实心图标风格，微调大小使其饱满 ====== */
     .el-timeline-item { padding-bottom: 8px !important; } 
@@ -43,21 +49,64 @@
   <div id="app" v-cloak class="h-screen flex items-center justify-center">
     <div class="text-center">
       <el-button type="primary" size="large" @click="visible = true" class="px-12 h-14 text-lg shadow-lg">
-        打开 1400px 订单日志 (经典实心版)
+        日志
       </el-button>
     </div>
 
     <el-drawer v-model="visible" size="1400px" destroy-on-close>
       <template #header>
-        <div class="drawer-title">订单日志 <span class="text-gray-500 font-normal text-[16px] ml-2">- 杭州西湖万豪酒店 (单号: HTL202604228899)</span></div>
+        <div class="drawer-title">订单日志</div>
       </template>
 
       <div class="flex flex-col h-full bg-white">
         
+        <div class="px-6 pt-2.5 pb-2.5 border-b bg-white shrink-0">
+          <div class="summary-bar rounded-xl border border-slate-200 px-3 py-2 shadow-sm">
+            <div class="grid grid-cols-12 gap-2">
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
+                <div class="summary-label">系统订单号</div>
+                <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.systemOrderNo }}</div>
+              </div>
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
+                <div class="summary-label">外部订单号</div>
+                <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.externalOrderNo }}</div>
+              </div>
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-3 min-w-0">
+                <div class="summary-label">酒店名称</div>
+                <div class="summary-value mt-0.5 flex items-center gap-1 min-w-0">
+                  <span class="truncate">{{ orderSummary.hotelName }}</span>
+                  <el-tooltip effect="light" placement="top">
+                    <template #content>酒店聚合ID：{{ orderSummary.hotelAggregateId }}</template>
+                    <el-icon class="summary-id-icon shrink-0"><InfoFilled /></el-icon>
+                  </el-tooltip>
+                </div>
+              </div>
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-3 min-w-0">
+                <div class="summary-label">房型名称 - 早餐</div>
+                <div class="summary-value mt-0.5 flex items-center gap-1 min-w-0">
+                  <span class="truncate">{{ orderSummary.roomName }} - {{ orderSummary.breakfast }}</span>
+                  <el-tooltip effect="light" placement="top">
+                    <template #content>房型聚合ID：{{ orderSummary.roomAggregateId }}</template>
+                    <el-icon class="summary-id-icon shrink-0"><InfoFilled /></el-icon>
+                  </el-tooltip>
+                </div>
+              </div>
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-1 min-w-0">
+                <div class="summary-label">入离</div>
+                <div class="summary-value mt-0.5 truncate">{{ orderSummary.checkInDate.slice(5) }}~{{ orderSummary.checkOutDate.slice(5) }}</div>
+              </div>
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-1 min-w-0">
+                <div class="summary-label">间夜 / RP</div>
+                <div class="summary-value mt-0.5 truncate">{{ orderSummary.nights }}晚 / {{ orderSummary.rpCode }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="px-6 border-b bg-white shrink-0">
           <el-tabs v-model="activeTab">
-            <el-tab-pane label="阶段日志 (时序追踪)" name="phase"></el-tab-pane>
-            <el-tab-pane label="业务日志 (分类筛选)" name="business"></el-tab-pane>
+            <el-tab-pane label="阶段日志" name="phase"></el-tab-pane>
+            <el-tab-pane label="业务日志" name="business"></el-tab-pane>
           </el-tabs>
         </div>
 
@@ -108,7 +157,7 @@
                   </div>
 
                   <div v-if="block.type === 'BATCH'" class="flex justify-between items-center mt-2.5 text-[12.5px]">
-                    <span class="text-gray-500 font-mono">单号: {{ block.taskId }}</span>
+                    <span class="text-gray-500 font-mono">采购单号: {{ block.taskId }}</span>
                     <span class="text-gray-500 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded">当前阶段: {{ block.latestPhaseName }}</span>
                   </div>
 
@@ -130,7 +179,7 @@
             </div>
           </div>
 
-          <div :class="activeTab === 'phase' ? 'w-[800px]' : 'flex-1'" class="p-6 overflow-y-auto custom-scroll shrink-0 flex-none">
+          <div :class="activeTab === 'phase' ? 'w-[800px] shrink-0 flex-none' : 'flex-1 min-w-0'" class="p-6 overflow-y-auto custom-scroll">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 min-h-full flex flex-col">
               
               <div class="p-5 border-b bg-gray-50 flex justify-between items-center rounded-t-xl shrink-0">
@@ -171,7 +220,7 @@
                     </template>
                   </el-table-column>
                   
-                  <el-table-column prop="time" label="精确时间" width="165">
+                  <el-table-column prop="time" label="时间" width="165">
                     <template #default="{ row }">
                       <div class="font-mono text-[12px] text-gray-500 flex flex-col">
                         <span>{{ row.time.split(' ')[0] }}</span>
@@ -180,7 +229,7 @@
                     </template>
                   </el-table-column>
                   
-                  <el-table-column label="阶段 (Phase) / 执行内容" min-width="320">
+                  <el-table-column v-if="activeTab === 'phase'" label="阶段 (Phase) / 执行内容" min-width="320">
                     <template #default="{ row }">
                       <div class="flex flex-col">
                         <span class="text-[12px] text-gray-400 font-mono mb-0.5">{{ row.phaseName }} ({{ row.phase }})</span>
@@ -188,14 +237,20 @@
                       </div>
                     </template>
                   </el-table-column>
+
+                  <el-table-column v-else label="内容" min-width="420">
+                    <template #default="{ row }">
+                      <span :class="row.isError ? 'text-red-500 font-bold' : 'text-gray-800'">{{ row.content }}</span>
+                    </template>
+                  </el-table-column>
                   
-                  <el-table-column prop="result" label="执行结果" width="180">
+                  <el-table-column v-if="activeTab === 'phase'" prop="result" label="执行结果" width="180">
                      <template #default="{ row }">
                        <span :class="row.isError ? 'text-red-600 font-bold' : 'text-emerald-600'">{{ row.result }}</span>
                      </template>
                   </el-table-column>
                   
-                  <el-table-column prop="operator" label="操作人" width="90"></el-table-column>
+                  <el-table-column v-if="activeTab === 'phase'" prop="operator" label="操作人" width="90"></el-table-column>
                 </el-table>
               </div>
             </div>
@@ -213,7 +268,21 @@
         const visible = ref(true);
         const activeTab = ref('phase');
         const selectedPhaseId = ref('');
-        const selectedBusinessType = ref('采购');
+        const selectedBusinessType = ref('试单');
+
+        const orderSummary = ref({
+          systemOrderNo: 'HTL202604228899',
+          externalOrderNo: 'MEITUAN-OUT-8877349921',
+          hotelName: '杭州西湖万豪酒店',
+          hotelAggregateId: 'H-AI-330106-00028471',
+          roomName: '豪华大床房',
+          roomAggregateId: 'RM-AI-330106-887231',
+          checkInDate: '2026-04-28',
+          checkOutDate: '2026-04-30',
+          nights: 2,
+          breakfast: '双早',
+          rpCode: 'RP01'
+        });
 
         // ==== 完整数据流 ====
         const rawLogs = [
@@ -371,16 +440,16 @@
         });
 
         const businessTypes = computed(() => {
-          const typeMap = {};
-          rawLogs.forEach(log => {
-            if (!typeMap[log.businessType]) {
-              typeMap[log.businessType] = { name: log.businessType, count: 0, logs: [] };
-            }
-            typeMap[log.businessType].count++;
-            typeMap[log.businessType].logs.push(log);
-          });
-          const order = ['试单', '下单', '采购', '售后/取消'];
-          return order.map(name => typeMap[name]).filter(Boolean);
+          const sourceMap = {
+            '试单': ['试单'],
+            '下单': ['下单'],
+            '取消': ['售后/取消']
+          };
+
+          return Object.entries(sourceMap).map(([name, sourceTypes]) => {
+            const logs = rawLogs.filter(log => sourceTypes.includes(log.businessType));
+            return { name, count: logs.length, logs };
+          }).filter(type => type.count > 0);
         });
 
         const currentPhaseSelection = computed(() => phaseBlocks.value.find(b => b.id === selectedPhaseId.value));
@@ -403,7 +472,7 @@
         };
 
         return {
-          visible, activeTab, totalLogsCount,
+          visible, activeTab, totalLogsCount, orderSummary,
           selectedPhaseId, phaseBlocks, currentPhaseSelection,
           selectedBusinessType, businessTypes, 
           rightSideLogs, copyJson
