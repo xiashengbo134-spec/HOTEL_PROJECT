@@ -34,8 +34,17 @@
 
     /* ====== 卡片交互与边框 ====== */
     .timeline-row { transition: all 0.2s; }
-    .timeline-row.active { background-color: #F0F9FF; border-color: #BAE6FD; box-shadow: 0 2px 4px rgba(56, 189, 248, 0.1); }
+    .timeline-row.active { background-color: #EAF2FF; border-color: #165DFF; box-shadow: 0 2px 4px rgba(22, 93, 255, 0.12); }
     .timeline-row:hover:not(.active) { background-color: #F8FAFC; border-color: #E2E8F0; }
+
+    .el-tabs__active-bar {
+      background-color: #165DFF !important;
+    }
+
+    .el-tabs__item.is-active,
+    .el-tabs__item:hover {
+      color: #165DFF !important;
+    }
 
     /* JSON 展开区 */
     .json-container { background-color: #1E293B; border-radius: 8px; padding: 16px; position: relative; margin: 8px 0; border: 1px solid #334155; }
@@ -84,7 +93,7 @@
     }
 
     .hit-row > td.el-table__cell {
-      background: #EFF6FF !important;
+      background: #EAF2FF !important;
     }
 
     .el-dialog__body {
@@ -197,7 +206,7 @@
               >
                 <div 
                   class="timeline-row min-h-[66px] px-2 py-1 rounded-lg cursor-pointer border bg-white flex items-center"
-                  :class="selectedPhaseId === block.id ? 'active border-blue-300' : 'border-gray-100'"
+                  :class="selectedPhaseId === block.id ? 'active border-[#165DFF]' : 'border-gray-100'"
                   @click="selectedPhaseId = block.id"
                 >
                   <div class="grid grid-cols-[92px_minmax(0,1fr)_56px] auto-rows-auto gap-x-0.5 gap-y-0.5 items-center w-full">
@@ -249,7 +258,7 @@
             <div 
               v-for="type in businessTypes" :key="type.name"
               class="px-6 py-4 cursor-pointer flex flex-col gap-2 border-l-4 border-transparent hover:bg-gray-50"
-              :class="selectedBusinessType === type.name ? 'bg-blue-50 border-blue-500 font-bold text-blue-600' : 'text-gray-700'"
+              :class="selectedBusinessType === type.name ? 'bg-[#EAF2FF] border-[#165DFF] font-bold text-[#165DFF]' : 'text-gray-700'"
               @click="selectedBusinessType = type.name"
             >
               <span>{{ type.name }}</span>
