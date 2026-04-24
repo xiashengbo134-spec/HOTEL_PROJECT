@@ -43,6 +43,45 @@
     
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
+
+    .line-clamp-3 {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .line-clamp-5 {
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      word-break: break-word;
+    }
+
+    .dark-tooltip {
+      max-width: 520px;
+      background: #0F172A !important;
+      color: #FFFFFF !important;
+      border: 1px solid #1E293B !important;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35) !important;
+    }
+    .dark-tooltip .el-popper__arrow::before {
+      background: #0F172A !important;
+      border-color: #1E293B !important;
+    }
+
+    .el-table .cell {
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .el-table__body-wrapper,
+    .el-table__header-wrapper,
+    .el-scrollbar__wrap {
+      overflow-x: hidden !important;
+    }
   </style>
 </head>
 <body>
@@ -71,7 +110,7 @@
                 <div class="summary-label">外部订单号</div>
                 <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.externalOrderNo }}</div>
               </div>
-              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-3 min-w-0">
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
                 <div class="summary-label">酒店名称</div>
                 <div class="summary-value mt-0.5 flex items-center gap-1 min-w-0">
                   <span class="truncate">{{ orderSummary.hotelName }}</span>
@@ -81,7 +120,7 @@
                   </el-tooltip>
                 </div>
               </div>
-              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-3 min-w-0">
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
                 <div class="summary-label">房型名称 - 早餐</div>
                 <div class="summary-value mt-0.5 flex items-center gap-1 min-w-0">
                   <span class="truncate">{{ orderSummary.roomName }} - {{ orderSummary.breakfast }}</span>
@@ -91,13 +130,13 @@
                   </el-tooltip>
                 </div>
               </div>
-              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-1 min-w-0">
-                <div class="summary-label">入离</div>
-                <div class="summary-value mt-0.5 truncate">{{ orderSummary.checkInDate.slice(5) }}~{{ orderSummary.checkOutDate.slice(5) }}</div>
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
+                <div class="summary-label">入离时间</div>
+                <div class="summary-value mt-0.5">{{ orderSummary.checkInDate }} 至 {{ orderSummary.checkOutDate }}</div>
               </div>
-              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-1 min-w-0">
+              <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
                 <div class="summary-label">间夜 / RP</div>
-                <div class="summary-value mt-0.5 truncate">{{ orderSummary.nights }}晚 / {{ orderSummary.rpCode }}</div>
+                <div class="summary-value mt-0.5 truncate">{{ orderSummary.rooms }}间{{ orderSummary.nights }}晚 / {{ orderSummary.rpCode }}</div>
               </div>
             </div>
           </div>
@@ -112,10 +151,10 @@
 
         <div class="flex flex-1 overflow-hidden bg-[#F8FAFC]">
           
-          <div v-if="activeTab === 'phase'" class="w-[600px] border-r bg-white overflow-y-auto custom-scroll p-6 shrink-0 flex-none">
-            <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-6 flex justify-between items-center">
+          <div v-if="activeTab === 'phase'" class="w-[600px] border-r bg-white overflow-y-auto custom-scroll p-4 shrink-0 flex-none">
+            <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-3 flex justify-between items-center leading-none">
               <span>业务流转时间轴</span>
-              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded">共 {{ totalLogsCount }} 条底层日志</span>
+              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded leading-none">共 {{ totalLogsCount }} 条底层日志</span>
             </div>
             
             <el-timeline>
@@ -126,39 +165,44 @@
                 hide-timestamp
               >
                 <div 
-                  class="timeline-row p-3.5 rounded-lg cursor-pointer flex flex-col border bg-white"
+                  class="timeline-row min-h-[66px] px-2 py-1 rounded-lg cursor-pointer border bg-white flex items-center"
                   :class="selectedPhaseId === block.id ? 'active border-blue-300' : 'border-gray-100'"
                   @click="selectedPhaseId = block.id"
                 >
-                  <div class="flex justify-between items-center">
-                    
-                    <div class="flex items-center">
-                      <span class="w-[155px] text-black font-mono font-bold text-[13.5px] shrink-0 tracking-tight">
-                        {{ block.time }}
-                      </span>
-                      <span class="font-bold text-[14.5px] text-gray-800">
-                        {{ block.title }}
-                      </span>
+                  <div class="grid grid-cols-[92px_minmax(0,1fr)_56px] auto-rows-auto gap-x-0.5 gap-y-0.5 items-center w-full">
+                    <div class="font-mono tracking-tight text-[13px] text-gray-500 leading-5 self-center">
+                      {{ block.time.split(' ')[0] }}
+                    </div>
+                    <div class="min-w-0 flex items-center gap-0.5 min-h-[20px]">
+                      <span class="font-bold text-[14px] text-gray-900 truncate min-w-0">{{ block.displayContent }}</span>
+                      <span class="text-[14px] text-gray-900 shrink-0">&nbsp;</span>
+                      <el-tooltip v-if="shouldShowTooltip(block.displayPhase, 'phase')" effect="dark" popper-class="dark-tooltip" placement="top" :content="block.displayPhase">
+                        <span class="font-bold text-[14px] text-gray-900 truncate shrink-0 max-w-[208px]">{{ block.displayPhase }}</span>
+                      </el-tooltip>
+                      <span v-else class="font-bold text-[14px] text-gray-900 truncate shrink-0 max-w-[208px]">{{ block.displayPhase }}</span>
+                    </div>
+                    <div class="text-[12.5px] text-gray-500 flex items-center gap-1 justify-end whitespace-nowrap self-center text-right">
+                      <el-icon><Avatar /></el-icon> {{ block.operator }}
                     </div>
 
-                    <div class="flex items-center gap-5 shrink-0">
-                      <span class="text-[14px] text-gray-400 font-mono font-bold bg-gray-50 px-1.5 py-0.5 rounded" title="日志条数">
+                    <div class="font-mono tracking-tight text-[14px] text-black leading-5 self-start">
+                      {{ block.time.split(' ')[1] }}
+                    </div>
+                    <div class="min-w-0 pr-0.5">
+                      <el-tooltip v-if="shouldShowTooltip(block.secondLineResult, 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="block.secondLineResult">
+                        <div class="text-[12px] leading-5 line-clamp-3" :class="block.secondLineResultClass">
+                          {{ block.secondLineResult }}
+                        </div>
+                      </el-tooltip>
+                      <div v-else class="text-[12px] leading-5 line-clamp-3" :class="block.secondLineResultClass">
+                        {{ block.secondLineResult }}
+                      </div>
+                    </div>
+                    <div class="flex justify-end self-start text-right">
+                      <span v-if="block.count > 1" class="text-[14px] text-black font-mono font-bold bg-gray-50 px-1.5 py-0.5 rounded">
                         {{ block.count }}
                       </span>
-                      
-                      <span class="text-[12.5px] text-gray-500 flex items-center gap-1">
-                        <el-icon><Avatar /></el-icon> {{ block.operator }}
-                      </span>
-                      
-                      <span class="font-bold text-[13.5px] w-[45px] text-right" :class="block.textColorClass">
-                        {{ block.statusText }}
-                      </span>
                     </div>
-                  </div>
-
-                  <div v-if="block.type === 'BATCH'" class="flex justify-between items-center mt-2.5 text-[12.5px]">
-                    <span class="text-gray-500 font-mono">采购单号: {{ block.taskId }}</span>
-                    <span class="text-gray-500 bg-gray-50 border border-gray-100 px-2 py-0.5 rounded">当前阶段: {{ block.latestPhaseName }}</span>
                   </div>
 
                 </div>
@@ -179,38 +223,36 @@
             </div>
           </div>
 
-          <div :class="activeTab === 'phase' ? 'w-[800px] shrink-0 flex-none' : 'flex-1 min-w-0'" class="p-6 overflow-y-auto custom-scroll">
+          <div :class="activeTab === 'phase' ? 'w-[800px] shrink-0 flex-none' : 'flex-1 min-w-0'" class="p-4 overflow-y-auto custom-scroll">
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 min-h-full flex flex-col">
               
-              <div class="p-5 border-b bg-gray-50 flex justify-between items-center rounded-t-xl shrink-0">
-                <div class="flex items-center gap-3">
-                  <span class="font-bold text-gray-800 text-[16px] flex items-center">
-                    {{ activeTab === 'phase' ? currentPhaseSelection?.title : selectedBusinessType + ' 日志明细' }}
-                  </span>
-                  
-                  <span 
-                    v-if="activeTab === 'phase'"
-                    class="font-bold text-[14px]" 
-                    :class="currentPhaseSelection?.textColorClass"
-                  >
-                    {{ currentPhaseSelection?.statusText }}
-                  </span>
-                </div>
-                
+              <div class="px-4 pt-3 pb-2 flex justify-end shrink-0">
                 <div class="text-[13px] text-gray-500 font-mono">
                   共 {{ rightSideLogs.length }} 条明细记录
                 </div>
               </div>
 
-              <div class="flex-1 overflow-auto p-4">
-                <el-table :data="rightSideLogs" style="width: 100%" stripe border>
-                  <el-table-column type="expand">
+              <div class="flex-1 overflow-x-hidden overflow-y-auto px-4 pb-4">
+                <el-table ref="logTableRef" :data="rightSideLogs" row-key="id" fit :show-header="true" style="width: 100%; table-layout: fixed" stripe border>
+                  <el-table-column type="expand" width="42">
+                    <template #header>
+                      <div class="flex items-center justify-center w-full">
+                        <el-button type="primary" link @click.stop="toggleAllLogs()">
+                          <el-icon size="16"><component :is="allExpanded ? 'CaretBottom' : 'CaretRight'" /></el-icon>
+                        </el-button>
+                      </div>
+                    </template>
                     <template #default="{ row }">
                       <div class="px-8 py-3 bg-gray-50">
                         <div v-if="row.json" class="json-container">
-                          <el-button type="primary" size="small" class="absolute right-4 top-4" link @click="copyJson(row.json)">
-                            <el-icon class="mr-1"><CopyDocument /></el-icon> 复制内容
-                          </el-button>
+                          <div class="absolute right-4 top-4 flex items-center gap-3">
+                            <el-button type="primary" size="small" link @click="copyJson(row.json)">
+                              <el-icon class="mr-1"><CopyDocument /></el-icon>复制
+                            </el-button>
+                            <el-button type="primary" size="small" link @click="openJsonDialog(row)">
+                              <el-icon class="mr-1"><FullScreen /></el-icon>展开
+                            </el-button>
+                          </div>
                           <pre>{{ row.json }}</pre>
                         </div>
                         <div v-else class="text-center py-6 text-gray-400 italic text-[13px]">
@@ -220,37 +262,48 @@
                     </template>
                   </el-table-column>
                   
-                  <el-table-column prop="time" label="时间" width="165">
+                  <el-table-column prop="time" label="时间" width="100">
                     <template #default="{ row }">
-                      <div class="font-mono text-[12px] text-gray-500 flex flex-col">
-                        <span>{{ row.time.split(' ')[0] }}</span>
-                        <span class="text-gray-800 font-bold">{{ row.time.split(' ')[1] }}</span>
+                      <div class="font-mono flex flex-col leading-[1.15]">
+                        <span class="text-[13px] text-gray-500">{{ row.time.split(' ')[0] }}</span>
+                        <span class="mt-1 text-[14px] text-gray-800">{{ row.time.split(' ')[1] }}</span>
                       </div>
                     </template>
                   </el-table-column>
                   
-                  <el-table-column v-if="activeTab === 'phase'" label="阶段 (Phase) / 执行内容" min-width="320">
+                  <el-table-column v-if="activeTab === 'phase'" label="阶段" width="140">
                     <template #default="{ row }">
                       <div class="flex flex-col">
-                        <span class="text-[12px] text-gray-400 font-mono mb-0.5">{{ row.phaseName }} ({{ row.phase }})</span>
-                        <span :class="row.isError ? 'text-red-500 font-bold' : 'text-gray-800'">{{ row.content }}</span>
+                        <span class="text-gray-800 font-semibold">{{ row.phaseName }}</span>
+                        <span class="text-[12px] text-gray-400 font-mono mt-0.5">{{ row.phase }}</span>
                       </div>
                     </template>
                   </el-table-column>
 
-                  <el-table-column v-else label="内容" min-width="420">
+                  <el-table-column v-if="activeTab === 'phase'" label="结果">
                     <template #default="{ row }">
-                      <span :class="row.isError ? 'text-red-500 font-bold' : 'text-gray-800'">{{ row.content }}</span>
+                      <el-tooltip v-if="shouldShowTooltip(buildRowResult(row), 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="buildRowResult(row)">
+                        <div class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
+                      </el-tooltip>
+                      <div v-else class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
                     </template>
                   </el-table-column>
-                  
-                  <el-table-column v-if="activeTab === 'phase'" prop="result" label="执行结果" width="180">
-                     <template #default="{ row }">
-                       <span :class="row.isError ? 'text-red-600 font-bold' : 'text-emerald-600'">{{ row.result }}</span>
-                     </template>
+
+                  <el-table-column v-else label="结果">
+                    <template #default="{ row }">
+                      <el-tooltip v-if="shouldShowTooltip(buildRowResult(row), 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="buildRowResult(row)">
+                        <div class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
+                      </el-tooltip>
+                      <div v-else class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
+                    </template>
                   </el-table-column>
-                  
-                  <el-table-column v-if="activeTab === 'phase'" prop="operator" label="操作人" width="90"></el-table-column>
+
+                  <el-table-column v-if="activeTab === 'phase'" prop="operator" label="操作人" width="68">
+                    <template #default="{ row }">
+                      <span class="text-[12px] text-gray-600 whitespace-nowrap">{{ row.operator }}</span>
+                    </template>
+                  </el-table-column>
+
                 </el-table>
               </div>
             </div>
@@ -259,6 +312,25 @@
         </div>
       </div>
     </el-drawer>
+
+    <el-dialog v-model="jsonDialogVisible" width="960px" top="6vh" append-to-body destroy-on-close>
+      <template #header>
+        <div class="flex items-center justify-between w-full pr-8">
+          <span class="font-semibold text-[16px] text-slate-900">日志报文详情</span>
+          <div class="flex items-center gap-3">
+            <el-button type="primary" link @click="copyJson(jsonDialogContent)">
+              <el-icon class="mr-1"><CopyDocument /></el-icon>复制
+            </el-button>
+            <el-button type="primary" link @click="jsonDialogVisible = false">
+              <el-icon class="mr-1"><Fold /></el-icon>收起
+            </el-button>
+          </div>
+        </div>
+      </template>
+      <div class="json-container !m-0 min-h-[420px] max-h-[70vh] overflow-auto custom-scroll">
+        <pre>{{ jsonDialogContent || '暂无可展示报文内容' }}</pre>
+      </div>
+    </el-dialog>
   </div>
 
   <script>
@@ -269,6 +341,10 @@
         const activeTab = ref('phase');
         const selectedPhaseId = ref('');
         const selectedBusinessType = ref('试单');
+        const jsonDialogVisible = ref(false);
+        const jsonDialogContent = ref('');
+        const logTableRef = ref(null);
+        const allExpanded = ref(false);
 
         const orderSummary = ref({
           systemOrderNo: 'HTL202604228899',
@@ -279,14 +355,15 @@
           roomAggregateId: 'RM-AI-330106-887231',
           checkInDate: '2026-04-28',
           checkOutDate: '2026-04-30',
-          nights: 2,
+          nights: 1,
+          rooms: 2,
           breakfast: '双早',
-          rpCode: 'RP01'
+          rpCode: 'PR01'
         });
 
         // ==== 完整数据流 ====
         const rawLogs = [
-          { id: 1, time: '2026-04-22 16:29:31', phase: 'VALIDATE', businessType: '试单', phaseName: '可定检查', content: '试单成功', result: '试单成功', operator: '系统', isError: false },
+          { id: 1, time: '2026-04-22 16:29:31', phase: 'VALIDATE', businessType: '试单', phaseName: 'VALIDATE', content: '可订检查', result: '试单成功', operator: '系统', isError: false },
           { id: 2, time: '2026-04-22 16:29:51', phase: 'ORDER_CREATE', businessType: '下单', phaseName: '创建订单', content: '下单完成', result: '下单完成', operator: '系统', isError: false },
           { id: 3, time: '2026-04-22 16:29:53', phase: 'PURCHASE_INQUIRY', businessType: '采购', phaseName: '采购询价', content: '询价返回成功', result: '询价返回成功', operator: '系统', isError: false },
           
@@ -298,7 +375,7 @@
           { id: 9, time: '2026-04-22 16:30:40', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', phaseName: '采购任务轮询', content: 'PTG采购单查询成功', result: '(1658111228473591): UNPAID', operator: '系统', isError: false },
           { id: 10, time: '2026-04-22 16:31:09', phase: 'PURCHASE_TASK_PAY', businessType: '采购', phaseName: '采购任务支付', content: 'PTG采购单选择设备失败', result: '已知业务异常[11181000]: 暂无可用支付设备', operator: '系统', isError: true },
           { id: 11, time: '2026-04-22 16:31:13', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', phaseName: '采购任务轮询', content: 'PTG采购单查询成功', result: '(1658111228473591): UNPAID', operator: '系统', isError: false },
-          { id: 12, time: '2026-04-22 16:31:44', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', phaseName: '采购任务轮询', content: 'PTG采购单查询成功', result: '(1658111228473591): UNPAID', operator: '系统', isError: false },
+          { id: 12, time: '2026-04-22 16:31:44', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', phaseName: '采购任务轮询', content: 'PTG采购单查询成功', result: 'PTG采购单取消请求结果(網絡異常，請稍後再試。|網絡異常，請稍後再試。|網絡異常，請稍後再試。|網絡異常，請稍後再試。|網絡異常，請稍後再試。|網絡異常，請稍後再試。|訂單已取消|網絡異常，請稍後再試。', operator: '系统', isError: false },
           
           { id: 13, time: '2026-04-22 16:31:57', phase: 'ORDER_AFTERSALE_CREATE', businessType: '售后/取消', phaseName: '创建售后任务', content: '创建售后任务成功', result: '创建售后任务成功', operator: '系统', isError: false },
           { id: 14, time: '2026-04-22 16:31:57', phase: 'ORDER_CANCEL', businessType: '售后/取消', phaseName: '订单取消', content: '订单取消', result: '订单取消', operator: '系统', isError: false },
@@ -306,7 +383,7 @@
           
           { id: 16, time: '2026-04-22 16:31:57', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消Start:USER_CANCEL', result: '行程冲突/行程变更', operator: '系统', isError: false },
           { id: 17, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消成功', result: '(1658111228473591)', operator: '系统', isError: false },
-          { id: 18, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消请求结果(网络异常)', result: '网络异常，请稍后再试', operator: '系统', isError: true },
+          { id: 18, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消请求结果(网络异常)', result: '网络异常，请稍后再试；供应商接口返回超时；自动重试三次后仍未恢复；建议人工复核支付链路、设备状态、供应商侧取消状态以及回调补偿任务执行情况。', operator: '系统', isError: true },
           { id: 19, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: '取消成功', result: '1658111228473591', operator: '系统', isError: false },
           
           { id: 20, time: '2026-04-22 16:32:12', phase: 'ORDER_REFUND', businessType: '售后/取消', phaseName: '订单退款', content: '已退款', result: '已退款', operator: '系统', isError: false },
@@ -324,6 +401,16 @@
         ];
 
         const totalLogsCount = computed(() => rawLogs.length);
+
+        const buildRowResult = (row) => [row.content, row.result].filter(Boolean).join(' / ');
+        const hasRiskKeyword = (text = '') => /失败|异常|错误/.test(text);
+        const getResultClass = (text = '', isError = false) => hasRiskKeyword(text) || isError ? 'text-red-600 font-bold' : 'text-gray-800';
+        const shouldShowTooltip = (text = '', mode = 'multi') => {
+          if (!text) return false;
+          const length = String(text).length;
+          if (mode === 'phase') return length > 20;
+          return length > 48 || String(text).includes('\n');
+        };
 
         // ==== 核心：恢复实心图标逻辑 (SuccessFilled, CircleCloseFilled) ====
         const applyThemeColor = (batch) => {
@@ -380,6 +467,8 @@
                   currentBatch.count++;
                   currentBatch.time = log.time;
                   currentBatch.latestPhaseName = log.phaseName;
+                  currentBatch.displayContent = log.content;
+                  currentBatch.latestResult = log.result;
                   if (log.isError) currentBatch.hasError = true;
               } else {
                   if (currentBatch) {
@@ -393,6 +482,8 @@
                     time: log.time, count: 1, hasError: log.isError,
                     operator: log.operator,
                     latestPhaseName: log.phaseName,
+                    displayContent: log.content,
+                    latestResult: log.result,
                     isInterrupted: false,
                     logs: [log]
                   };
@@ -406,6 +497,8 @@
                   currentBatch.count++;
                   currentBatch.time = log.time;
                   currentBatch.latestPhaseName = log.phaseName;
+                  currentBatch.displayContent = log.content;
+                  currentBatch.latestResult = log.result;
                   if (log.isError) currentBatch.hasError = true;
                   if (extractedId && currentBatch.taskId === '未知单号') currentBatch.taskId = extractedId;
               } else {
@@ -420,6 +513,8 @@
                     title: '采购任务', 
                     time: log.time, count: 1, hasError: log.isError,
                     latestPhaseName: log.phaseName,
+                    displayContent: log.content,
+                    latestResult: log.result,
                     isInterrupted: false,
                     logs: [log]
                   };
@@ -434,6 +529,14 @@
           blocks.forEach(block => {
              const ops = [...new Set(block.logs.map(l => l.operator))];
              block.operator = ops.find(o => o !== '系统') || '系统';
+             if (block.type === 'BATCH') {
+               block.displayContent = block.logs[block.logs.length - 1]?.phaseName || block.displayContent;
+               block.displayPhase = block.logs[block.logs.length - 1]?.phase || block.latestPhaseName;
+             } else {
+               block.displayPhase = block.subtitle;
+             }
+             block.secondLineResult = block.latestResult;
+             block.secondLineResultClass = getResultClass(block.secondLineResult, block.hasError);
           });
 
           return blocks;
@@ -466,16 +569,57 @@
           }
         }, { immediate: true });
 
+        watch([activeTab, rightSideLogs], () => {
+          allExpanded.value = false;
+        });
+
         const copyJson = (text) => {
+          if (!text) {
+            ElementPlus.ElMessage.warning('暂无可复制内容');
+            return;
+          }
           navigator.clipboard.writeText(text);
           ElementPlus.ElMessage.success('报文内容已成功复制');
+        };
+
+        const openJsonDialog = (row) => {
+          jsonDialogContent.value = row?.json || '';
+          jsonDialogVisible.value = true;
+        };
+
+        const openJsonDialogByRows = (rows) => {
+          const content = (rows || []).filter(row => row.json).map(row => `[${row.time}] ${row.phaseName || row.businessType || '日志'}\n${row.json}`).join('\n\n------------------------------\n\n');
+          jsonDialogContent.value = content || '暂无可展示报文内容';
+          jsonDialogVisible.value = true;
+        };
+
+        const copyAllExpandableJson = () => {
+          const content = rightSideLogs.value.filter(row => row.json).map(row => `[${row.time}] ${row.phaseName || row.businessType || '日志'}\n${row.json}`).join('\n\n------------------------------\n\n');
+          copyJson(content);
+        };
+
+        const expandAllLogs = () => {
+          rightSideLogs.value.forEach(row => logTableRef.value?.toggleRowExpansion(row, true));
+          allExpanded.value = true;
+        };
+
+        const collapseAllLogs = () => {
+          rightSideLogs.value.forEach(row => logTableRef.value?.toggleRowExpansion(row, false));
+          allExpanded.value = false;
+        };
+
+        const toggleAllLogs = () => {
+          if (allExpanded.value) collapseAllLogs();
+          else expandAllLogs();
         };
 
         return {
           visible, activeTab, totalLogsCount, orderSummary,
           selectedPhaseId, phaseBlocks, currentPhaseSelection,
           selectedBusinessType, businessTypes, 
-          rightSideLogs, copyJson
+          rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip,
+          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows, copyAllExpandableJson,
+          logTableRef, allExpanded, expandAllLogs, collapseAllLogs, toggleAllLogs
         };
       }
     });
