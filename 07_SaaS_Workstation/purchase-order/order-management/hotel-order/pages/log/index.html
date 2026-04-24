@@ -14,13 +14,13 @@
     
     .el-table, .el-tabs__item, .el-button, .el-timeline-item__content { font-family: "PingFang SC", sans-serif !important; font-size: 14px !important; }
     
-    .el-drawer__header { margin-bottom: 0 !important; padding: 20px 24px; border-bottom: 1px solid #E5E7EB; background: #FFF; }
+    .el-drawer__header { margin-bottom: 0 !important; padding: 0 24px !important; height: 56px; border-bottom: 1px solid #E5E7EB; background: #FFF; display: flex; align-items: center; }
     .el-drawer__body { padding: 0 !important; background-color: #F8FAFC; }
 
     .drawer-title { font-family: "PingFang SC", sans-serif; font-weight: 600; font-size: 20px; color: #1E293B; }
     .summary-bar { background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); }
     .summary-label { color: #64748B; font-size: 11px; line-height: 1; }
-    .summary-value { color: #0F172A; font-size: 13px; font-weight: 600; line-height: 1.25; }
+    .summary-value { color: #0F172A; font-size: 13px; font-weight: 400; line-height: 1.25; }
     .summary-chip { background: rgba(255,255,255,0.82); border: 1px solid #E2E8F0; }
     .summary-id-icon { color: #94A3B8; cursor: pointer; transition: color 0.2s; }
     .summary-id-icon:hover { color: #475569; }
@@ -82,6 +82,37 @@
     .el-scrollbar__wrap {
       overflow-x: hidden !important;
     }
+
+    .hit-row > td.el-table__cell {
+      background: #EFF6FF !important;
+    }
+
+    .el-dialog__body {
+      max-height: calc(88vh - 72px);
+      overflow: hidden;
+    }
+
+    .expand-toggle-btn {
+      min-height: auto !important;
+      padding: 0 !important;
+      color: #64748B !important;
+      background: transparent !important;
+      border: none !important;
+    }
+
+    .expand-toggle-btn:hover {
+      color: #334155 !important;
+      background: transparent !important;
+    }
+
+    .el-table__expand-icon {
+      color: #64748B !important;
+      font-size: 14px !important;
+    }
+
+    .el-table__expand-icon:hover {
+      color: #334155 !important;
+    }
   </style>
 </head>
 <body>
@@ -94,7 +125,7 @@
 
     <el-drawer v-model="visible" size="1400px" destroy-on-close>
       <template #header>
-        <div class="drawer-title">订单日志</div>
+        <div class="drawer-title leading-none">订单日志</div>
       </template>
 
       <div class="flex flex-col h-full bg-white">
@@ -153,8 +184,8 @@
           
           <div v-if="activeTab === 'phase'" class="w-[600px] border-r bg-white overflow-y-auto custom-scroll p-4 shrink-0 flex-none">
             <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-3 flex justify-between items-center leading-none">
-              <span>业务流转时间轴</span>
-              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded leading-none">共 {{ totalLogsCount }} 条底层日志</span>
+              <span>阶段日志时间轴</span>
+              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded leading-none">共 {{ totalLogsCount }} 条日志</span>
             </div>
             
             <el-timeline>
@@ -180,6 +211,9 @@
                         <span class="font-bold text-[14px] text-gray-900 truncate shrink-0 max-w-[208px]">{{ block.displayPhase }}</span>
                       </el-tooltip>
                       <span v-else class="font-bold text-[14px] text-gray-900 truncate shrink-0 max-w-[208px]">{{ block.displayPhase }}</span>
+                      <el-tooltip v-if="block.count > 1" effect="dark" popper-class="dark-tooltip" placement="top" content="这是当前最新命中的阶段，后续阶段变化时会自动更新。">
+                        <span class="ml-1 shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-semibold text-blue-600 border border-blue-200 leading-none">当前命中</span>
+                      </el-tooltip>
                     </div>
                     <div class="text-[12.5px] text-gray-500 flex items-center gap-1 justify-end whitespace-nowrap self-center text-right">
                       <el-icon><Avatar /></el-icon> {{ block.operator }}
@@ -233,12 +267,12 @@
               </div>
 
               <div class="flex-1 overflow-x-hidden overflow-y-auto px-4 pb-4">
-                <el-table ref="logTableRef" :data="rightSideLogs" row-key="id" fit :show-header="true" style="width: 100%; table-layout: fixed" stripe border>
+                <el-table ref="logTableRef" :data="rightSideLogs" row-key="id" fit :show-header="true" :row-class-name="getRowClassName" style="width: 100%; table-layout: fixed" border>
                   <el-table-column type="expand" width="42">
                     <template #header>
                       <div class="flex items-center justify-center w-full">
-                        <el-button type="primary" link @click.stop="toggleAllLogs()">
-                          <el-icon size="16"><component :is="allExpanded ? 'CaretBottom' : 'CaretRight'" /></el-icon>
+                        <el-button class="expand-toggle-btn" link @click.stop="toggleAllLogs()">
+                          <el-icon size="14"><component :is="allExpanded ? 'CaretBottom' : 'CaretRight'" /></el-icon>
                         </el-button>
                       </div>
                     </template>
@@ -313,7 +347,7 @@
       </div>
     </el-drawer>
 
-    <el-dialog v-model="jsonDialogVisible" width="960px" top="6vh" append-to-body destroy-on-close>
+    <el-dialog v-model="jsonDialogVisible" width="1280px" top="3vh" append-to-body destroy-on-close>
       <template #header>
         <div class="flex items-center justify-between w-full pr-8">
           <span class="font-semibold text-[16px] text-slate-900">日志报文详情</span>
@@ -327,7 +361,7 @@
           </div>
         </div>
       </template>
-      <div class="json-container !m-0 min-h-[420px] max-h-[70vh] overflow-auto custom-scroll">
+      <div class="json-container !m-0 min-h-[520px] max-h-[82vh] overflow-auto custom-scroll">
         <pre>{{ jsonDialogContent || '暂无可展示报文内容' }}</pre>
       </div>
     </el-dialog>
@@ -383,7 +417,46 @@
           
           { id: 16, time: '2026-04-22 16:31:57', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消Start:USER_CANCEL', result: '行程冲突/行程变更', operator: '系统', isError: false },
           { id: 17, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消成功', result: '(1658111228473591)', operator: '系统', isError: false },
-          { id: 18, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消请求结果(网络异常)', result: '网络异常，请稍后再试；供应商接口返回超时；自动重试三次后仍未恢复；建议人工复核支付链路、设备状态、供应商侧取消状态以及回调补偿任务执行情况。', operator: '系统', isError: true },
+          { id: 18, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: 'PTG采购单取消请求结果(网络异常)', result: '网络异常，请稍后再试；供应商接口返回超时；自动重试三次后仍未恢复；建议人工复核支付链路、设备状态、供应商侧取消状态以及回调补偿任务执行情况。', operator: '系统', isError: true, json: `{
+  "taskId": "1658111228473591",
+  "phase": "PURCHASE_TASK_CANCEL",
+  "status": "FAILED",
+  "retryTimes": 3,
+  "traceId": "TRACE-20260422-163205-00018",
+  "request": {
+    "source": "hotel-order-center",
+    "operator": "system",
+    "reason": "USER_CANCEL",
+    "hotelId": "H-AI-330106-00028471",
+    "roomId": "RM-AI-330106-887231",
+    "orderNo": "HTL202604228899",
+    "supplierOrderNo": "PTG-1658111228473591",
+    "checkInDate": "2026-04-28",
+    "checkOutDate": "2026-04-30",
+    "guestList": [
+      { "name": "张三", "mobile": "13800000001" },
+      { "name": "李四", "mobile": "13800000002" }
+    ]
+  },
+  "responseTimeline": [
+    { "time": "2026-04-22 16:32:01", "node": "cancel-init", "message": "已发起取消请求" },
+    { "time": "2026-04-22 16:32:02", "node": "supplier-gateway", "message": "供应商网关超时，准备重试" },
+    { "time": "2026-04-22 16:32:03", "node": "retry-1", "message": "第1次重试失败" },
+    { "time": "2026-04-22 16:32:04", "node": "retry-2", "message": "第2次重试失败" },
+    { "time": "2026-04-22 16:32:05", "node": "retry-3", "message": "第3次重试失败，进入人工复核" }
+  ],
+  "diagnosis": {
+    "network": "upstream timeout",
+    "deviceStatus": "UNKNOWN",
+    "callbackStatus": "PENDING",
+    "suggestion": [
+      "复核供应商侧取消结果",
+      "检查支付设备是否占用",
+      "检查回调补偿任务是否已执行",
+      "如供应商已取消则发起状态回刷"
+    ]
+  }
+}` },
           { id: 19, time: '2026-04-22 16:32:05', phase: 'PURCHASE_TASK_CANCEL', businessType: '采购', phaseName: '采购任务取消', content: '取消成功', result: '1658111228473591', operator: '系统', isError: false },
           
           { id: 20, time: '2026-04-22 16:32:12', phase: 'ORDER_REFUND', businessType: '售后/取消', phaseName: '订单退款', content: '已退款', result: '已退款', operator: '系统', isError: false },
@@ -410,6 +483,11 @@
           const length = String(text).length;
           if (mode === 'phase') return length > 20;
           return length > 48 || String(text).includes('\n');
+        };
+
+        const getRowClassName = ({ row }) => {
+          const latestRow = rightSideLogs.value[rightSideLogs.value.length - 1];
+          return latestRow && latestRow.id === row.id ? 'hit-row' : '';
         };
 
         // ==== 核心：恢复实心图标逻辑 (SuccessFilled, CircleCloseFilled) ====
@@ -617,7 +695,7 @@
           visible, activeTab, totalLogsCount, orderSummary,
           selectedPhaseId, phaseBlocks, currentPhaseSelection,
           selectedBusinessType, businessTypes, 
-          rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip,
+          rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip, getRowClassName,
           jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows, copyAllExpandableJson,
           logTableRef, allExpanded, expandAllLogs, collapseAllLogs, toggleAllLogs
         };
