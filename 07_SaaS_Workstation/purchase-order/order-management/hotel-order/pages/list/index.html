@@ -4,9 +4,369 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>酒店订单列表页原型</title>
+  <style>
+    :root {
+      --color-primary: #165dff;
+      --color-primary-hover: #4080ff;
+      --color-success: #00b42a;
+      --color-warning: #ff7d00;
+      --color-danger: #f53f3f;
+      --color-text-1: #1d2129;
+      --color-text-2: #4e5969;
+      --color-text-3: #86909c;
+      --color-text-4: #c9cdd4;
+      --color-border-1: #e5e6eb;
+      --color-border-2: #f2f3f5;
+      --color-fill-1: #f7f8fa;
+      --color-bg-1: #ffffff;
+      --color-bg-2: #f2f3f5;
+      --color-bg-blue: #edf3ff;
+      --shadow-card: 0 8px 24px rgba(29, 33, 41, 0.06);
+      --radius-small: 6px;
+      --radius-large: 14px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--color-bg-2); font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--color-text-1); }
+    button, input, select { font-family: inherit; }
+    .layout { min-height: 100vh; display: flex; flex-direction: column; }
+    .topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--color-border-1); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: sticky; top: 0; z-index: 50; }
+    .topbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .topbar-title { font-size: 16px; font-weight: 600; white-space: nowrap; }
+    .breadcrumb { display: flex; align-items: center; gap: 8px; color: var(--color-text-3); font-size: 14px; white-space: nowrap; }
+    .avatar-chip { display: inline-flex; align-items: center; gap: 10px; padding: 6px 10px 6px 6px; border-radius: 999px; background: var(--color-fill-1); border: 1px solid var(--color-border-2); }
+    .avatar-circle { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #165dff, #36cfc9); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
+    .avatar-name { color: var(--color-text-2); font-size: 14px; font-weight: 500; }
+    .main { min-height: calc(100vh - 56px); display: flex; }
+    .sidebar { width: 232px; flex-shrink: 0; background: #fff; border-right: 1px solid var(--color-border-1); padding: 16px 12px; }
+    .menu-group-title { padding: 8px 12px; color: var(--color-text-3); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .menu-tree, .menu-children { display: flex; flex-direction: column; gap: 4px; }
+    .menu-children { padding-left: 12px; }
+    .menu-item { display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: var(--color-text-2); font-size: 14px; font-weight: 500; }
+    .menu-item.parent { justify-content: space-between; }
+    .menu-item.active { background: var(--color-bg-blue); color: var(--color-primary); font-weight: 600; }
+    .content { flex: 1; min-width: 0; padding: 20px; }
+    .container { width: 100%; }
+    .card { background: var(--color-bg-1); border: 1px solid var(--color-border-2); border-radius: var(--radius-large); box-shadow: var(--shadow-card); }
+    .toolbar-card { padding: 16px; margin-bottom: 16px; }
+    .toolbar-main { display: flex; align-items: stretch; gap: 16px; }
+    .form-grid { flex: 1; display: grid; grid-template-columns: minmax(180px,1fr) minmax(180px,1fr) minmax(220px,1.15fr) minmax(220px,1.15fr); gap: 14px; align-items: end; }
+    .field { min-width: 0; }
+    .field-label { display: none; }
+    .field-control, .range-control { width: 100%; min-height: 36px; border: 1px solid var(--color-border-1); border-radius: var(--radius-small); background: #fff; color: var(--color-text-1); padding: 0 12px; outline: none; }
+    .field-control:focus, .range-control:focus, .date-select:focus, .inline-field:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.1); }
+    .field-control::placeholder { color: var(--color-text-4); }
+    .inline-field { display: flex; align-items: center; min-height: 36px; border: 1px solid var(--color-border-1); border-radius: var(--radius-small); background: #fff; padding: 0 10px; gap: 10px; }
+    .field-prefix { flex: 0 0 auto; color: var(--color-text-3); font-size: 14px; white-space: nowrap; }
+    .field-split { width: 1px; height: 16px; background: var(--color-border-1); flex-shrink: 0; }
+    .inline-field .field-control,
+    .inline-field .date-select { border: 0; min-height: 34px; padding: 0; background: transparent; box-shadow: none; }
+    .inline-field .field-control:focus,
+    .inline-field .date-select:focus { box-shadow: none; }
+    .inline-field .field-control { flex: 1; min-width: 0; }
+    .composite-control { display: flex; align-items: center; gap: 4px; min-width: 0; width: 100%; }
+    .date-select { min-width: 98px; color: var(--color-text-2); outline: none; }
+    .field-time .date-select { flex: 0 0 88px; min-width: 88px; font-size: 14px; }
+    .field-time .field-split { margin: 0 1px; }
+    .range-control { display: flex; align-items: center; gap: 8px; padding: 0; border: 0; min-height: auto; background: transparent; }
+    .field-time .range-control { flex: 1; min-width: 0; }
+    .range-control input { border: 0; outline: none; min-width: 0; width: 100%; flex: 1; color: var(--color-text-1); background: transparent; padding: 0; }
+    .field-time .range-control input { flex: 1 1 96px; }
+    .range-sep { color: var(--color-text-4); font-size: 12px; }
+    .toolbar-actions { margin-top: 0; display: flex; flex: 0 0 100px; padding-left: 16px; border-left: 1px solid var(--color-border-1); }
+    .field-time { margin-right: 0; }
+    .field-city { width: 100%; max-width: none; margin-left: 0; justify-self: stretch; }
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+    .filter-btn-group { width: 100%; flex-direction: column; align-items: stretch; justify-content: space-between; flex-wrap: nowrap; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 88px; height: 36px; padding: 0 16px; border-radius: var(--radius-small); border: 1px solid var(--color-border-1); background: #fff; color: var(--color-text-2); font-size: 14px; cursor: pointer; }
+    .btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .btn-primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    .btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: #fff; }
+    .btn-outline-primary { color: var(--color-primary); border-color: rgba(22, 93, 255, 0.35); background: rgba(22, 93, 255, 0.04); }
+    .btn-outline-danger { color: var(--color-danger); border-color: rgba(245, 63, 63, 0.35); background: rgba(245, 63, 63, 0.04); }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .tabs-card { margin-bottom: 16px; padding: 0 16px; }
+    .tabs-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .tabs { display: flex; gap: 28px; overflow-x: auto; min-width: 0; flex: 1; }
+    .tab { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 56px; padding: 0; border: 0; background: transparent; color: var(--color-text-2); font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
+    .tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 999px 999px 0 0; background: transparent; }
+    .tab.active { color: var(--color-primary); font-weight: 600; }
+    .tab.active::after { background: var(--color-primary); }
+    .badge-dot { display: inline-flex; align-items: center; justify-content: center; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--color-danger); color: #fff; font-size: 12px; font-weight: 600; }
+    .list-card { padding: 12px; }
+    .list-meta { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 8px; color: var(--color-text-2); font-size: 14px; gap: 12px; }
+    .list-count { font-weight: 500; }
+    .list-sort { display: inline-flex; align-items: center; justify-content: flex-start; }
+    .list-sort-select { width: 120px; min-width: 120px; height: 30px; padding: 0 20px 0 10px; border: 1px solid var(--color-border-1); border-radius: var(--radius-small); background: var(--color-fill-1); color: var(--color-text-2); font-size: 12px; text-align: center; text-align-last: center; outline: none; }
+    .list-sort-select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.1); }
+    .summary-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: var(--color-fill-1); color: var(--color-text-2); font-size: 12px; line-height: 1.25; }
+    .order-item { border: 1px solid var(--color-border-1); border-radius: 12px; background: #fff; padding: 10px 16px; }
+    .order-item + .order-item { margin-top: 12px; }
+    .order-top { display: grid; grid-template-columns: minmax(420px,1.38fr) minmax(460px,1.82fr) minmax(210px,.82fr) minmax(220px,.86fr); gap: 12px; align-items: start; }
+    .section-title { margin-bottom: 6px; color: var(--color-text-3); font-size: 12px; font-weight: 500; }
+    .order-title-line { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+    .source-line { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .channel-badge { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; color: #fff; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .channel-feizhu { background: linear-gradient(135deg, #ff7d00, #ffb400); }
+    .channel-douyin { background: linear-gradient(135deg, #111827, #4b5563); }
+    .channel-meituan { background: linear-gradient(135deg, #ffb400, #ff7d00); }
+    .channel-xiecheng { background: linear-gradient(135deg, #165dff, #36cfc9); }
+    .order-main { min-width: 0; }
+    .id-row { display: flex; flex-direction: column; gap: 4px; min-width: 0; margin-bottom: 6px; }
+    .id-cell { display: flex; align-items: center; gap: 8px; min-width: 0; flex-wrap: nowrap; }
+    .mono { font-family: "JetBrains Mono", Consolas, monospace; white-space: nowrap; font-size: 14px; }
+    .copy-btn { border: 0; background: transparent; color: var(--color-text-3); cursor: pointer; padding: 0; }
+    .copy-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border-1); border-radius: 4px; font-size: 10px; background: #fff; }
+    .copy-btn:hover .copy-icon { border-color: rgba(22, 93, 255, 0.35); background: rgba(22, 93, 255, 0.06); }
+    .hotel-line { display: flex; align-items: center; gap: 8px; min-width: 0; margin-bottom: 4px; flex-wrap: wrap; }
+    .hotel-name { font-size: 15px; font-weight: 600; color: var(--color-text-1); display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
+    .id-info-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 18px; padding: 0 4px; border-radius: 4px; border: 1px solid var(--color-border-1); color: var(--color-text-3); font-size: 10px; font-weight: 600; background: #fff; flex-shrink: 0; line-height: 1; }
+    .text-ellipsis { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
+    .sub-line { color: var(--color-text-2); font-size: 14px; line-height: 1.35; }
+    .sub-line strong { color: var(--color-text-3); font-weight: 500; }
+    .sub-line-value { color: var(--color-text-1); font-weight: 500; }
+    .pair-line { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; row-gap: 6px; align-items: start; }
+    .pair-item { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: start; min-width: 0; }
+    .pair-item strong { width: auto; flex: initial; }
+    .time-list, .action-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .time-stack, .status-stack, .amount-stack { display: flex; flex-direction: column; gap: 6px; }
+    .time-item { display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-height: 22px; }
+    .metric, .status-item { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; column-gap: 10px; row-gap: 6px; min-height: 24px; }
+    .sale-mode-row { display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-height: 24px; }
+    .time-label, .status-name, .metric-label, .sale-mode-label { width: 72px; flex: 0 0 72px; color: var(--color-text-3); font-size: 12px; line-height: 24px; }
+    .time-value { color: var(--color-text-1); font-size: 14px; line-height: 1.35; text-align: left; word-break: break-all; }
+
+    .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border-radius: 999px; border: 1px solid transparent; font-size: 12px; line-height: 22px; white-space: nowrap; }
+    .tag-blue { background: rgba(22, 93, 255, 0.08); color: var(--color-primary); border-color: rgba(22, 93, 255, 0.18); }
+    .tag-green { background: rgba(0, 180, 42, 0.08); color: var(--color-success); border-color: rgba(0, 180, 42, 0.18); }
+    .tag-orange { background: rgba(255, 125, 0, 0.1); color: var(--color-warning); border-color: rgba(255, 125, 0, 0.2); }
+    .tag-red { background: rgba(245, 63, 63, 0.08); color: var(--color-danger); border-color: rgba(245, 63, 63, 0.18); }
+    .tag-purple { background: rgba(114, 46, 209, 0.08); color: #722ed1; border-color: rgba(114, 46, 209, 0.16); }
+    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); border-color: var(--color-border-1); }
+    .status-tags { display: inline-flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 6px; min-width: 0; max-width: 100%; }
+    .status-tags-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; width: auto; max-width: 100%; }
+    .status-tags-row .tag, .status-tags > .tag { width: auto; max-width: 100%; flex: 0 0 auto; }
+        .metric { padding: 0; border-radius: 0; background: transparent; }
+    .metric-value { font-size: 16px; font-weight: 700; color: var(--color-text-1); display: inline-flex; align-items: center; gap: 8px; line-height: 24px; text-align: left; }
+    .metric-danger .metric-value { color: var(--color-danger); }
+    .metric-warning .metric-value { color: var(--color-warning); }
+    .sale-mode-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; width: auto; max-width: max-content; height: 20px; padding: 0 8px; border-radius: 999px; font-size: 12px; font-weight: 600; background: rgba(22, 93, 255, 0.08); color: var(--color-primary); flex: 0 0 auto; }
+    .timer-label { display: none; }
+    .timer-value { font-family: "JetBrains Mono", Consolas, monospace; font-size: 22px; font-weight: 700; letter-spacing: .5px; line-height: 1.1; color: var(--color-text-1); }
+
+        .timer-safe .timer-value { color: #00a870; }
+        .timer-warning .timer-value { color: var(--color-warning); }
+        .timer-danger .timer-value, .timer-timeout .timer-value { color: var(--color-danger); }
+        .timer-result { color: var(--color-text-1); font-weight: 600; font-size: 14px; line-height: 1.35; }
+
+
+    .order-bottom { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--color-border-1); display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .pagination { margin-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 0 4px; color: var(--color-text-2); font-size: 14px; }
+    .pagination-controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .page-number { min-width: 32px; height: 32px; padding: 0 10px; }
+    .page-number.active { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    .empty-state { padding: 60px 20px; text-align: center; color: var(--color-text-3); }
+    .empty-title { margin: 0 0 8px; font-size: 18px; color: var(--color-text-2); font-weight: 600; }
+    .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-12px); min-width: 220px; max-width: 520px; padding: 12px 16px; border-radius: 10px; background: rgba(29, 33, 41, 0.92); color: #fff; font-size: 14px; opacity: 0; pointer-events: none; transition: all 0.2s ease; z-index: 1000; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .modal-mask { position: fixed; inset: 0; background: rgba(29, 33, 41, 0.45); display: none; align-items: center; justify-content: center; padding: 24px; z-index: 999; }
+    .modal-mask.show { display: flex; }
+    .modal { width: 100%; max-width: 420px; border-radius: 16px; background: #fff; box-shadow: 0 20px 48px rgba(29, 33, 41, 0.18); overflow: hidden; }
+    .modal-head { padding: 18px 20px 8px; font-size: 18px; font-weight: 600; }
+    .modal-body { padding: 8px 20px 20px; color: var(--color-text-2); line-height: 1.7; font-size: 14px; }
+    .modal-foot { padding: 0 20px 20px; display: flex; justify-content: flex-end; gap: 12px; }
+    [data-tooltip] { position: relative; cursor: help; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; left: 0; top: calc(100% + 8px); min-width: 220px; max-width: 340px; padding: 10px 12px; border-radius: 10px; background: rgba(29, 33, 41, 0.96); color: #fff; white-space: pre-line; font-size: 12px; line-height: 1.6; z-index: 10; }
+    @media (max-width: 1360px) { .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .composite-control { grid-template-columns: 108px minmax(0, 1fr); } .order-top { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { .content { padding: 16px; } .form-grid { grid-template-columns: 1fr; } .toolbar-actions, .order-bottom, .tabs-toolbar, .main, .pagination { flex-direction: column; align-items: stretch; } .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--color-border-1); } .btn-group, .action-list, .tabs, .pagination-controls { width: 100%; } .btn-group .btn, .action-list .btn { flex: 1; } }
+  </style>
 </head>
 <body>
-  <h1>酒店订单列表页原型</h1>
-  <p>后续在此补充列表页 HTML 原型。</p>
+  <div class="layout">
+    <header class="topbar">
+      <div class="topbar-left">
+        <div class="topbar-title">采购 / 订单</div>
+        <div class="breadcrumb"><span>订单管理</span><span>/</span><span>酒店订单</span></div>
+      </div>
+      <div class="avatar-chip"><span class="avatar-circle">LX</span><span class="avatar-name">林开新</span></div>
+    </header>
+
+    <div class="main">
+      <aside class="sidebar">
+        <div class="menu-group-title">二级 / 三级菜单</div>
+        <div class="menu-tree">
+          <div class="menu-item parent">订单管理 <span>▾</span></div>
+          <div class="menu-children"><div class="menu-item active">酒店订单</div></div>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div class="container">
+          <section class="card toolbar-card">
+            <div class="toolbar-main">
+              <div class="form-grid">
+              <div class="field inline-field"><span class="field-prefix">系统订单号</span><span class="field-split"></span><input class="field-control" id="filterOrderNo" placeholder="支持完整单号或尾 6 位" /></div>
+              <div class="field inline-field"><span class="field-prefix">外部订单号</span><span class="field-split"></span><input class="field-control" id="filterOuterOrderNo" placeholder="支持完整单号或尾 6 位" /></div>
+              <div class="field inline-field"><span class="field-prefix">入住人 / 联系人</span><span class="field-split"></span><input class="field-control" id="filterGuestKeyword" placeholder="支持入住人、联系人、手机号聚合搜索" /></div>
+              <div class="field inline-field"><span class="field-prefix">酒店名称 / ID</span><span class="field-split"></span><input class="field-control" id="filterHotelKeyword" placeholder="支持酒店名称、聚合ID、平台ID、销售ID" /></div>
+              <div class="field field-time inline-field"><div class="composite-control"><select class="date-select" id="filterTimeType"><option value="bookingTime">预订时间</option><option value="checkInDate">入住时间</option><option value="checkOutDate">离店时间</option></select><span class="field-split"></span><div class="range-control"><input id="filterStartDate" type="date" placeholder="开始日期" /><span class="range-sep">至</span><input id="filterEndDate" type="date" placeholder="结束日期" /></div></div></div>
+              <div class="field field-city inline-field"><span class="field-prefix">城市</span><span class="field-split"></span><input class="field-control" id="filterCity" placeholder="请输入" /></div>
+              <div class="field inline-field"><span class="field-prefix">订单来源</span><span class="field-split"></span><select class="field-control" id="filterSource"><option value="">全部来源</option><option value="飞猪·杭州直营店">飞猪 · 杭州直营店</option><option value="抖音·江浙运营号">抖音 · 江浙运营号</option><option value="美团·华东旗舰店">美团 · 华东旗舰店</option><option value="携程·商旅专营店">携程 · 商旅专营店</option></select></div>
+              <div class="field inline-field"><span class="field-prefix">平台订单状态</span><span class="field-split"></span><select class="field-control" id="filterPlatformStatus"><option value="">全部状态</option><option value="待确认">待确认</option><option value="已接单">已接单</option><option value="取消中">取消中</option><option value="已取消">已取消</option></select></div>
+              </div>
+              <div class="toolbar-actions"><div class="btn-group filter-btn-group"><button class="btn btn-primary" id="searchBtn">查询</button><button class="btn" id="resetBtn">重置</button></div></div>
+            </div>
+          </section>
+
+          <section class="card tabs-card">
+            <div class="tabs-toolbar"><div class="tabs" id="tabs"></div><div class="btn-group"><button class="btn">导出</button><button class="btn">导出记录</button></div></div>
+          </section>
+
+          <section class="card list-card">
+            <div class="list-meta"><div class="list-count" id="resultText">共 0 条订单</div><div class="list-sort" id="sortWrap" style="display:none;"><select class="list-sort-select" id="sortSelect"><option value="default">按默认排序</option><option value="slaAsc">按剩余处理时间排序</option></select></div></div>
+            <div id="orderList"></div>
+            <div class="pagination" id="pagination"></div>
+          </section>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="modal-mask" id="confirmMask">
+    <div class="modal">
+      <div class="modal-head" id="confirmTitle">确认操作</div>
+      <div class="modal-body" id="confirmContent">请确认是否继续。</div>
+      <div class="modal-foot">
+        <button class="btn" id="cancelConfirmBtn">取消</button>
+        <button class="btn btn-primary" id="submitConfirmBtn">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const tabs = [
+      { key: 'pending', label: '待处理', badge: 1 },
+      { key: 'afterSale', label: '售后中', badge: 3 },
+      { key: 'accepted', label: '已接单' },
+      { key: 'rejected', label: '已拒单' },
+      { key: 'canceled', label: '已取消' },
+      { key: 'all', label: '全部订单' }
+    ];
+
+    const orders = [
+      { id: '1', bizStatus: 'pending', orderNo: 'HTL202604228899', outerOrderNo: 'DOUYIN-OUT-8877349921', channelText: '抖音', channelClass: 'channel-douyin', source: '抖音·江浙运营号', hotelName: '杭州西湖万豪酒店', hotelAddress: '杭州市西湖区曙光路188号', roomName: '豪华大床房（高楼层城景）', breakfast: '双早', saleMode: '卖价', guestName: '张三', contactName: '李四', contactMobile: '13800000001', checkInDate: '2026-04-28', checkOutDate: '2026-04-29', roomCount: 2, nightCount: 1, city: '杭州', bookingTime: '2026-04-22 16:29:51', payTime: '2026-04-22 16:30:12', cancelTime: '-', payAmount: '¥251.24', settlementAmount: '¥224.61', cancelRule: '入住前1天18:00前可免费取消，之后取消收取首晚房费。', hotelIdTooltip: '聚合酒店ID：H-AI-330106-00028471\n销售酒店ID：SALE-HOTEL-3301\n平台酒店ID：DY-HOTEL-88921\n销售房型ID：SALE-ROOM-88921\n销售计划ID：RP-PR01-88921', amountTooltip: '支付金额：¥251.24\n结算金额：¥224.61\n佣金：¥26.63\n佣金比例：10.60%\n退款金额：-\n取消罚金：-\n售卖模式：卖价', systemStatus: { label: '系统状态', text: '预订中', type: 'tag-blue' }, platformStatus: { label: '平台状态', text: '已接单', type: 'tag-green' }, afterSaleStatus: { label: '售后状态', text: '未进入售后', type: 'tag-gray' }, afterSaleTags: [], actionSummary: { title: '', detail: '', type: '' }, sla: { enabled: true, deadline: Date.now() + 59 * 60 * 1000 + 7000 } },
+      { id: '2', bizStatus: 'afterSale', orderNo: 'HTL202604220127', outerOrderNo: 'FEIZHU-OUT-1027345522', channelText: '飞猪', channelClass: 'channel-feizhu', source: '飞猪·杭州直营店', hotelName: '上海静安香格里拉酒店', hotelAddress: '上海市静安区延安中路1218号', roomName: '行政双床房（含行政礼遇）', breakfast: '含双早', saleMode: '底价', guestName: '王小雅', contactName: '王小雅', contactMobile: '13912343251', checkInDate: '2026-04-26', checkOutDate: '2026-04-28', roomCount: 2, nightCount: 2, city: '上海', bookingTime: '2026-04-21 12:15:10', payTime: '2026-04-21 12:18:09', cancelTime: '-', payAmount: '¥1,096.00', settlementAmount: '¥1,028.40', cancelRule: '不可免费取消，取消将按订单实付金额收取罚金。', hotelIdTooltip: '聚合酒店ID：H-AI-310106-00219471\n销售酒店ID：SALE-HOTEL-9201\n平台酒店ID：FZ-HOTEL-33281\n销售房型ID：SALE-ROOM-33281\n销售计划ID：RP-FZ-33281', amountTooltip: '支付金额：¥1096.00\n结算金额：¥1028.40\n佣金：¥67.60\n佣金比例：6.17%\n退款金额：¥300.00\n取消罚金：-\n售卖模式：底价', systemStatus: { label: '系统状态', text: '取消中', type: 'tag-orange' }, platformStatus: { label: '平台状态', text: '取消中', type: 'tag-orange' }, afterSaleStatus: { label: '售后状态', text: '售后中', type: 'tag-red' }, afterSaleTags: ['协商退款', '已同意'], actionSummary: { title: '人工已接单', detail: '人工已接单', type: '' }, sla: { enabled: false } },
+      { id: '3', bizStatus: 'accepted', orderNo: 'HTL202604180051', outerOrderNo: 'MEITUAN-OUT-7726612210', channelText: '美团', channelClass: 'channel-meituan', source: '美团·华东旗舰店', hotelName: '北京国贸大酒店', hotelAddress: '北京市朝阳区建国门外大街1号', roomName: '尊享大床房（高层行政景观房）', breakfast: '无早', saleMode: '卖价', guestName: '陈子墨', contactName: '刘琴', contactMobile: '13788889802', checkInDate: '2026-04-25', checkOutDate: '2026-04-27', roomCount: 2, nightCount: 2, city: '北京', bookingTime: '2026-04-18 09:11:04', payTime: '2026-04-18 09:14:22', cancelTime: '-', payAmount: '¥768.00', settlementAmount: '¥703.50', cancelRule: '入住当天00:00前可免费取消。', hotelIdTooltip: '聚合酒店ID：H-AI-110105-00111901\n销售酒店ID：SALE-HOTEL-1105\n平台酒店ID：MT-HOTEL-66210\n销售房型ID：SALE-ROOM-66210\n销售计划ID：RP-MT-66210', amountTooltip: '支付金额：¥768.00\n结算金额：¥703.50\n佣金：¥64.50\n佣金比例：8.40%\n退款金额：-\n取消罚金：-\n售卖模式：卖价', systemStatus: { label: '系统状态', text: '已预订', type: 'tag-green' }, platformStatus: { label: '平台状态', text: '已确认', type: 'tag-green' }, afterSaleStatus: { label: '售后状态', text: '已处理', type: 'tag-gray' }, afterSaleTags: [], actionSummary: { title: '系统已接单', detail: '系统已接单', type: '' }, sla: { enabled: false } },
+      { id: '4', bizStatus: 'rejected', orderNo: 'HTL202604170088', outerOrderNo: 'CTRIP-OUT-6677001801', channelText: '携程', channelClass: 'channel-xiecheng', source: '携程·商旅专营店', hotelName: '三亚亚特兰蒂斯酒店', hotelAddress: '三亚市海棠区海棠北路36号', roomName: '海景双床房（尊享海景露台）', breakfast: '双早', saleMode: '底价', guestName: '赵雪', contactName: '赵雪', contactMobile: '13677777755', checkInDate: '2026-04-24', checkOutDate: '2026-04-25', roomCount: 1, nightCount: 1, city: '三亚', bookingTime: '2026-04-17 19:20:41', payTime: '2026-04-17 19:22:18', cancelTime: '-', payAmount: '¥1,420.00', settlementAmount: '¥1,362.00', cancelRule: '不可取消。', hotelIdTooltip: '聚合酒店ID：H-AI-460202-00277001\n销售酒店ID：SALE-HOTEL-4602\n平台酒店ID：CT-HOTEL-01801\n销售房型ID：SALE-ROOM-01801\n销售计划ID：RP-CT-01801', amountTooltip: '支付金额：¥1420.00\n结算金额：¥1362.00\n佣金：¥58.00\n佣金比例：4.08%\n退款金额：-\n取消罚金：-\n售卖模式：底价', systemStatus: { label: '系统状态', text: '已拒单', type: 'tag-gray' }, platformStatus: { label: '平台状态', text: '待处理', type: 'tag-orange' }, afterSaleStatus: { label: '售后状态', text: '未进入售后', type: 'tag-gray' }, afterSaleTags: [], actionSummary: { title: '人工已拒单', detail: '人工已拒单', type: '' }, sla: { enabled: false } },
+      { id: '5', bizStatus: 'canceled', orderNo: 'HTL202604150233', outerOrderNo: 'FEIZHU-OUT-1200118837', channelText: '飞猪', channelClass: 'channel-feizhu', source: '飞猪·杭州直营店', hotelName: '杭州武林凯悦酒店', hotelAddress: '杭州市拱墅区体育场路398号', roomName: '商务双床房', breakfast: '单早', saleMode: '卖价', guestName: '周可', contactName: '周可', contactMobile: '13566669021', checkInDate: '2026-04-20', checkOutDate: '2026-04-21', roomCount: 1, nightCount: 1, city: '杭州', bookingTime: '2026-04-15 13:04:33', payTime: '2026-04-15 13:06:41', cancelTime: '2026-04-15 15:06:42', payAmount: '¥598.00', settlementAmount: '¥562.00', cancelRule: '入住前可取消，超时自动拒单后按平台规则退款。', hotelIdTooltip: '聚合酒店ID：H-AI-330103-00011837\n销售酒店ID：SALE-HOTEL-3303\n平台酒店ID：FZ-HOTEL-11837\n销售房型ID：SALE-ROOM-11837\n销售计划ID：RP-FZ-11837', amountTooltip: '支付金额：¥598.00\n结算金额：¥562.00\n佣金：¥36.00\n佣金比例：6.02%\n退款金额：¥598.00\n取消罚金：-\n售卖模式：卖价', systemStatus: { label: '系统状态', text: '已取消', type: 'tag-gray' }, platformStatus: { label: '平台状态', text: '已取消', type: 'tag-gray' }, afterSaleStatus: { label: '售后状态', text: '已处理', type: 'tag-green' }, afterSaleTags: ['已取消'], actionSummary: { title: '已取消', detail: '已取消', type: '' }, sla: { enabled: false } },
+      { id: '6', bizStatus: 'all', orderNo: 'HTL202604230019', outerOrderNo: 'DOUYIN-OUT-9001122201', channelText: '抖音', channelClass: 'channel-douyin', source: '抖音·江浙运营号', hotelName: '杭州钱江新城轻居酒店', hotelAddress: '杭州市上城区民心路99号', roomName: '钟点大床房（高层静音）', breakfast: '无早', saleMode: '卖价', guestName: '吴桐', contactName: '吴桐', contactMobile: '18812345678', checkInDate: '2026-04-23', checkOutDate: '-', roomCount: 1, nightCount: 0, isHourlyRoom: true, stayDuration: '连住3小时', selectedTimeRange: '09:00 - 12:00', city: '杭州', bookingTime: '2026-04-23 08:12:03', payTime: '2026-04-23 08:13:11', cancelTime: '-', payAmount: '¥168.00', settlementAmount: '¥150.00', cancelRule: '钟点房订单一经确认不可免费取消。', hotelIdTooltip: '聚合酒店ID：H-AI-330102-00022019\n销售酒店ID：SALE-HOTEL-22019\n平台酒店ID：DY-HOTEL-22019\n销售房型ID：SALE-ROOM-22019\n销售计划ID：RP-DY-22019', amountTooltip: '支付金额：¥168.00\n结算金额：¥150.00\n佣金：¥18.00\n佣金比例：10.71%\n退款金额：-\n取消罚金：-\n售卖模式：卖价', systemStatus: { label: '系统状态', text: '已预订', type: 'tag-green' }, platformStatus: { label: '平台状态', text: '已确认', type: 'tag-green' }, afterSaleStatus: { label: '售后状态', text: '未进入售后', type: 'tag-gray' }, afterSaleTags: [], actionSummary: { title: '人工已接单', detail: '人工已接单', type: '' }, sla: { enabled: false } }
+    ];
+
+    const state = { activeTab: 'pending', pageNum: 1, pageSize: 3, sortBy: 'default', filters: { orderNo: '', outerOrderNo: '', guestKeyword: '', hotelKeyword: '', timeType: 'bookingTime', startDate: '', endDate: '', city: '', source: '', platformStatus: '' }, confirmAction: null };
+
+    const tabsEl = document.getElementById('tabs');
+    const orderListEl = document.getElementById('orderList');
+    const resultTextEl = document.getElementById('resultText');
+    const paginationEl = document.getElementById('pagination');
+    const sortWrapEl = document.getElementById('sortWrap');
+    const sortSelectEl = document.getElementById('sortSelect');
+    const toastEl = document.getElementById('toast');
+    const confirmMask = document.getElementById('confirmMask');
+    const confirmTitle = document.getElementById('confirmTitle');
+    const confirmContent = document.getElementById('confirmContent');
+    const submitConfirmBtn = document.getElementById('submitConfirmBtn');
+    const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
+
+    function formatCountdown(deadline) { const diff = Math.max(0, deadline - Date.now()); const totalSeconds = Math.floor(diff / 1000); const minutes = Math.floor(totalSeconds / 60); const seconds = totalSeconds % 60; return `${String(minutes).padStart(2, '0')}分${String(seconds).padStart(2, '0')}秒`; }
+    function getSlaLevel(deadline) { const diff = Math.max(0, deadline - Date.now()); const minutes = diff / 1000 / 60; if (diff <= 0) return 'timeout'; if (minutes < 5) return 'danger'; if (minutes < 15) return 'warning'; return 'safe'; }
+    function escapeHtml(text) { return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+    function getFilteredOrders() {
+      return orders.filter(order => {
+        const tabMatch = state.activeTab === 'all' ? true : order.bizStatus === state.activeTab;
+        if (!tabMatch) return false;
+        const { orderNo, outerOrderNo, guestKeyword, hotelKeyword, timeType, startDate, endDate, city, source, platformStatus } = state.filters;
+        const guestText = `${order.guestName} ${order.contactName} ${order.contactMobile}`;
+        const hotelText = `${order.hotelName} ${order.hotelAddress} ${order.hotelIdTooltip}`;
+        const timeField = order[timeType] || '';
+        const timeDate = timeField ? timeField.slice(0, 10) : '';
+        if (orderNo && !order.orderNo.toLowerCase().includes(orderNo.toLowerCase())) return false;
+        if (outerOrderNo && !order.outerOrderNo.toLowerCase().includes(outerOrderNo.toLowerCase())) return false;
+        if (guestKeyword && !guestText.toLowerCase().includes(guestKeyword.toLowerCase())) return false;
+        if (hotelKeyword && !hotelText.toLowerCase().includes(hotelKeyword.toLowerCase())) return false;
+        if (city && !order.city.includes(city)) return false;
+        if (source && order.source !== source) return false;
+        if (platformStatus && order.platformStatus.text.indexOf(platformStatus) === -1) return false;
+        if (startDate && timeDate < startDate) return false;
+        if (endDate && timeDate > endDate) return false;
+        return true;
+      });
+    }
+
+    function renderTabs() {
+      tabsEl.innerHTML = tabs.map(tab => `<button class="tab ${tab.key === state.activeTab ? 'active' : ''}" data-tab="${tab.key}">${tab.label}${tab.badge ? `<span class="badge-dot">${tab.badge}</span>` : ''}</button>`).join('');
+    }
+
+    function renderOrders() {
+      const filtered = getFilteredOrders();
+      const sorted = [...filtered];
+      if (state.activeTab === 'pending' && state.sortBy === 'slaAsc') {
+        sorted.sort((a, b) => {
+          const aDeadline = a.sla && a.sla.enabled ? a.sla.deadline : Number.MAX_SAFE_INTEGER;
+          const bDeadline = b.sla && b.sla.enabled ? b.sla.deadline : Number.MAX_SAFE_INTEGER;
+          return aDeadline - bDeadline;
+        });
+      }
+      const total = sorted.length;
+      const totalPages = Math.max(1, Math.ceil(total / state.pageSize));
+      if (state.pageNum > totalPages) state.pageNum = totalPages;
+      const start = (state.pageNum - 1) * state.pageSize;
+      const paged = sorted.slice(start, start + state.pageSize);
+      resultTextEl.textContent = `共 ${total} 条订单`;
+      sortWrapEl.style.display = state.activeTab === 'pending' ? 'inline-flex' : 'none';
+      sortSelectEl.value = state.sortBy;
+      if (!paged.length) {
+        orderListEl.innerHTML = `<div class="empty-state"><p class="empty-title">暂无匹配订单</p><div>你可以尝试切换 Tab 或调整筛选条件后重新查询。</div></div>`;
+        paginationEl.innerHTML = '';
+        return;
+      }
+
+      orderListEl.innerHTML = paged.map(order => {
+        const afterSaleTags = order.afterSaleTags.length ? `<div class="status-tags-row">${order.afterSaleTags.map(tag => `<span class="tag tag-gray">${tag}</span>`).join('')}</div>` : '';
+        const showAcceptReject = order.bizStatus === 'pending' || (state.activeTab === 'all' && order.bizStatus === 'pending');
+        const amountTooltip = escapeHtml(order.amountTooltip);
+        const timerHtml = order.sla.enabled
+          ? `<div class="time-stack timer-${getSlaLevel(order.sla.deadline)}"><div class="time-item"><span class="timer-value" data-deadline="${order.sla.deadline}">${formatCountdown(order.sla.deadline)}</span></div>${order.actionSummary.title ? `<div class="time-item"><span class="time-label">处理结果</span><span class="timer-result">${order.actionSummary.title}</span></div>` : ''}</div>`
+          : `<div class="time-stack"><div class="time-item"><span class="time-label">处理结果</span><span class="timer-result">${order.actionSummary.detail}</span></div></div>`;
+
+        return `<div class="order-item"><div class="order-top"><div><div class="section-title">订单号</div><div class="id-row"><div class="id-cell"><span class="tag tag-blue">外部单号</span><span class="mono">${order.outerOrderNo}</span><button class="copy-btn" data-copy="${order.outerOrderNo}" aria-label="复制外部单号"><span class="copy-icon">⧉</span></button></div><div class="id-cell"><span class="tag tag-gray">系统单号</span><span class="mono">${order.orderNo}</span><button class="copy-btn" data-copy="${order.orderNo}" aria-label="复制系统单号"><span class="copy-icon">⧉</span></button></div></div><div class="source-line"><div class="channel-badge ${order.channelClass}">${order.channelText}</div><span class="tag tag-gray">${order.source}</span></div><div style="margin-top: 8px;">${timerHtml}</div></div><div><div class="section-title">酒店信息</div><div class="order-title-line"><div class="order-main"><div class="hotel-line"><span class="hotel-name"><span class="text-ellipsis" data-tooltip="${escapeHtml(order.hotelName)}">${order.hotelName}</span><span class="id-info-icon" data-tooltip="${escapeHtml(order.hotelIdTooltip)}">ID</span></span>${order.isHourlyRoom ? '<span class="tag tag-purple">钟点房</span>' : ''}<span class="tag tag-orange">${order.breakfast}</span><span class="tag tag-gray" data-tooltip="${escapeHtml(order.cancelRule)}">取消规则</span></div><div class="sub-line"><strong>地址：</strong><span class="sub-line-value">${order.city} | ${order.hotelAddress}</span></div><div class="sub-line"><strong>房型：</strong><span class="sub-line-value text-ellipsis" style="max-width:320px;" data-tooltip="${escapeHtml(order.roomName)}">${order.roomName}</span></div><div class="sub-line pair-line"><span class="pair-item"><strong>入住人：</strong><span class="sub-line-value">${order.guestName}</span></span><span class="pair-item"><strong>联系人：</strong><span class="sub-line-value">${order.contactName} / ${order.contactMobile}</span></span></div><div class="sub-line pair-line"><span class="pair-item"><strong>入离时间：</strong><span class="sub-line-value">${order.checkInDate}${order.checkOutDate !== '-' ? ` 至 ${order.checkOutDate}` : ''}</span></span><span class="pair-item"><strong>${order.isHourlyRoom ? '房间数' : '间夜'}：</strong><span class="sub-line-value">${order.isHourlyRoom ? `${order.roomCount}间` : `${order.roomCount}间${order.nightCount}晚`}</span></span></div>${order.isHourlyRoom ? `<div class="sub-line pair-line"><span class="pair-item"><strong>入住时长：</strong><span class="sub-line-value">${order.stayDuration}</span></span><span class="pair-item"><strong>已选时段：</strong><span class="sub-line-value">${order.selectedTimeRange}</span></span></div>` : ''}</div></div></div><div><div class="section-title">金额信息</div><div class="amount-stack"><div class="metric metric-danger" data-tooltip="${amountTooltip}"><div class="metric-label">支付金额</div><div class="metric-value">${order.payAmount}</div></div><div class="metric metric-warning" data-tooltip="${amountTooltip}"><div class="metric-label">结算金额</div><div class="metric-value">${order.settlementAmount}</div></div><div class="sale-mode-row"><span class="sale-mode-label">售卖模式</span><span class="sale-mode-badge">${order.saleMode}</span></div></div></div><div><div class="section-title">状态信息</div><div class="status-stack"><div class="status-item"><span class="status-name">${order.systemStatus.label}</span><div class="status-tags"><span class="tag ${order.systemStatus.type}">${order.systemStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.platformStatus.label}</span><div class="status-tags"><span class="tag tag-gray">${order.platformStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.afterSaleStatus.label}</span><div class="status-tags"><span class="tag ${order.afterSaleStatus.type}">${order.afterSaleStatus.text}</span>${afterSaleTags}</div></div></div></div></div><div class="order-bottom"><div class="time-list"><span class="summary-chip">预订时间：${order.bookingTime}</span><span class="summary-chip">支付时间：${order.payTime}</span><span class="summary-chip">取消时间：${order.cancelTime}</span></div><div class="action-list">${showAcceptReject ? `<button class="btn btn-outline-primary" data-action="accept" data-order="${order.orderNo}">接单</button><button class="btn btn-outline-danger" data-action="reject" data-order="${order.orderNo}">拒单</button>` : ''}<button class="btn" data-action="detail" data-order="${order.orderNo}">订单详情</button><button class="btn" data-action="log" data-order="${order.orderNo}">日志</button></div></div></div>`;
+      }).join('');
+
+      paginationEl.innerHTML = `<div>第 ${state.pageNum} / ${totalPages} 页</div><div class="pagination-controls"><button class="btn page-number" data-page-action="prev" ${state.pageNum === 1 ? 'disabled' : ''}>上一页</button>${Array.from({ length: totalPages }, (_, i) => i + 1).map(page => `<button class="btn page-number ${page === state.pageNum ? 'active' : ''}" data-page="${page}">${page}</button>`).join('')}<button class="btn page-number" data-page-action="next" ${state.pageNum === totalPages ? 'disabled' : ''}>下一页</button></div>`;
+      updateCountdowns();
+    }
+
+    function render() { renderTabs(); renderOrders(); }
+    function syncFiltersFromDom() { state.filters.orderNo = document.getElementById('filterOrderNo').value.trim(); state.filters.outerOrderNo = document.getElementById('filterOuterOrderNo').value.trim(); state.filters.guestKeyword = document.getElementById('filterGuestKeyword').value.trim(); state.filters.hotelKeyword = document.getElementById('filterHotelKeyword').value.trim(); state.filters.timeType = document.getElementById('filterTimeType').value; state.filters.startDate = document.getElementById('filterStartDate').value; state.filters.endDate = document.getElementById('filterEndDate').value; state.filters.city = document.getElementById('filterCity').value; state.filters.source = document.getElementById('filterSource').value; state.filters.platformStatus = document.getElementById('filterPlatformStatus').value; state.pageNum = 1; }
+    function resetFilters() { document.getElementById('filterOrderNo').value = ''; document.getElementById('filterOuterOrderNo').value = ''; document.getElementById('filterGuestKeyword').value = ''; document.getElementById('filterHotelKeyword').value = ''; document.getElementById('filterTimeType').value = 'bookingTime'; document.getElementById('filterStartDate').value = ''; document.getElementById('filterEndDate').value = ''; document.getElementById('filterCity').value = ''; document.getElementById('filterSource').value = ''; document.getElementById('filterPlatformStatus').value = ''; syncFiltersFromDom(); render(); showToast('筛选条件已重置'); }
+    function showToast(message) { toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800); }
+    function openConfirm(action, orderNo) { const actionText = action === 'accept' ? '接单' : '拒单'; state.confirmAction = { action, orderNo }; confirmTitle.textContent = `确认${actionText}`; confirmContent.textContent = `确认要对订单 ${orderNo} 执行“${actionText}”操作吗？`; confirmMask.classList.add('show'); }
+    function closeConfirm() { confirmMask.classList.remove('show'); state.confirmAction = null; }
+    function updateCountdowns() { document.querySelectorAll('.timer-value[data-deadline]').forEach(el => { const deadline = Number(el.dataset.deadline); const box = el.closest('.time-stack'); const level = getSlaLevel(deadline); el.textContent = formatCountdown(deadline); if (box) { box.classList.remove('timer-safe', 'timer-warning', 'timer-danger', 'timer-timeout'); box.classList.add(`timer-${level}`); } }); }
+
+    tabsEl.addEventListener('click', event => { const tabBtn = event.target.closest('[data-tab]'); if (!tabBtn) return; state.activeTab = tabBtn.dataset.tab; state.pageNum = 1; if (state.activeTab !== 'pending') state.sortBy = 'default'; render(); });
+    orderListEl.addEventListener('click', async event => { const copyBtn = event.target.closest('[data-copy]'); if (copyBtn) { try { await navigator.clipboard.writeText(copyBtn.dataset.copy); showToast(`已复制：${copyBtn.dataset.copy}`); } catch { showToast('复制失败，请手动复制'); } return; } const actionBtn = event.target.closest('[data-action]'); if (!actionBtn) return; const action = actionBtn.dataset.action; const orderNo = actionBtn.dataset.order; if (action === 'accept' || action === 'reject') return openConfirm(action, orderNo); if (action === 'detail') return showToast(`进入订单详情页：${orderNo}`); if (action === 'log') showToast(`打开订单日志：${orderNo}`); });
+    paginationEl.addEventListener('click', event => { const pageBtn = event.target.closest('[data-page]'); const actionBtn = event.target.closest('[data-page-action]'); const totalPages = Math.max(1, Math.ceil(getFilteredOrders().length / state.pageSize)); if (pageBtn) { state.pageNum = Number(pageBtn.dataset.page); render(); return; } if (actionBtn) { const action = actionBtn.dataset.pageAction; if (action === 'prev' && state.pageNum > 1) state.pageNum -= 1; if (action === 'next' && state.pageNum < totalPages) state.pageNum += 1; render(); } });
+    sortSelectEl.addEventListener('change', event => { state.sortBy = event.target.value; state.pageNum = 1; render(); });
+    document.getElementById('searchBtn').addEventListener('click', () => { syncFiltersFromDom(); render(); showToast('已按当前筛选条件刷新列表'); });
+    document.getElementById('resetBtn').addEventListener('click', resetFilters);
+    submitConfirmBtn.addEventListener('click', () => { if (!state.confirmAction) return; showToast(`已确认${state.confirmAction.action === 'accept' ? '接单' : '拒单'}：${state.confirmAction.orderNo}`); closeConfirm(); });
+    cancelConfirmBtn.addEventListener('click', closeConfirm);
+    confirmMask.addEventListener('click', event => { if (event.target === confirmMask) closeConfirm(); });
+
+    syncFiltersFromDom();
+    render();
+    setInterval(updateCountdowns, 1000);
+  </script>
 </body>
 </html>
