@@ -4,9 +4,666 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>酒店订单详情页原型</title>
+  <style>
+    :root {
+      --color-primary: #165dff;
+      --color-primary-hover: #4080ff;
+      --color-success: #00b42a;
+      --color-warning: #ff7d00;
+      --color-danger: #f53f3f;
+      --color-text-1: #1d2129;
+      --color-text-2: #4e5969;
+      --color-text-3: #86909c;
+      --color-text-4: #c9cdd4;
+      --color-border-1: #e5e6eb;
+      --color-border-2: #f2f3f5;
+      --color-fill-1: #f7f8fa;
+      --color-fill-2: #f2f3f5;
+      --color-bg-1: #ffffff;
+      --color-bg-2: #f2f3f5;
+      --color-bg-blue: #edf3ff;
+      --shadow-card: 0 8px 24px rgba(29, 33, 41, 0.06);
+      --radius-small: 6px;
+      --radius-large: 14px;
+      --bottom-bar-height: 76px;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--color-bg-2); font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--color-text-1); }
+    button, input, select, textarea { font-family: inherit; }
+    .layout { min-height: 100vh; padding: 24px 0; }
+    .dialog-shell { width: 1400px; max-width: calc(100vw - 32px); margin: 0 auto; }
+    .dialog-page { background: #fff; border: 1px solid var(--color-border-2); border-radius: 18px; box-shadow: 0 18px 48px rgba(15, 23, 42, 0.12); overflow: hidden; }
+    .dialog-header { height: 60px; padding: 0 20px; border-bottom: 1px solid var(--color-border-2); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #fff; }
+    .dialog-header-left { min-width: 0; }
+    .dialog-title { font-size: 18px; font-weight: 600; }
+    .dialog-subtitle { margin-top: 4px; color: var(--color-text-3); font-size: 12px; }
+    .dialog-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .content { min-width: 0; padding: 20px 20px calc(var(--bottom-bar-height) + 28px); background: var(--color-bg-2); }
+    .container { width: 100%; margin: 0 auto; }
+    .card { background: var(--color-bg-1); border: 1px solid var(--color-border-2); border-radius: var(--radius-large); box-shadow: var(--shadow-card); }
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 88px; height: 36px; padding: 0 16px; border-radius: var(--radius-small); border: 1px solid var(--color-border-1); background: #fff; color: var(--color-text-2); font-size: 14px; cursor: pointer; }
+    .btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .btn-primary { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
+    .btn-primary:hover { background: var(--color-primary-hover); border-color: var(--color-primary-hover); color: #fff; }
+    .btn-outline-primary { color: var(--color-primary); border-color: rgba(22, 93, 255, .35); background: rgba(22, 93, 255, .04); }
+    .btn-outline-danger { color: var(--color-danger); border-color: rgba(245, 63, 63, .35); background: rgba(245, 63, 63, .04); }
+    .btn[disabled] { opacity: .5; cursor: not-allowed; }
+    .btn-link { border: 0; background: transparent; color: var(--color-primary); padding: 0; min-width: auto; height: auto; }
+    .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border-radius: 999px; border: 1px solid transparent; font-size: 12px; line-height: 22px; white-space: nowrap; }
+    .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); border-color: rgba(22, 93, 255, .18); }
+    .tag-green { background: rgba(0, 180, 42, .08); color: var(--color-success); border-color: rgba(0, 180, 42, .18); }
+    .tag-orange { background: rgba(255, 125, 0, .1); color: var(--color-warning); border-color: rgba(255, 125, 0, .2); }
+    .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); border-color: rgba(245, 63, 63, .18); }
+    .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; border-color: rgba(114, 46, 209, .16); }
+    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); border-color: var(--color-border-1); }
+    .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+    .page-title { margin: 0; font-size: 24px; line-height: 1.25; }
+    .page-subtitle { margin-top: 6px; color: var(--color-text-3); font-size: 13px; }
+    .page-head-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .overview-card { padding: 18px 20px; margin-bottom: 16px; }
+    .overview-top { display: grid; grid-template-columns: minmax(0, 1.8fr) minmax(320px, 1fr); gap: 20px; align-items: start; }
+    .overview-main { min-width: 0; }
+    .overview-title-line { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .order-title { font-size: 20px; font-weight: 700; line-height: 1.3; }
+    .channel-badge { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 12px; color: #fff; font-weight: 700; font-size: 12px; }
+    .channel-douyin { background: linear-gradient(135deg, #111827, #4b5563); }
+    .channel-feizhu { background: linear-gradient(135deg, #ff7d00, #ffb400); }
+    .overview-id-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
+    .info-line { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .info-label { color: var(--color-text-3); font-size: 12px; flex: 0 0 auto; }
+    .info-value { color: var(--color-text-1); font-size: 14px; min-width: 0; }
+    .mono { font-family: "JetBrains Mono", Consolas, monospace; }
+    .copy-btn { border: 0; background: transparent; color: var(--color-text-3); cursor: pointer; padding: 0; }
+    .copy-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border-1); border-radius: 4px; font-size: 10px; background: #fff; }
+    .tooltip-anchor { position: relative; display: inline-flex; align-items: center; }
+    .id-info-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 18px; padding: 0 4px; border-radius: 4px; border: 1px solid var(--color-border-1); color: var(--color-text-3); font-size: 10px; font-weight: 600; background: #fff; line-height: 1; cursor: pointer; }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); min-width: 220px; max-width: 320px; padding: 10px 12px; border-radius: 8px; background: rgba(29, 33, 41, .94); color: #fff; font-size: 12px; line-height: 1.55; white-space: pre-line; box-shadow: 0 8px 24px rgba(15, 23, 42, .24); z-index: 20; }
+    .overview-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 18px; margin-top: 14px; }
+    .meta-card { padding: 12px 14px; border-radius: 12px; background: var(--color-fill-1); border: 1px solid var(--color-border-2); }
+    .meta-label { color: var(--color-text-3); font-size: 12px; margin-bottom: 6px; }
+    .meta-value { color: var(--color-text-1); font-size: 14px; font-weight: 600; line-height: 1.4; }
+    .overview-side { padding: 16px; border-radius: 14px; background: linear-gradient(180deg, #f9fbff 0%, #f5f7fa 100%); border: 1px solid rgba(22, 93, 255, .08); }
+    .side-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .side-title { color: var(--color-text-3); font-size: 12px; }
+    .timer { font-family: "JetBrains Mono", Consolas, monospace; font-size: 28px; font-weight: 700; letter-spacing: .5px; line-height: 1; }
+    .timer-safe { color: var(--color-success); }
+    .timer-warning { color: var(--color-warning); }
+    .timer-danger, .timer-timeout { color: var(--color-danger); }
+    .risk-box { padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px dashed var(--color-border-1); }
+    .risk-title { color: var(--color-text-3); font-size: 12px; margin-bottom: 6px; }
+    .risk-text { color: var(--color-text-1); font-size: 13px; line-height: 1.5; }
+    .main-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(320px, .95fr); gap: 16px; align-items: start; }
+    .left-stack, .right-stack { display: flex; flex-direction: column; gap: 16px; }
+    .section-card { padding: 16px 18px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .section-title { font-size: 16px; font-weight: 600; }
+    .section-subtitle { color: var(--color-text-3); font-size: 12px; }
+    .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; }
+    .detail-item { min-width: 0; }
+    .detail-item.full { grid-column: 1 / -1; }
+    .detail-label { color: var(--color-text-3); font-size: 12px; margin-bottom: 6px; }
+    .detail-value { color: var(--color-text-1); font-size: 14px; line-height: 1.5; min-width: 0; word-break: break-word; }
+    .detail-value strong { font-weight: 600; }
+    .inline-tags { display: inline-flex; gap: 6px; flex-wrap: wrap; vertical-align: middle; }
+    .quiet-box { padding: 12px 14px; border-radius: 12px; background: var(--color-fill-1); color: var(--color-text-2); font-size: 13px; line-height: 1.55; }
+    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
+    .summary-item { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 24px; }
+    .summary-name { color: var(--color-text-3); font-size: 12px; line-height: 24px; }
+    .summary-value { color: var(--color-text-1); font-size: 14px; line-height: 24px; }
+    .summary-value.strong { font-size: 16px; font-weight: 700; }
+    .summary-value.danger { color: var(--color-danger); }
+    .summary-value.warning { color: var(--color-warning); }
+    .expand-card { border: 1px solid var(--color-border-2); border-radius: 12px; overflow: hidden; background: #fff; }
+    .expand-head { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 0; background: var(--color-fill-1); cursor: pointer; text-align: left; }
+    .expand-head-title { font-size: 14px; color: var(--color-text-1); font-weight: 600; }
+    .expand-head-desc { color: var(--color-text-3); font-size: 12px; }
+    .expand-icon { color: var(--color-text-3); transition: transform .2s ease; }
+    .expand-card.open .expand-icon { transform: rotate(180deg); }
+    .expand-body { display: none; padding: 14px; border-top: 1px solid var(--color-border-2); }
+    .expand-card.open .expand-body { display: block; }
+    .cost-list { display: grid; gap: 10px; }
+    .cost-row { display: grid; grid-template-columns: 88px minmax(0, 1fr); column-gap: 10px; align-items: center; }
+    .cost-row-label { color: var(--color-text-3); font-size: 12px; }
+    .cost-row-value { color: var(--color-text-1); font-size: 14px; }
+    .cost-row-value.emphasis { font-weight: 700; }
+    .purchase-day-list { display: flex; flex-direction: column; gap: 12px; }
+    .purchase-day { border: 1px solid var(--color-border-2); border-radius: 14px; overflow: hidden; }
+    .purchase-day-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; background: #fff; }
+    .purchase-day-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .purchase-day-date { font-size: 15px; font-weight: 600; }
+    .purchase-day-summary { color: var(--color-text-2); font-size: 13px; }
+    .purchase-day-empty { padding: 14px 16px; color: var(--color-text-3); font-size: 13px; border-top: 1px dashed var(--color-border-1); background: var(--color-fill-1); }
+    .purchase-entry-list { display: flex; flex-direction: column; border-top: 1px dashed var(--color-border-1); background: #fcfcfd; }
+    .purchase-entry { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; gap: 14px; padding: 14px 16px; align-items: start; }
+    .purchase-entry + .purchase-entry { border-top: 1px dashed var(--color-border-1); }
+    .purchase-time { color: var(--color-text-2); font-size: 13px; }
+    .purchase-main { min-width: 0; }
+    .purchase-main-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+    .purchase-supplier { font-size: 14px; font-weight: 600; }
+    .purchase-sub { color: var(--color-text-2); font-size: 13px; line-height: 1.55; }
+    .purchase-detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; margin-top: 10px; }
+    .purchase-detail-item { min-width: 0; }
+    .purchase-detail-label { color: var(--color-text-3); font-size: 12px; margin-bottom: 4px; }
+    .purchase-detail-value { color: var(--color-text-1); font-size: 13px; line-height: 1.5; word-break: break-word; }
+    .purchase-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .purchase-actions .btn { min-width: auto; padding: 0 12px; height: 32px; }
+    .timeline { display: grid; gap: 10px; }
+    .timeline-item { display: grid; grid-template-columns: 18px 140px minmax(0, 1fr); column-gap: 12px; align-items: start; }
+    .timeline-axis { position: relative; display: flex; justify-content: center; }
+    .timeline-axis::before { content: ""; position: absolute; top: 0; bottom: -14px; width: 2px; background: var(--color-border-1); }
+    .timeline-item:last-child .timeline-axis::before { bottom: 8px; }
+    .timeline-dot { position: relative; z-index: 1; width: 10px; height: 10px; border-radius: 50%; background: var(--color-primary); margin-top: 5px; }
+    .timeline-time { color: var(--color-text-3); font-size: 12px; line-height: 1.6; }
+    .timeline-content { color: var(--color-text-1); font-size: 14px; line-height: 1.55; }
+    .timeline-title { font-weight: 600; margin-bottom: 2px; }
+    .bottom-bar { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); z-index: 60; width: 1400px; max-width: calc(100vw - 32px); padding: 12px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--color-border-1); border-left: 1px solid var(--color-border-2); border-right: 1px solid var(--color-border-2); border-radius: 16px 16px 0 0; }
+    .bottom-bar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .bottom-summary { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--color-text-2); font-size: 13px; }
+    .summary-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--color-fill-1); color: var(--color-text-2); font-size: 12px; }
+    .bottom-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); display: none; align-items: center; justify-content: center; z-index: 90; padding: 20px; }
+    .modal-mask.show { display: flex; }
+    .modal { width: min(720px, 100%); max-height: 80vh; overflow: auto; background: #fff; border-radius: 16px; box-shadow: 0 18px 48px rgba(15, 23, 42, .2); }
+    .modal-head { padding: 16px 18px; border-bottom: 1px solid var(--color-border-2); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .modal-title { font-size: 16px; font-weight: 600; }
+    .modal-body { padding: 18px; }
+    .failure-list { display: grid; gap: 12px; }
+    .failure-item { border: 1px solid var(--color-border-2); border-radius: 12px; padding: 12px 14px; }
+    .failure-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+    .failure-code { color: var(--color-danger); font-size: 12px; font-weight: 600; }
+    .failure-text { color: var(--color-text-1); font-size: 14px; line-height: 1.6; }
+    .failure-sub { color: var(--color-text-3); font-size: 12px; margin-top: 6px; }
+    .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-12px); min-width: 220px; max-width: 520px; padding: 12px 16px; border-radius: 10px; background: rgba(29, 33, 41, .92); color: #fff; font-size: 14px; opacity: 0; pointer-events: none; transition: all .2s ease; z-index: 1000; }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    @media (max-width: 1440px) {
+      .overview-top, .main-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1200px) {
+      .overview-meta, .detail-grid, .purchase-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .purchase-entry { grid-template-columns: 1fr; }
+      .purchase-actions { justify-content: flex-start; }
+    }
+    @media (max-width: 768px) {
+      .content { padding: 16px 16px calc(var(--bottom-bar-height) + 100px); }
+      .overview-id-grid, .detail-grid, .summary-grid, .overview-meta, .purchase-detail-grid { grid-template-columns: 1fr; }
+      .bottom-bar-inner, .page-head, .section-head, .purchase-day-head { flex-direction: column; align-items: stretch; }
+      .timeline-item { grid-template-columns: 18px 1fr; }
+      .timeline-time { grid-column: 2; }
+    }
+  </style>
 </head>
 <body>
-  <h1>酒店订单详情页原型</h1>
-  <p>后续在此补充详情页 HTML 原型。</p>
+  <div class="layout">
+    <div class="dialog-shell">
+      <div class="dialog-page">
+        <div class="dialog-header">
+          <div class="dialog-header-left">
+            <div class="dialog-title">酒店订单详情</div>
+            <div class="dialog-subtitle">弹窗页宽度固定 1400px，一级信息聚焦在上部摘要与采购单模块。</div>
+          </div>
+          <div class="dialog-actions">
+            <button class="btn">返回列表</button>
+            <button class="btn">关闭</button>
+          </div>
+        </div>
+
+        <main class="content">
+          <div class="container">
+            <div class="page-head">
+            <div>
+              <h1 class="page-title">订单详情</h1>
+              <div class="page-subtitle">优先展示采购判断信息，非一级重要字段通过折叠、弹窗与补充区域承接。</div>
+            </div>
+            <div class="page-head-actions">
+              <button class="btn">返回列表</button>
+              <button class="btn">查看日志</button>
+            </div>
+          </div>
+
+          <section class="card overview-card">
+            <div class="overview-top">
+              <div class="overview-main">
+                <div class="overview-title-line">
+                  <div class="channel-badge channel-douyin">抖音</div>
+                  <div class="order-title">杭州西湖万豪酒店 · 豪华大床房（高楼层城景）</div>
+                  <span class="tag tag-purple">双早</span>
+                  <span class="tag tag-blue">卖价</span>
+                  <span class="tag tag-gray">抖音 · 江浙运营号</span>
+                </div>
+                <div class="overview-id-grid">
+                  <div class="info-line"><span class="info-label">系统单号</span><span class="info-value mono">HTL202604228899</span><button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div>
+                  <div class="info-line"><span class="info-label">外部单号</span><span class="info-value mono">DOUYIN-OUT-8877349921</span><button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div>
+                  <div class="info-line"><span class="info-label">系统状态</span><span class="tag tag-blue">预订中</span></div>
+                  <div class="info-line"><span class="info-label">平台状态</span><span class="tag tag-gray">已接单</span></div>
+                  <div class="info-line"><span class="info-label">售后状态</span><span class="inline-tags"><span class="tag tag-gray">未进入售后</span></span></div>
+                  <div class="info-line"><span class="info-label">采购结论</span><span class="tag tag-orange">待人工补采</span><button class="btn btn-link" data-modal="purchaseFailure">查看失败原因</button></div>
+                </div>
+                <div class="overview-meta">
+                  <div class="meta-card"><div class="meta-label">预订时间</div><div class="meta-value">2026-04-22 16:29:51</div></div>
+                  <div class="meta-card"><div class="meta-label">支付时间</div><div class="meta-value">2026-04-22 16:30:12</div></div>
+                  <div class="meta-card"><div class="meta-label">入住 / 离店</div><div class="meta-value">2026-04-28 至 2026-04-29 · 2间1晚</div></div>
+                  <div class="meta-card"><div class="meta-label">处理结果</div><div class="meta-value">平台已下单，供应商多次采购失败，待人工补采。</div></div>
+                </div>
+              </div>
+
+              <div class="overview-side">
+                <div class="side-top">
+                  <div>
+                    <div class="side-title">SLA 剩余处理时间</div>
+                    <div class="timer timer-warning" id="countdownValue" data-deadline="1893459547000">59分07秒</div>
+                  </div>
+                  <span class="tag tag-orange">即将超时</span>
+                </div>
+                <div class="risk-box" style="margin-bottom:10px;">
+                  <div class="risk-title">当前风险提示</div>
+                  <div class="risk-text">过去 24 小时内已发起 6 次采购尝试，其中 4 次因房态不足失败，建议人工切换供应商并优先确认同城库存。</div>
+                </div>
+                <div class="risk-box">
+                  <div class="risk-title">快捷提示</div>
+                  <div class="risk-text">支付渠道与平台状态正常，无重复退款风险。失败原因、支付补充信息等次级字段收敛到弹层查看。</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <div class="main-grid">
+            <div class="left-stack">
+              <section class="card section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">订单与入住信息</div>
+                    <div class="section-subtitle">优先保留核心入住、联系人与平台确认信息。</div>
+                  </div>
+                  <button class="btn btn-link" data-modal="paymentInfo">查看支付补充信息</button>
+                </div>
+                <div class="detail-grid">
+                  <div class="detail-item full"><div class="detail-label">酒店名称</div><div class="detail-value"><strong>杭州西湖万豪酒店</strong>　<span class="tooltip-anchor" data-tooltip="聚合酒店ID：H-AI-330106-00028471&#10;销售酒店ID：SALE-HOTEL-3301&#10;平台酒店ID：DY-HOTEL-88921"><span class="id-info-icon">ID</span></span></div></div>
+                  <div class="detail-item full"><div class="detail-label">酒店地址</div><div class="detail-value">杭州市西湖区曙光路188号</div></div>
+                  <div class="detail-item"><div class="detail-label">房型 / 早餐</div><div class="detail-value">豪华大床房（高楼层城景） / 双早</div></div>
+                  <div class="detail-item"><div class="detail-label">取消规则</div><div class="detail-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
+                  <div class="detail-item"><div class="detail-label">入住人</div><div class="detail-value">张三</div></div>
+                  <div class="detail-item"><div class="detail-label">联系人</div><div class="detail-value">李四 / 13800000001</div></div>
+                  <div class="detail-item"><div class="detail-label">入离时间</div><div class="detail-value">2026-04-28 至 2026-04-29</div></div>
+                  <div class="detail-item"><div class="detail-label">间夜 / 房间数</div><div class="detail-value">1晚 / 2间</div></div>
+                  <div class="detail-item"><div class="detail-label">平台确认号</div><div class="detail-value">DY-CFM-20260422-11928</div></div>
+                  <div class="detail-item"><div class="detail-label">销售计划 / 房型ID</div><div class="detail-value">RP-PR01-88921 / SALE-ROOM-88921</div></div>
+                </div>
+              </section>
+
+              <section class="card section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">采购单信息</div>
+                    <div class="section-subtitle">直接展示每次采购单处理情况，按日期聚合，避免只给统计不落到具体采购单。</div>
+                  </div>
+                  <div class="inline-tags">
+                    <span class="tag tag-orange">采购中断风险高</span>
+                    <span class="tag tag-gray">按采购日期分组</span>
+                  </div>
+                </div>
+
+                <div class="purchase-day-list">
+                  <div class="purchase-day">
+                    <div class="purchase-day-head">
+                      <div class="purchase-day-title">
+                        <div class="purchase-day-date">2026-04-22</div>
+                        <span class="tag tag-green">成功 1 次</span>
+                        <span class="tag tag-red">失败 2 次</span>
+                      </div>
+                      <div class="purchase-day-summary">首日多渠道试采，最终由供应商 A 成功确认</div>
+                    </div>
+                    <div class="purchase-entry-list">
+                      <div class="purchase-entry">
+                        <div class="purchase-time">09:12:31<br />采购单 PO-20260422-001</div>
+                        <div class="purchase-main">
+                          <div class="purchase-main-top"><span class="purchase-supplier">供应商 A · 杭州直连仓</span><span class="tag tag-red">失败</span></div>
+                          <div class="purchase-sub">失败原因：房态不足。返回码 ROOM_CLOSED，建议切换同城备采渠道。</div>
+                          <div class="purchase-detail-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">采购价</div><div class="purchase-detail-value">¥216.00</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理情况</div><div class="purchase-detail-value">系统自动终止，待切换供应商</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理人</div><div class="purchase-detail-value">系统自动采购</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">失败归因</div><div class="purchase-detail-value">库存不足</div></div></div>
+                        </div>
+                        <div class="purchase-actions">
+                          <button class="btn" data-modal="purchaseFailure">失败详情</button>
+                          <button class="btn btn-outline-primary">重新采购</button>
+                        </div>
+                      </div>
+                      <div class="purchase-entry">
+                        <div class="purchase-time">10:48:11<br />采购单 PO-20260422-003</div>
+                        <div class="purchase-main">
+                          <div class="purchase-main-top"><span class="purchase-supplier">供应商 B · 华东库存池</span><span class="tag tag-green">成功</span></div>
+                          <div class="purchase-sub">采购成功，确认号 SUP-B-772810。返回库存稳定，已锁房 15 分钟。</div>
+                          <div class="purchase-detail-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">采购价</div><div class="purchase-detail-value">¥208.40</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理情况</div><div class="purchase-detail-value">已锁房，待平台确认回写</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理人</div><div class="purchase-detail-value">系统自动采购</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">确认号</div><div class="purchase-detail-value">SUP-B-772810</div></div></div>
+                        </div>
+                        <div class="purchase-actions">
+                          <button class="btn">重发确认</button>
+                        </div>
+                      </div>
+                      <div class="purchase-entry">
+                        <div class="purchase-time">11:16:45<br />采购单 PO-20260422-004</div>
+                        <div class="purchase-main">
+                          <div class="purchase-main-top"><span class="purchase-supplier">供应商 C · OTA 备采</span><span class="tag tag-red">失败</span></div>
+                          <div class="purchase-sub">失败原因：价格上浮超阈值。当前采购价高于系统结算线 12%。</div>
+                          <div class="purchase-detail-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">采购价</div><div class="purchase-detail-value">¥251.70</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理情况</div><div class="purchase-detail-value">因利润阈值不达标终止</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理人</div><div class="purchase-detail-value">系统风控规则</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">失败归因</div><div class="purchase-detail-value">价格过高</div></div></div>
+                        </div>
+                        <div class="purchase-actions">
+                          <button class="btn" data-modal="purchaseFailure">失败详情</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="purchase-day">
+                    <div class="purchase-day-head">
+                      <div class="purchase-day-title">
+                        <div class="purchase-day-date">2026-04-23</div>
+                        <span class="tag tag-green">成功 1 次</span>
+                        <span class="tag tag-red">失败 2 次</span>
+                      </div>
+                      <div class="purchase-day-summary">二次补采后重新锁房，仍存在供应商切换记录</div>
+                    </div>
+                    <div class="purchase-entry-list">
+                      <div class="purchase-entry">
+                        <div class="purchase-time">08:33:10<br />采购单 PO-20260423-001</div>
+                        <div class="purchase-main">
+                          <div class="purchase-main-top"><span class="purchase-supplier">供应商 A · 杭州直连仓</span><span class="tag tag-red">失败</span></div>
+                          <div class="purchase-sub">失败原因：供应商超时未响应。系统已自动重试 2 次。</div>
+                          <div class="purchase-detail-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">采购价</div><div class="purchase-detail-value">¥209.00</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理情况</div><div class="purchase-detail-value">重试 2 次后超时关闭</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理人</div><div class="purchase-detail-value">系统自动采购</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">失败归因</div><div class="purchase-detail-value">供应商超时</div></div></div>
+                        </div>
+                        <div class="purchase-actions">
+                          <button class="btn" data-modal="purchaseFailure">失败详情</button>
+                          <button class="btn btn-outline-primary">重新采购</button>
+                        </div>
+                      </div>
+                      <div class="purchase-entry">
+                        <div class="purchase-time">09:51:08<br />采购单 PO-20260423-002</div>
+                        <div class="purchase-main">
+                          <div class="purchase-main-top"><span class="purchase-supplier">供应商 D · 商旅保底池</span><span class="tag tag-green">成功</span></div>
+                          <div class="purchase-sub">采购成功，保底库存已确认，可履约。供应商备注：建议 12 小时内回写平台确认。</div>
+                          <div class="purchase-detail-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">采购价</div><div class="purchase-detail-value">¥207.80</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理情况</div><div class="purchase-detail-value">已作为当前有效履约渠道</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理人</div><div class="purchase-detail-value">王敏（采购专员）</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">确认号</div><div class="purchase-detail-value">SUP-D-882102</div></div></div>
+                        </div>
+                        <div class="purchase-actions">
+                          <button class="btn">人工补采</button>
+                          <button class="btn btn-outline-primary">确认回写</button>
+                        </div>
+                      </div>
+                      <div class="purchase-entry">
+                        <div class="purchase-time">10:42:27<br />采购单 PO-20260423-003</div>
+                        <div class="purchase-main">
+                          <div class="purchase-main-top"><span class="purchase-supplier">供应商 C · OTA 备采</span><span class="tag tag-red">失败</span></div>
+                          <div class="purchase-sub">失败原因：重复占库存失败。系统已自动终止后续同渠道重试。</div>
+                          <div class="purchase-detail-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">采购价</div><div class="purchase-detail-value">¥210.20</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理情况</div><div class="purchase-detail-value">自动拦截重复占库</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">处理人</div><div class="purchase-detail-value">系统自动采购</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">失败归因</div><div class="purchase-detail-value">重复占库存</div></div></div>
+                        </div>
+                        <div class="purchase-actions">
+                          <button class="btn" data-modal="purchaseFailure">失败详情</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="purchase-day">
+                    <div class="purchase-day-head">
+                      <div class="purchase-day-title">
+                        <div class="purchase-day-date">2026-04-24</div>
+                        <span class="tag tag-gray">未采购</span>
+                      </div>
+                      <div class="purchase-day-summary">当日无新采购动作，系统依据前一日成功结果待人工最终确认。</div>
+                    </div>
+                    <div class="purchase-day-empty">未触发采购。原因：等待人工确认最终履约渠道，系统未继续发起采购请求。</div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">订单轨迹</div>
+                    <div class="section-subtitle">保留关键业务动作与采购节点，不与采购单明细重复表达。</div>
+                  </div>
+                </div>
+                <div class="timeline">
+                  <div class="timeline-item">
+                    <div class="timeline-axis"><div class="timeline-dot"></div></div>
+                    <div class="timeline-time">2026-04-22 16:29:51</div>
+                    <div class="timeline-content"><div class="timeline-title">平台下单成功</div><div>抖音渠道下单，系统生成内部订单并进入待处理。</div></div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-axis"><div class="timeline-dot"></div></div>
+                    <div class="timeline-time">2026-04-22 16:30:12</div>
+                    <div class="timeline-content"><div class="timeline-title">支付完成</div><div>用户支付成功，实付金额 ¥251.24，支付渠道信息已收敛到支付补充信息弹层。</div></div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-axis"><div class="timeline-dot"></div></div>
+                    <div class="timeline-time">2026-04-22 16:31:05</div>
+                    <div class="timeline-content"><div class="timeline-title">首次自动采购</div><div>采购引擎开始向供应商 A / B 发起并行采购请求。</div></div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-axis"><div class="timeline-dot"></div></div>
+                    <div class="timeline-time">2026-04-23 09:51:08</div>
+                    <div class="timeline-content"><div class="timeline-title">供应商 D 采购成功</div><div>当前存在有效保底库存，可履约，但仍需人工复核最终回写平台确认。</div></div>
+                  </div>
+                  <div class="timeline-item">
+                    <div class="timeline-axis"><div class="timeline-dot"></div></div>
+                    <div class="timeline-time">当前</div>
+                    <div class="timeline-content"><div class="timeline-title">等待人工处理</div><div>建议在 SLA 到期前完成人工复核与最终采购确认。</div></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+            <div class="right-stack">
+              <section class="card section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">金额与结算</div>
+                    <div class="section-subtitle">默认展示摘要，明细折叠查看。</div>
+                  </div>
+                </div>
+                <div class="summary-grid">
+                  <div class="summary-item"><div class="summary-name">支付金额</div><div class="summary-value strong danger">¥251.24</div></div>
+                  <div class="summary-item"><div class="summary-name">结算金额</div><div class="summary-value strong warning">¥224.61</div></div>
+                  <div class="summary-item"><div class="summary-name">采购成本</div><div class="summary-value">¥208.40</div></div>
+                  <div class="summary-item"><div class="summary-name">预估毛利</div><div class="summary-value">¥42.84</div></div>
+                  <div class="summary-item"><div class="summary-name">售卖模式</div><div class="summary-value"><span class="tag tag-blue">卖价</span></div></div>
+                  <div class="summary-item"><div class="summary-name">佣金比例</div><div class="summary-value">10.60%</div></div>
+                </div>
+                <div class="expand-card" id="priceExpand" style="margin-top:14px;">
+                  <button class="expand-head" data-toggle="priceExpand">
+                    <div>
+                      <div class="expand-head-title">价格明细</div>
+                      <div class="expand-head-desc">房费、补贴、退款、佣金与采购成本</div>
+                    </div>
+                    <span class="expand-icon">⌄</span>
+                  </button>
+                  <div class="expand-body">
+                    <div class="cost-list">
+                      <div class="cost-row"><div class="cost-row-label">房费原价</div><div class="cost-row-value">¥268.00</div></div>
+                      <div class="cost-row"><div class="cost-row-label">平台优惠</div><div class="cost-row-value">- ¥8.00</div></div>
+                      <div class="cost-row"><div class="cost-row-label">店铺补贴</div><div class="cost-row-value">- ¥8.76</div></div>
+                      <div class="cost-row"><div class="cost-row-label">用户实付</div><div class="cost-row-value emphasis">¥251.24</div></div>
+                      <div class="cost-row"><div class="cost-row-label">采购成本</div><div class="cost-row-value">¥208.40</div></div>
+                      <div class="cost-row"><div class="cost-row-label">结算金额</div><div class="cost-row-value emphasis">¥224.61</div></div>
+                      <div class="cost-row"><div class="cost-row-label">佣金</div><div class="cost-row-value">¥26.63</div></div>
+                      <div class="cost-row"><div class="cost-row-label">退款金额</div><div class="cost-row-value">-</div></div>
+                      <div class="cost-row"><div class="cost-row-label">取消罚金</div><div class="cost-row-value">-</div></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="card section-card">
+                <div class="section-head">
+                  <div>
+                    <div class="section-title">状态摘要</div>
+                    <div class="section-subtitle">与列表页统一字段顺序，强调决策信息。</div>
+                  </div>
+                </div>
+                <div class="summary-grid">
+                  <div class="summary-item"><div class="summary-name">系统状态</div><div class="summary-value"><span class="tag tag-blue">预订中</span></div></div>
+                  <div class="summary-item"><div class="summary-name">平台状态</div><div class="summary-value"><span class="tag tag-gray">已接单</span></div></div>
+                  <div class="summary-item"><div class="summary-name">售后状态</div><div class="summary-value"><span class="tag tag-gray">未进入售后</span></div></div>
+                  <div class="summary-item"><div class="summary-name">采购状态</div><div class="summary-value"><span class="tag tag-orange">待人工补采</span></div></div>
+                </div>
+                <div class="quiet-box" style="margin-top:14px;">
+                  当前订单无退款动作。若后续进入售后，协商退款、已同意、已拒绝等附加状态建议在售后记录内展示，不与主状态并行堆叠。
+                </div>
+              </section>
+
+            </div>
+          </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-bar-inner">
+      <div class="bottom-summary">
+        <span class="summary-chip">当前采购结论：待人工补采</span>
+        <span class="summary-chip">剩余处理时间：<span id="countdownMini">59分07秒</span></span>
+        <span class="summary-chip">最近成功渠道：供应商 D</span>
+      </div>
+      <div class="bottom-actions">
+        <button class="btn btn-outline-primary">接单</button>
+        <button class="btn btn-outline-danger">拒单</button>
+        <button class="btn">人工补采</button>
+        <button class="btn">发起售后</button>
+        <button class="btn">查看日志</button>
+        <button class="btn btn-primary">确认采购结果</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="purchaseFailureModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">采购失败原因明细</div>
+        <button class="btn" data-close-modal>关闭</button>
+      </div>
+      <div class="modal-body">
+        <div class="failure-list">
+          <div class="failure-item">
+            <div class="failure-top"><strong>供应商 A · 杭州直连仓</strong><span class="failure-code">ROOM_CLOSED</span></div>
+            <div class="failure-text">供应商返回房态不足，目标日期库存已关闭，建议切换同城备采池。</div>
+            <div class="failure-sub">出现时间：2026-04-22 09:12:31 / 2026-04-23 08:33:10</div>
+          </div>
+          <div class="failure-item">
+            <div class="failure-top"><strong>供应商 C · OTA 备采</strong><span class="failure-code">PRICE_LIMIT</span></div>
+            <div class="failure-text">报价高于系统允许采购线 12%，未满足利润阈值要求，系统自动终止。</div>
+            <div class="failure-sub">出现时间：2026-04-22 11:16:45</div>
+          </div>
+          <div class="failure-item">
+            <div class="failure-top"><strong>供应商 A · 杭州直连仓</strong><span class="failure-code">SUP_TIMEOUT</span></div>
+            <div class="failure-text">供应商接口两次超时未返回，系统已自动标记为暂不可用。</div>
+            <div class="failure-sub">出现时间：2026-04-23 08:33:10</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-mask" id="paymentInfoModal">
+    <div class="modal">
+      <div class="modal-head">
+        <div class="modal-title">支付补充信息</div>
+        <button class="btn" data-close-modal>关闭</button>
+      </div>
+      <div class="modal-body">
+        <div class="detail-grid">
+          <div class="detail-item"><div class="detail-label">支付渠道</div><div class="detail-value">抖音支付</div></div>
+          <div class="detail-item"><div class="detail-label">支付流水号</div><div class="detail-value mono">DY-PAY-202604221630127721</div></div>
+          <div class="detail-item"><div class="detail-label">支付完成时间</div><div class="detail-value">2026-04-22 16:30:12</div></div>
+          <div class="detail-item"><div class="detail-label">支付状态</div><div class="detail-value"><span class="tag tag-green">支付成功</span></div></div>
+          <div class="detail-item full"><div class="detail-label">备注</div><div class="detail-value">无退款、无风控拦截。该区域仅承接次级支付字段，不与主摘要重复。</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const toastEl = document.getElementById('toast');
+    const countdownValueEl = document.getElementById('countdownValue');
+    const countdownMiniEl = document.getElementById('countdownMini');
+
+    function showToast(message) {
+      toastEl.textContent = message;
+      toastEl.classList.add('show');
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+    }
+
+    function formatCountdown(deadline) {
+      const diff = Math.max(0, deadline - Date.now());
+      const totalSeconds = Math.floor(diff / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(minutes).padStart(2, '0')}分${String(seconds).padStart(2, '0')}秒`;
+    }
+
+    function getSlaLevel(deadline) {
+      const diff = Math.max(0, deadline - Date.now());
+      const minutes = diff / 1000 / 60;
+      if (diff <= 0) return 'timer-timeout';
+      if (minutes < 5) return 'timer-danger';
+      if (minutes < 15) return 'timer-warning';
+      return 'timer-safe';
+    }
+
+    function updateCountdown() {
+      const deadline = Number(countdownValueEl.dataset.deadline);
+      const text = formatCountdown(deadline);
+      const level = getSlaLevel(deadline);
+      countdownValueEl.textContent = text;
+      countdownMiniEl.textContent = text;
+      countdownValueEl.classList.remove('timer-safe', 'timer-warning', 'timer-danger', 'timer-timeout');
+      countdownValueEl.classList.add(level);
+    }
+
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(btn.dataset.copy);
+          showToast(`已复制：${btn.dataset.copy}`);
+        } catch {
+          showToast('复制失败，请手动复制');
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-toggle]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const card = document.getElementById(btn.dataset.toggle);
+        card.classList.toggle('open');
+      });
+    });
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) modal.classList.add('show');
+    }
+
+    function closeModal(el) {
+      const modal = el.closest('.modal-mask');
+      if (modal) modal.classList.remove('show');
+    }
+
+    document.querySelectorAll('[data-modal]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (btn.dataset.modal === 'purchaseFailure') openModal('purchaseFailureModal');
+        if (btn.dataset.modal === 'paymentInfo') openModal('paymentInfoModal');
+      });
+    });
+
+    document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => closeModal(btn)));
+    document.querySelectorAll('.modal-mask').forEach(mask => {
+      mask.addEventListener('click', event => {
+        if (event.target === mask) mask.classList.remove('show');
+      });
+    });
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
 </body>
 </html>

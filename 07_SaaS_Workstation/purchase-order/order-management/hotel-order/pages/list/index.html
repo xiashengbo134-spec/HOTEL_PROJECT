@@ -23,7 +23,7 @@
       --color-bg-blue: #edf3ff;
       --shadow-card: 0 8px 24px rgba(29, 33, 41, 0.06);
       --radius-small: 6px;
-      --radius-large: 14px;
+      --radius-large: 7px;
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--color-bg-2); font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--color-text-1); }
@@ -44,11 +44,11 @@
     .menu-item { display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: var(--color-text-2); font-size: 14px; font-weight: 500; }
     .menu-item.parent { justify-content: space-between; }
     .menu-item.active { background: var(--color-bg-blue); color: var(--color-primary); font-weight: 600; }
-    .content { flex: 1; min-width: 0; padding: 20px; }
+    .content { flex: 1; min-width: 0; padding: 10px; }
     .container { width: 100%; }
     .card { background: var(--color-bg-1); border: 1px solid var(--color-border-2); border-radius: var(--radius-large); box-shadow: var(--shadow-card); }
-    .toolbar-card { padding: 16px; margin-bottom: 16px; }
-    .toolbar-main { display: flex; align-items: stretch; gap: 16px; }
+    .toolbar-card { padding: 16px; margin-bottom: 8px; }
+    .toolbar-main { display: flex; align-items: stretch; gap: 8px; }
     .form-grid { flex: 1; display: grid; grid-template-columns: minmax(180px,1fr) minmax(180px,1fr) minmax(220px,1.15fr) minmax(220px,1.15fr); gap: 14px; align-items: end; }
     .field { min-width: 0; }
     .field-label { display: none; }
@@ -84,8 +84,8 @@
     .btn-outline-primary { color: var(--color-primary); border-color: rgba(22, 93, 255, 0.35); background: rgba(22, 93, 255, 0.04); }
     .btn-outline-danger { color: var(--color-danger); border-color: rgba(245, 63, 63, 0.35); background: rgba(245, 63, 63, 0.04); }
     .btn[disabled] { opacity: .5; cursor: not-allowed; }
-    .tabs-card { margin-bottom: 16px; padding: 0 16px; }
-    .tabs-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .tabs-card { margin-bottom: 8px; padding: 0 16px; }
+    .tabs-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
     .tabs { display: flex; gap: 28px; overflow-x: auto; min-width: 0; flex: 1; }
     .tab { position: relative; display: inline-flex; align-items: center; gap: 8px; height: 56px; padding: 0; border: 0; background: transparent; color: var(--color-text-2); font-size: 14px; font-weight: 500; cursor: pointer; white-space: nowrap; }
     .tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 999px 999px 0 0; background: transparent; }
@@ -99,8 +99,8 @@
     .list-sort-select { width: 120px; min-width: 120px; height: 30px; padding: 0 20px 0 10px; border: 1px solid var(--color-border-1); border-radius: var(--radius-small); background: var(--color-fill-1); color: var(--color-text-2); font-size: 12px; text-align: center; text-align-last: center; outline: none; }
     .list-sort-select:focus { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.1); }
     .summary-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; background: var(--color-fill-1); color: var(--color-text-2); font-size: 12px; line-height: 1.25; }
-    .order-item { border: 1px solid var(--color-border-1); border-radius: 12px; background: #fff; padding: 10px 16px; }
-    .order-item + .order-item { margin-top: 12px; }
+    .order-item { border: 1px solid var(--color-border-1); border-radius: 6px; background: #fff; padding: 10px 16px; }
+    .order-item + .order-item { margin-top: 6px; }
     .order-top { display: grid; grid-template-columns: minmax(420px,1.38fr) minmax(460px,1.82fr) minmax(210px,.82fr) minmax(220px,.86fr); gap: 12px; align-items: start; }
     .section-title { margin-bottom: 6px; color: var(--color-text-3); font-size: 12px; font-weight: 500; }
     .order-title-line { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
@@ -174,10 +174,19 @@
     .modal-head { padding: 18px 20px 8px; font-size: 18px; font-weight: 600; }
     .modal-body { padding: 8px 20px 20px; color: var(--color-text-2); line-height: 1.7; font-size: 14px; }
     .modal-foot { padding: 0 20px 20px; display: flex; justify-content: flex-end; gap: 12px; }
+    .drawer-mask { position: fixed; inset: 0; background: rgba(29, 33, 41, 0.35); display: none; justify-content: flex-end; z-index: 998; }
+    .drawer-mask.show { display: flex; }
+    .drawer-panel { width: 1400px; max-width: calc(100vw - 32px); height: 100vh; background: #fff; box-shadow: -12px 0 32px rgba(29, 33, 41, 0.18); display: flex; flex-direction: column; }
+    .drawer-head { height: 56px; padding: 0 20px; border-bottom: 1px solid var(--color-border-1); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .drawer-title { font-size: 16px; font-weight: 600; }
+    .drawer-close-icon { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 18px; line-height: 1; }
+    .drawer-body { flex: 1; min-height: 0; background: var(--color-bg-2); }
+    .drawer-iframe { width: 100%; height: 100%; border: 0; background: #fff; }
     [data-tooltip] { position: relative; cursor: help; }
     [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; left: 0; top: calc(100% + 8px); min-width: 220px; max-width: 340px; padding: 10px 12px; border-radius: 10px; background: rgba(29, 33, 41, 0.96); color: #fff; white-space: pre-line; font-size: 12px; line-height: 1.6; z-index: 10; }
     @media (max-width: 1360px) { .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .composite-control { grid-template-columns: 108px minmax(0, 1fr); } .order-top { grid-template-columns: 1fr; } }
-    @media (max-width: 760px) { .content { padding: 16px; } .form-grid { grid-template-columns: 1fr; } .toolbar-actions, .order-bottom, .tabs-toolbar, .main, .pagination { flex-direction: column; align-items: stretch; } .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--color-border-1); } .btn-group, .action-list, .tabs, .pagination-controls { width: 100%; } .btn-group .btn, .action-list .btn { flex: 1; } }
+    @media (max-width: 760px) { .content { padding: 8px; } .form-grid { grid-template-columns: 1fr; } .toolbar-actions, .order-bottom, .tabs-toolbar, .main, .pagination { flex-direction: column; align-items: stretch; } .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--color-border-1); } .btn-group, .action-list, .tabs, .pagination-controls { width: 100%; } .btn-group .btn, .action-list .btn { flex: 1; } }
+
   </style>
 </head>
 <body>
@@ -243,6 +252,30 @@
     </div>
   </div>
 
+    <div class="drawer-mask" id="detailDrawer">
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <div class="drawer-title">订单详情</div>
+        <button class="btn drawer-close-icon" id="closeDetailDrawerBtn" aria-label="关闭">×</button>
+      </div>
+      <div class="drawer-body">
+        <iframe class="drawer-iframe" id="detailDrawerFrame" src="../detail/side-drawer.html" title="订单详情"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="drawer-mask" id="logDrawer">
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <div class="drawer-title">订单日志</div>
+        <button class="btn drawer-close-icon" id="closeLogDrawerBtn" aria-label="关闭">×</button>
+      </div>
+      <div class="drawer-body">
+        <iframe class="drawer-iframe" id="logDrawerFrame" src="../log/index.html" title="订单日志"></iframe>
+      </div>
+    </div>
+  </div>
+
+
   <script>
     const tabs = [
       { key: 'pending', label: '待处理', badge: 1 },
@@ -274,7 +307,12 @@
     const confirmMask = document.getElementById('confirmMask');
     const confirmTitle = document.getElementById('confirmTitle');
     const confirmContent = document.getElementById('confirmContent');
+        const detailDrawer = document.getElementById('detailDrawer');
+    const detailDrawerFrame = document.getElementById('detailDrawerFrame');
+    const logDrawer = document.getElementById('logDrawer');
+    const logDrawerFrame = document.getElementById('logDrawerFrame');
     const submitConfirmBtn = document.getElementById('submitConfirmBtn');
+
     const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
 
     function formatCountdown(deadline) { const diff = Math.max(0, deadline - Date.now()); const totalSeconds = Math.floor(diff / 1000); const minutes = Math.floor(totalSeconds / 60); const seconds = totalSeconds % 60; return `${String(minutes).padStart(2, '0')}分${String(seconds).padStart(2, '0')}秒`; }
@@ -352,10 +390,16 @@
     function showToast(message) { toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800); }
     function openConfirm(action, orderNo) { const actionText = action === 'accept' ? '接单' : '拒单'; state.confirmAction = { action, orderNo }; confirmTitle.textContent = `确认${actionText}`; confirmContent.textContent = `确认要对订单 ${orderNo} 执行“${actionText}”操作吗？`; confirmMask.classList.add('show'); }
     function closeConfirm() { confirmMask.classList.remove('show'); state.confirmAction = null; }
+        function openDetailDrawer(orderNo) { detailDrawerFrame.src = `../detail/side-drawer.html?orderNo=${encodeURIComponent(orderNo)}`; detailDrawer.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function closeDetailDrawer() { detailDrawer.classList.remove('show'); document.body.style.overflow = ''; }
+    function openLogDrawer(orderNo) { logDrawerFrame.src = `../log/index.html?orderNo=${encodeURIComponent(orderNo)}`; logDrawer.classList.add('show'); document.body.style.overflow = 'hidden'; }
+    function closeLogDrawer() { logDrawer.classList.remove('show'); document.body.style.overflow = ''; }
     function updateCountdowns() { document.querySelectorAll('.timer-value[data-deadline]').forEach(el => { const deadline = Number(el.dataset.deadline); const box = el.closest('.time-stack'); const level = getSlaLevel(deadline); el.textContent = formatCountdown(deadline); if (box) { box.classList.remove('timer-safe', 'timer-warning', 'timer-danger', 'timer-timeout'); box.classList.add(`timer-${level}`); } }); }
 
+
     tabsEl.addEventListener('click', event => { const tabBtn = event.target.closest('[data-tab]'); if (!tabBtn) return; state.activeTab = tabBtn.dataset.tab; state.pageNum = 1; if (state.activeTab !== 'pending') state.sortBy = 'default'; render(); });
-    orderListEl.addEventListener('click', async event => { const copyBtn = event.target.closest('[data-copy]'); if (copyBtn) { try { await navigator.clipboard.writeText(copyBtn.dataset.copy); showToast(`已复制：${copyBtn.dataset.copy}`); } catch { showToast('复制失败，请手动复制'); } return; } const actionBtn = event.target.closest('[data-action]'); if (!actionBtn) return; const action = actionBtn.dataset.action; const orderNo = actionBtn.dataset.order; if (action === 'accept' || action === 'reject') return openConfirm(action, orderNo); if (action === 'detail') return showToast(`进入订单详情页：${orderNo}`); if (action === 'log') showToast(`打开订单日志：${orderNo}`); });
+        orderListEl.addEventListener('click', async event => { const copyBtn = event.target.closest('[data-copy]'); if (copyBtn) { try { await navigator.clipboard.writeText(copyBtn.dataset.copy); showToast(`已复制：${copyBtn.dataset.copy}`); } catch { showToast('复制失败，请手动复制'); } return; } const actionBtn = event.target.closest('[data-action]'); if (!actionBtn) return; const action = actionBtn.dataset.action; const orderNo = actionBtn.dataset.order; if (action === 'accept' || action === 'reject') return openConfirm(action, orderNo); if (action === 'detail') return openDetailDrawer(orderNo); if (action === 'log') return openLogDrawer(orderNo); });
+
     paginationEl.addEventListener('click', event => { const pageBtn = event.target.closest('[data-page]'); const actionBtn = event.target.closest('[data-page-action]'); const totalPages = Math.max(1, Math.ceil(getFilteredOrders().length / state.pageSize)); if (pageBtn) { state.pageNum = Number(pageBtn.dataset.page); render(); return; } if (actionBtn) { const action = actionBtn.dataset.pageAction; if (action === 'prev' && state.pageNum > 1) state.pageNum -= 1; if (action === 'next' && state.pageNum < totalPages) state.pageNum += 1; render(); } });
     sortSelectEl.addEventListener('change', event => { state.sortBy = event.target.value; state.pageNum = 1; render(); });
     document.getElementById('searchBtn').addEventListener('click', () => { syncFiltersFromDom(); render(); showToast('已按当前筛选条件刷新列表'); });
@@ -363,6 +407,11 @@
     submitConfirmBtn.addEventListener('click', () => { if (!state.confirmAction) return; showToast(`已确认${state.confirmAction.action === 'accept' ? '接单' : '拒单'}：${state.confirmAction.orderNo}`); closeConfirm(); });
     cancelConfirmBtn.addEventListener('click', closeConfirm);
     confirmMask.addEventListener('click', event => { if (event.target === confirmMask) closeConfirm(); });
+        document.getElementById('closeDetailDrawerBtn').addEventListener('click', closeDetailDrawer);
+    document.getElementById('closeLogDrawerBtn').addEventListener('click', closeLogDrawer);
+    detailDrawer.addEventListener('click', event => { if (event.target === detailDrawer) closeDetailDrawer(); });
+    logDrawer.addEventListener('click', event => { if (event.target === logDrawer) closeLogDrawer(); });
+
 
     syncFiltersFromDom();
     render();

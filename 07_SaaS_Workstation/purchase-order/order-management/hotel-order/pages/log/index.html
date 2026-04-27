@@ -14,10 +14,10 @@
     
     .el-table, .el-tabs__item, .el-button, .el-timeline-item__content { font-family: "PingFang SC", sans-serif !important; font-size: 14px !important; }
     
-    .el-drawer__header { margin-bottom: 0 !important; padding: 0 24px !important; height: 56px; border-bottom: 1px solid #E5E7EB; background: #FFF; display: flex; align-items: center; }
-    .el-drawer__body { padding: 0 !important; background-color: #F8FAFC; }
+    .page-shell { height: 100vh; display: flex; flex-direction: column; background-color: #F8FAFC; }
 
     .drawer-title { font-family: "PingFang SC", sans-serif; font-weight: 600; font-size: 20px; color: #1E293B; }
+    .page-head { height: 56px; padding: 0 24px; border-bottom: 1px solid #E5E7EB; background: #FFF; display: flex; align-items: center; flex: 0 0 auto; }
     .summary-bar { background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%); }
     .summary-label { color: #64748B; font-size: 11px; line-height: 1; }
     .summary-value { color: #0F172A; font-size: 13px; font-weight: 400; line-height: 1.25; }
@@ -125,21 +125,14 @@
   </style>
 </head>
 <body>
-  <div id="app" v-cloak class="h-screen flex items-center justify-center">
-    <div class="text-center">
-      <el-button type="primary" size="large" @click="visible = true" class="px-12 h-14 text-lg shadow-lg">
-        日志
-      </el-button>
+  <div id="app" v-cloak class="page-shell">
+    <div class="page-head">
+      <div class="drawer-title leading-none">订单日志</div>
     </div>
 
-    <el-drawer v-model="visible" size="1400px" destroy-on-close>
-      <template #header>
-        <div class="drawer-title leading-none">订单日志</div>
-      </template>
-
-      <div class="flex flex-col h-full bg-white">
-        
-        <div class="px-6 pt-2.5 pb-2.5 border-b bg-white shrink-0">
+    <div class="flex flex-col flex-1 min-h-0 bg-white">
+      
+      <div class="px-6 pt-2.5 pb-2.5 border-b bg-white shrink-0">
           <div class="summary-bar rounded-xl border border-slate-200 px-3 py-2 shadow-sm">
             <div class="grid grid-cols-12 gap-2">
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
@@ -354,7 +347,6 @@
 
         </div>
       </div>
-    </el-drawer>
 
     <el-dialog v-model="jsonDialogVisible" width="1280px" top="3vh" append-to-body destroy-on-close>
       <template #header>
@@ -380,7 +372,6 @@
     const { createApp, ref, computed, watch, nextTick } = Vue;
     const app = createApp({
       setup() {
-        const visible = ref(true);
         const activeTab = ref('phase');
         const selectedPhaseId = ref('');
         const selectedBusinessType = ref('试单');
@@ -701,7 +692,7 @@
         };
 
         return {
-          visible, activeTab, totalLogsCount, orderSummary,
+          activeTab, totalLogsCount, orderSummary,
           selectedPhaseId, phaseBlocks, currentPhaseSelection,
           selectedBusinessType, businessTypes, 
           rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip, getRowClassName,
