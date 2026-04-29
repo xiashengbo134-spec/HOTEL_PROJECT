@@ -218,10 +218,19 @@
     .failure-list { display: grid; gap: 12px; }
     .failure-item { border: 1px solid var(--color-border-2); border-radius: 6px; padding: 12px 14px; }
 
-    .failure-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+        .failure-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
     .failure-code { color: var(--color-danger); font-size: 12px; font-weight: 600; }
     .failure-text { color: var(--color-text-1); font-size: 14px; line-height: 1.6; }
     .failure-sub { color: var(--color-text-3); font-size: 12px; margin-top: 6px; }
+    .price-detail-list { display: flex; flex-direction: column; gap: 12px; }
+    .price-detail-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .price-detail-title { color: var(--color-text-1); font-size: 14px; font-weight: 600; text-align: left; }
+    .price-detail-amount { color: var(--color-danger); font-size: 18px; font-weight: 700; text-align: right; }
+    .price-detail-line { display: flex; align-items: center; justify-content: space-between; gap: 16px; color: var(--color-text-1); font-size: 14px; }
+    .price-detail-line + .price-detail-line { margin-top: 8px; }
+    .price-detail-line-label { text-align: left; }
+    .price-detail-line-value { color: var(--color-danger); text-align: right; font-weight: 600; }
+
     .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-12px); min-width: 220px; max-width: 520px; padding: 12px 16px; border-radius: 10px; background: rgba(29, 33, 41, .92); color: #fff; font-size: 14px; opacity: 0; pointer-events: none; transition: all .2s ease; z-index: 1000; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         @media (max-width: 1200px) { .top-panel-grid { grid-template-columns: 1fr; } .purchase-actions { justify-content: flex-start; } }
@@ -607,7 +616,8 @@
   <div class="modal-mask" id="priceDetailModal">
     <div class="modal">
       <div class="modal-head"><div class="modal-title">订单价格明细</div><button class="btn" data-close-modal>关闭</button></div>
-      <div class="modal-body"><div class="failure-list"><div class="failure-item"><div class="failure-top"><strong>订单金额</strong><strong>¥864.00</strong></div><div class="failure-text">优惠金额：¥300.00</div><div class="failure-sub">门店首单 ¥100　城市特惠 ¥100　黄金会员 ¥100</div></div></div></div>
+            <div class="modal-body"><div class="failure-list"><div class="failure-item"><div class="price-detail-list"><div class="price-detail-row"><div class="price-detail-title">订单金额</div><div class="price-detail-amount">¥864.00</div></div><div><div class="price-detail-line"><div class="price-detail-line-label">门店首单</div><div class="price-detail-line-value">¥100</div></div><div class="price-detail-line"><div class="price-detail-line-label">城市特惠</div><div class="price-detail-line-value">¥100</div></div><div class="price-detail-line"><div class="price-detail-line-label">黄金会员</div><div class="price-detail-line-value">¥100</div></div></div></div></div></div>
+
     </div>
   </div>
 
