@@ -23,8 +23,8 @@
       --color-bg-2: #f2f3f5;
       --color-bg-blue: #edf3ff;
       --shadow-card: 0 8px 24px rgba(29, 33, 41, 0.06);
-      --radius-small: 6px;
-      --radius-large: 14px;
+      --radius-small: 4px;
+      --radius-large: 4px;
       --bottom-bar-height: 76px;
     }
     * { box-sizing: border-box; }
@@ -32,7 +32,7 @@
     button, input, select, textarea { font-family: inherit; }
     .layout { min-height: 100vh; padding: 24px 0; }
     .dialog-shell { width: 1400px; max-width: calc(100vw - 32px); margin: 0 auto; }
-    .dialog-page { background: #fff; border: 1px solid var(--color-border-2); border-radius: 18px; box-shadow: 0 18px 48px rgba(15, 23, 42, 0.12); overflow: hidden; }
+    .dialog-page { background: #fff; border: 1px solid var(--color-border-2); border-radius: 4px; box-shadow: 0 18px 48px rgba(15, 23, 42, 0.12); overflow: hidden; }
     .dialog-header { height: 60px; padding: 0 20px; border-bottom: 1px solid var(--color-border-2); display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #fff; }
     .dialog-header-left { min-width: 0; }
     .dialog-title { font-size: 18px; font-weight: 600; }
@@ -49,13 +49,13 @@
     .btn-outline-danger { color: var(--color-danger); border-color: rgba(245, 63, 63, .35); background: rgba(245, 63, 63, .04); }
     .btn[disabled] { opacity: .5; cursor: not-allowed; }
     .btn-link { border: 0; background: transparent; color: var(--color-primary); padding: 0; min-width: auto; height: auto; }
-    .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border-radius: 999px; border: 1px solid transparent; font-size: 12px; line-height: 22px; white-space: nowrap; }
-    .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); border-color: rgba(22, 93, 255, .18); }
-    .tag-green { background: rgba(0, 180, 42, .08); color: var(--color-success); border-color: rgba(0, 180, 42, .18); }
-    .tag-orange { background: rgba(255, 125, 0, .1); color: var(--color-warning); border-color: rgba(255, 125, 0, .2); }
-    .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); border-color: rgba(245, 63, 63, .18); }
-    .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; border-color: rgba(114, 46, 209, .16); }
-    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); border-color: var(--color-border-1); }
+    .tag { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 0 10px; border-radius: 4px; border: 0; font-size: 14px; line-height: 20px; white-space: nowrap; box-shadow: none; }
+    .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); }
+    .tag-green { background: rgba(0, 180, 42, .08); color: var(--color-success); }
+    .tag-orange { background: rgba(255, 125, 0, .1); color: var(--color-warning); }
+    .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
+    .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; }
+    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); }
     .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
     .page-title { margin: 0; font-size: 24px; line-height: 1.25; }
     .page-subtitle { margin-top: 6px; color: var(--color-text-3); font-size: 13px; }
@@ -69,7 +69,7 @@
     .channel-douyin { background: linear-gradient(135deg, #111827, #4b5563); }
     .channel-feizhu { background: linear-gradient(135deg, #ff7d00, #ffb400); }
     .overview-id-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 18px; }
-    .info-line { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .info-line { display: flex; align-items: center; gap: 8px; min-width: 0; min-height: 24px; }
     .info-label { color: var(--color-text-3); font-size: 12px; flex: 0 0 auto; }
     .info-value { color: var(--color-text-1); font-size: 14px; min-width: 0; }
     .mono { font-family: "JetBrains Mono", Consolas, monospace; }
@@ -110,7 +110,7 @@
     .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
     .summary-item { display: grid; grid-template-columns: 76px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 24px; }
     .summary-name { color: var(--color-text-3); font-size: 12px; line-height: 24px; }
-    .summary-value { color: var(--color-text-1); font-size: 14px; line-height: 24px; }
+    .summary-value { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; color: var(--color-text-1); font-size: 14px; line-height: 24px; }
     .summary-value.strong { font-size: 16px; font-weight: 700; }
     .summary-value.danger { color: var(--color-danger); }
     .summary-value.warning { color: var(--color-warning); }
@@ -157,14 +157,14 @@
     .timeline-time { color: var(--color-text-3); font-size: 12px; line-height: 1.6; }
     .timeline-content { color: var(--color-text-1); font-size: 14px; line-height: 1.55; }
     .timeline-title { font-weight: 600; margin-bottom: 2px; }
-    .bottom-bar { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); z-index: 60; width: 1400px; max-width: calc(100vw - 32px); padding: 12px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--color-border-1); border-left: 1px solid var(--color-border-2); border-right: 1px solid var(--color-border-2); border-radius: 16px 16px 0 0; }
+    .bottom-bar { position: fixed; left: 50%; bottom: 0; transform: translateX(-50%); z-index: 60; width: 1400px; max-width: calc(100vw - 32px); padding: 12px 20px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--color-border-1); border-left: 1px solid var(--color-border-2); border-right: 1px solid var(--color-border-2); border-radius: 4px 4px 0 0; }
     .bottom-bar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .bottom-summary { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--color-text-2); font-size: 13px; }
-    .summary-chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: var(--color-fill-1); color: var(--color-text-2); font-size: 12px; }
+    .summary-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 24px; padding: 0 10px; border-radius: 4px; background: var(--color-fill-1); color: var(--color-text-2); font-size: 14px; line-height: 20px; }
     .bottom-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); display: none; align-items: center; justify-content: center; z-index: 90; padding: 20px; }
     .modal-mask.show { display: flex; }
-    .modal { width: min(720px, 100%); max-height: 80vh; overflow: auto; background: #fff; border-radius: 16px; box-shadow: 0 18px 48px rgba(15, 23, 42, .2); }
+    .modal { width: min(720px, 100%); max-height: 80vh; overflow: auto; background: #fff; border-radius: 4px; box-shadow: 0 18px 48px rgba(15, 23, 42, .2); }
     .modal-head { padding: 16px 18px; border-bottom: 1px solid var(--color-border-2); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .modal-title { font-size: 16px; font-weight: 600; }
     .modal-body { padding: 18px; }
@@ -232,8 +232,8 @@
                   <span class="tag tag-gray">抖音 · 江浙运营号</span>
                 </div>
                 <div class="overview-id-grid">
-                  <div class="info-line"><span class="info-label">系统单号</span><span class="info-value mono">HTL202604228899</span><button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div>
-                  <div class="info-line"><span class="info-label">外部单号</span><span class="info-value mono">DOUYIN-OUT-8877349921</span><button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div>
+                  <div class="info-line"><span class="info-label">系统</span><span class="info-value mono">HTL202604228899</span><button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div>
+                  <div class="info-line"><span class="info-label">外部</span><span class="info-value mono">DOUYIN-OUT-8877349921</span><button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div>
                   <div class="info-line"><span class="info-label">系统状态</span><span class="tag tag-blue">预订中</span></div>
                   <div class="info-line"><span class="info-label">平台状态</span><span class="tag tag-gray">已接单</span></div>
                   <div class="info-line"><span class="info-label">售后状态</span><span class="inline-tags"><span class="tag tag-gray">未进入售后</span></span></div>

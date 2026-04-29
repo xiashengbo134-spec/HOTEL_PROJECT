@@ -122,6 +122,33 @@
     .el-table__expand-icon:hover {
       color: #334155 !important;
     }
+
+    .log-filter-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .log-filter-chip-btn {
+      min-width: 96px;
+      height: 30px;
+      padding: 0 12px;
+      border-radius: 4px;
+      border: 1px solid #E2E8F0;
+      background: #FFF;
+      color: #475569;
+      font-size: 13px;
+      line-height: 28px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .log-filter-chip-btn.active {
+      background: #165DFF;
+      border-color: #165DFF;
+      color: #FFF;
+    }
   </style>
 </head>
 <body>
@@ -136,11 +163,11 @@
           <div class="summary-bar rounded-xl border border-slate-200 px-3 py-2 shadow-sm">
             <div class="grid grid-cols-12 gap-2">
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
-                <div class="summary-label">系统订单号</div>
+                <div class="summary-label">系统</div>
                 <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.systemOrderNo }}</div>
               </div>
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
-                <div class="summary-label">外部订单号</div>
+                <div class="summary-label">外部</div>
                 <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.externalOrderNo }}</div>
               </div>
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
@@ -176,10 +203,19 @@
         </div>
 
         <div class="px-6 border-b bg-white shrink-0">
-          <el-tabs v-model="activeTab">
-            <el-tab-pane label="阶段日志" name="phase"></el-tab-pane>
-            <el-tab-pane label="业务日志" name="business"></el-tab-pane>
-          </el-tabs>
+          <div class="flex items-center justify-between gap-4">
+            <el-tabs v-model="activeTab">
+              <el-tab-pane label="阶段日志" name="phase"></el-tab-pane>
+              <el-tab-pane label="业务日志" name="business"></el-tab-pane>
+            </el-tabs>
+            <div class="flex items-center gap-3 pb-2">
+              <span class="text-[13px] text-slate-500">查看范围</span>
+              <div class="log-filter-chip">
+                <button type="button" :class="['log-filter-chip-btn', selectedLogScope === 'order' ? 'active' : '']" @click="toggleLogScope('order')">只看订单</button>
+                <button type="button" :class="['log-filter-chip-btn', selectedLogScope === 'purchase' ? 'active' : '']" @click="toggleLogScope('purchase')">只看采购单</button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="flex flex-1 overflow-hidden bg-[#F8FAFC]">
@@ -254,7 +290,10 @@
               :class="selectedBusinessType === type.name ? 'bg-[#EAF2FF] border-[#165DFF] font-bold text-[#165DFF]' : 'text-gray-700'"
               @click="selectedBusinessType = type.name"
             >
-              <span>{{ type.name }}</span>
+              <div class="flex items-center justify-between gap-2">
+                <span>{{ type.name }}</span>
+                <span class="text-[12px] font-semibold" :class="type.status === '失败' ? 'text-red-500' : 'text-emerald-500'">{{ type.status }}</span>
+              </div>
               <span class="text-xs text-gray-400 font-normal">{{ type.count }} 条记录</span>
             </div>
           </div>
@@ -325,6 +364,15 @@
                     </template>
                   </el-table-column>
 
+                  <el-table-column v-else label="类型" width="110">
+                    <template #default="{ row }">
+                      <div class="flex flex-col leading-6">
+                        <span class="text-[14px] font-semibold text-gray-800">{{ row.businessType }}</span>
+                        <span :class="row.isError ? 'text-red-500' : 'text-emerald-500'" class="text-[12px]">{{ row.businessStatus }}</span>
+                      </div>
+                    </template>
+                  </el-table-column>
+
                   <el-table-column v-else label="结果">
                     <template #default="{ row }">
                       <el-tooltip v-if="shouldShowTooltip(buildRowResult(row), 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="buildRowResult(row)">
@@ -375,6 +423,7 @@
         const activeTab = ref('phase');
         const selectedPhaseId = ref('');
         const selectedBusinessType = ref('试单');
+        const selectedLogScope = ref('');
         const jsonDialogVisible = ref(false);
         const jsonDialogContent = ref('');
         const logTableRef = ref(null);
@@ -394,6 +443,16 @@
           breakfast: '双早',
           rpCode: 'PR01'
         });
+
+        const decorateLog = (log) => {
+          const scope = log.phase.includes('PURCHASE') ? 'purchase' : 'order';
+          const statusMatch = `${log.content} ${log.result}`.match(/成功|失败|进行中|已取消|已退款|已终止|待确认|未支付|取消成功|取消失败/);
+          return {
+            ...log,
+            scope,
+            businessStatus: statusMatch ? statusMatch[0] : (log.isError ? '失败' : '成功')
+          };
+        };
 
         // ==== 完整数据流 ====
         const rawLogs = [
@@ -471,9 +530,13 @@
           
           { id: 27, time: '2026-04-22 17:01:10', phase: 'PURCHASE_TASK_CREATE', businessType: '采购', phaseName: '采购任务创建', content: '人工重新发起采购补单', result: '手工补单任务生成(9999111228473599)', operator: '林开新', isError: false },
           { id: 28, time: '2026-04-22 17:01:15', phase: 'PURCHASE_TASK_QUERY', businessType: '采购', phaseName: '采购任务轮询', content: '查询供应商出票状态', result: 'PTG采购单查询成功(9999111228473599): UNPAID', operator: '系统', isError: false }
-        ];
+        ].map(decorateLog);
 
-        const totalLogsCount = computed(() => rawLogs.length);
+        const scopedLogs = computed(() => {
+          if (!selectedLogScope.value) return rawLogs;
+          return rawLogs.filter(log => log.scope === selectedLogScope.value);
+        });
+        const totalLogsCount = computed(() => scopedLogs.value.length);
 
         const buildRowResult = (row) => [row.content, row.result].filter(Boolean).join(' / ');
         const hasRiskKeyword = (text = '') => /失败|异常|错误/.test(text);
@@ -532,7 +595,7 @@
           const blocks = [];
           let currentBatch = null;
 
-          rawLogs.forEach((log) => {
+          scopedLogs.value.forEach((log) => {
             const isMicro = log.phase.includes('PURCHASE_TASK');
             
             let extractedId = null;
@@ -624,12 +687,14 @@
           const sourceMap = {
             '试单': ['试单'],
             '下单': ['下单'],
+            '采购': ['采购'],
             '取消': ['售后/取消']
           };
 
           return Object.entries(sourceMap).map(([name, sourceTypes]) => {
-            const logs = rawLogs.filter(log => sourceTypes.includes(log.businessType));
-            return { name, count: logs.length, logs };
+            const logs = scopedLogs.value.filter(log => sourceTypes.includes(log.businessType));
+            const status = logs.some(log => log.isError || log.businessStatus === '失败' || /失败|异常|错误/.test(`${log.content} ${log.result}`)) ? '失败' : '成功';
+            return { name, count: logs.length, logs, status };
           }).filter(type => type.count > 0);
         });
 
@@ -641,15 +706,33 @@
           else return currentBusinessSelection.value ? currentBusinessSelection.value.logs : [];
         });
 
-        watch(phaseBlocks, (val) => {
-          if (val.length > 0 && !selectedPhaseId.value) {
+        watch([phaseBlocks, selectedLogScope], ([val]) => {
+          if (!val.length) {
+            selectedPhaseId.value = '';
+            return;
+          }
+          const hit = val.find(item => item.id === selectedPhaseId.value);
+          if (!hit) {
             nextTick(() => { selectedPhaseId.value = val[0].id; });
           }
+        }, { immediate: true });
+
+        watch([businessTypes, selectedLogScope], ([val]) => {
+          if (!val.length) {
+            selectedBusinessType.value = '';
+            return;
+          }
+          const hit = val.find(item => item.name === selectedBusinessType.value);
+          if (!hit) selectedBusinessType.value = val[0].name;
         }, { immediate: true });
 
         watch([activeTab, rightSideLogs], () => {
           allExpanded.value = false;
         });
+
+        const toggleLogScope = (scope) => {
+          selectedLogScope.value = selectedLogScope.value === scope ? '' : scope;
+        };
 
         const copyJson = (text) => {
           if (!text) {
@@ -692,7 +775,7 @@
         };
 
         return {
-          activeTab, totalLogsCount, orderSummary,
+          activeTab, totalLogsCount, orderSummary, selectedLogScope, toggleLogScope,
           selectedPhaseId, phaseBlocks, currentPhaseSelection,
           selectedBusinessType, businessTypes, 
           rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip, getRowClassName,

@@ -19,8 +19,10 @@
       --color-bg-1: #ffffff;
       --color-bg-2: #f2f3f5;
       --shadow-card: 0 8px 24px rgba(29, 33, 41, 0.06);
-      --radius-small: 6px;
-      --radius-large: 7px;
+            --radius-small: 4px;
+      --radius-large: 4px;
+
+
 
       --bottom-bar-height: 72px;
     }
@@ -36,26 +38,38 @@
     .btn-outline-primary { color: var(--color-primary); border-color: rgba(22, 93, 255, .35); background: rgba(22, 93, 255, .04); }
     .btn-outline-danger { color: var(--color-danger); border-color: rgba(245, 63, 63, .35); background: rgba(245, 63, 63, .04); }
     .btn-link { border: 0; background: transparent; color: var(--color-primary); padding: 0; min-width: auto; height: auto; }
-    .tag { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; border-radius: 999px; border: 1px solid transparent; font-size: 14px; line-height: 22px; white-space: nowrap; }
-    .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); border-color: rgba(22, 93, 255, .18); }
-    .tag-green { background: rgba(0, 180, 42, .08); color: var(--color-success); border-color: rgba(0, 180, 42, .18); }
-    .tag-orange { background: rgba(255, 125, 0, .1); color: var(--color-warning); border-color: rgba(255, 125, 0, .2); }
-    .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); border-color: rgba(245, 63, 63, .18); }
-    .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; border-color: rgba(114, 46, 209, .16); }
-    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); border-color: var(--color-border-1); }
-    .summary-card { padding: 12px; height: 100%; }
-    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; }
+        .tag { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 0 10px; border-radius: 4px; border: 0; font-size: 14px; line-height: 20px; white-space: nowrap; box-shadow: none; }
+    .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); }
+    .tag-green { background: rgba(0, 180, 42, .08); color: var(--color-success); }
+    .tag-orange { background: rgba(255, 125, 0, .1); color: var(--color-warning); }
+    .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
+    .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; }
+    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); }
+    .tag-cyan { background: rgba(20, 184, 166, .1); color: #0f766e; }
+    .tag-emphasis { min-height: 32px; padding: 0 16px; font-size: 16px; font-weight: 700; box-shadow: none; }
+    .tag-purchase-success { background: rgba(0, 180, 42, .16); color: #087c2e; }
+    .tag-purchase-processing { background: rgba(255, 125, 0, .18); color: #b75d00; }
+    .tag-purchase-failed { background: rgba(245, 63, 63, .16); color: #b71d1d; }
+    .tag-purchase-stopped { background: rgba(134, 144, 156, .18); color: #4e5969; }
+    .tag-purchase-none { background: rgba(229, 230, 235, .9); color: #86909c; }
+
+        .summary-card, .section-card { padding: 12px; height: 100%; }
+    .summary-grid, .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; }
+
     .summary-item { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 20px; }
     .summary-item.full { grid-column: 1 / -1; }
-    .summary-label { color: var(--color-text-3); font-size: 13px; line-height: 20px; }
+        .summary-label, .right-summary-name { color: var(--color-text-3); font-size: 13px; line-height: 20px; }
     .summary-value { color: var(--color-text-1); font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .right-summary-value { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 24px; color: var(--color-text-1); font-size: 14px; line-height: 24px; word-break: break-word; }
+
     .mono { font-family: "JetBrains Mono", Consolas, monospace; }
     .copy-btn { border: 0; background: transparent; color: var(--color-text-3); cursor: pointer; padding: 0; margin-left: 6px; }
     .copy-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border-1); border-radius: 4px; font-size: 10px; background: #fff; }
     .purchase-layout { display: block; margin-top: 12px; }
     .left-stack, .right-stack { display: flex; flex-direction: column; gap: 16px; }
     .section-card { padding: 12px; height: 100%; }
-    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+        .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; padding-bottom: 2px; }
+
     .section-title { font-size: 16px; font-weight: 600; }
     .section-subtitle { color: var(--color-text-3); font-size: 13px; }
     .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 18px; }
@@ -71,66 +85,113 @@
     .tooltip-popup { position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); min-width: 220px; max-width: 340px; padding: 10px 12px; border-radius: 8px; background: #000; color: #fff; font-size: 14px; line-height: 1.55; white-space: normal; box-shadow: 0 8px 24px rgba(15, 23, 42, .24); z-index: 20; display: none; user-select: text; cursor: text; }
     .tooltip-item.open .tooltip-popup { display: block; }
     .tooltip-row { display: block; white-space: nowrap; }
-    .task-tab-list { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
-    .task-tab-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; min-width: 250px; padding: 10px 12px; border: 1px solid var(--color-border-1); border-radius: 7px; background: #fff; color: var(--color-text-2); cursor: pointer; }
-    .task-tab-btn.active { border-color: rgba(22, 93, 255, .28); background: rgba(22, 93, 255, .04); box-shadow: inset 0 0 0 1px rgba(22, 93, 255, .08); }
-    .task-tab-title { font-size: 14px; font-weight: 600; color: var(--color-text-1); }
-    .task-tab-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .task-tab-time { color: var(--color-text-3); font-size: 12px; }
-    .purchase-task-panel { display: none; }
-    .purchase-task-panel.active { display: block; }
-    .purchase-process-table { border: 1px solid var(--color-border-2); border-radius: 7px; overflow: hidden; background: #fff; }
-    .purchase-process-head, .purchase-process-row { display: grid; grid-template-columns: 140px 120px 60px 110px minmax(0, 1fr) 90px 140px; gap: 10px; align-items: center; padding: 10px 12px; font-size: 14px; }
-    .purchase-process-head { background: var(--color-fill-1); color: var(--color-text-3); }
-    .purchase-process-row { border-top: 1px dashed var(--color-border-1); }
-    .purchase-process-main { color: var(--color-text-1); font-weight: 600; }
-    .process-muted { color: var(--color-text-3); }
+                                .inline-tags { display: inline-flex; gap: 6px; flex-wrap: wrap; vertical-align: middle; }
+        .purchase-date-tab-list { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+        .purchase-date-tab { display: flex; flex-direction: column; gap: 8px; min-width: 196px; padding: 10px 12px; border: 1px solid var(--color-border-1); border-radius: 4px; background: #fff; cursor: pointer; text-align: left; }
+        .purchase-date-tab.active { border-color: rgba(22, 93, 255, .28); background: rgba(22, 93, 255, .04); box-shadow: inset 0 0 0 1px rgba(22, 93, 255, .08); }
+        .purchase-date-tab-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+        .purchase-date-tab-range { font-size: 14px; font-weight: 600; color: var(--color-text-1); }
+        .purchase-date-tab-status-group { display: inline-flex; align-items: center; gap: 10px; }
+        .purchase-date-tab-status { font-size: 14px; font-weight: 700; }
+        .purchase-date-tab-status.success { color: var(--color-success); }
+        .purchase-date-tab-status.fail, .purchase-date-tab-status.empty { color: var(--color-danger); }
+        .purchase-date-tab-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; }
+        .purchase-date-tab-time { color: var(--color-text-3); font-size: 12px; }
+        .purchase-date-tab-room { color: var(--color-text-1); font-size: 14px; font-weight: 700; }
+        .purchase-panel { display: none; }
+        .purchase-panel.active { display: block; }
+        .purchase-order-list { display: flex; flex-direction: column; gap: 10px; }
+                .purchase-order-item { display: grid; grid-template-columns: 148px minmax(0, 1fr); gap: 14px; border: 1px solid var(--color-border-2); border-radius: 4px; background: #fff; padding: 12px 14px; }
+        .purchase-order-time { position: relative; padding-right: 12px; }
+        .purchase-order-time::after { content: ""; position: absolute; top: 4px; right: 0; bottom: 4px; width: 1px; background: var(--color-border-1); }
+        .purchase-timeline { display: flex; flex-direction: column; gap: 22px; }
+        .purchase-timeline-item { position: relative; padding-left: 18px; min-height: 52px; display: flex; flex-direction: column; justify-content: center; }
+        .purchase-timeline-item::before { content: ""; position: absolute; left: 5px; top: 12px; bottom: -24px; width: 2px; background: var(--color-border-1); }
+        .purchase-timeline-item:last-child::before { bottom: 8px; }
+        .purchase-timeline-item::after { content: ""; position: absolute; left: 0; top: 50%; margin-top: -5px; width: 10px; height: 10px; border-radius: 50%; background: var(--color-primary); }
+        .purchase-timeline-item.pending::after { background: #c9cdd4; }
+        .purchase-timeline-item.pending .purchase-timeline-label { color: #c9cdd4; }
+        .purchase-timeline-label { color: var(--color-text-3); font-size: 12px; line-height: 1.4; }
+        .purchase-timeline-date { color: var(--color-text-3); font-size: 12px; line-height: 1.5; margin-top: 2px; }
+        .purchase-timeline-time-text { color: var(--color-text-1); font-size: 14px; line-height: 1.5; font-weight: 600; }
+                                                                .purchase-order-content { min-width: 0; position: relative; padding-right: 132px; }
+        .purchase-order-top { display: block; margin-bottom: 8px; }
+
+                .purchase-order-title-wrap { min-width: 0; }
+                                                .purchase-order-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; width: 100%; min-height: 24px; }
+
+                                                .purchase-order-no { font-size: 14px; font-weight: 600; color: var(--color-text-1); }
+                                                .purchase-order-status { position: absolute; top: 0; right: 0; display: inline-flex; align-items: center; justify-content: flex-end; text-align: right; }
+                                                .purchase-order-side { position: absolute; top: 76px; right: 0; display: flex; flex-direction: column; align-items: flex-end; justify-content: center; gap: 4px; width: 120px; }
+
+
+
+
+
+
+                        .purchase-order-amount { color: var(--color-text-1); font-size: 18px; font-weight: 700; line-height: 1.2; text-align: right; }
+
+        .purchase-order-discount-link { color: var(--color-primary); font-size: 13px; line-height: 20px; cursor: pointer; background: none; border: 0; padding: 0; }
+        .status-pending-pay { background: rgba(255, 125, 0, .1); color: var(--color-warning); }
+
+        .status-pending-confirm { background: rgba(22, 93, 255, .08); color: var(--color-primary); }
+        .status-pending-checkin { background: rgba(114, 46, 209, .08); color: #722ed1; }
+        .status-checked-in { background: rgba(0, 180, 42, .08); color: var(--color-success); }
+        .status-checked-out { background: rgba(78, 89, 105, .12); color: var(--color-text-2); }
+        .status-cancelled { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
+        .status-empty { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
+
+    .purchase-upgrade-tags { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .tag-hour-room { background: rgba(114, 46, 209, .08); color: #722ed1; }
+
     .source-badge { display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
     .source-platform { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: #165dff; color: #fff; font-size: 10px; flex: 0 0 auto; }
-    .source-channel { display: inline-flex; align-items: center; padding: 0 8px; height: 20px; border-radius: 999px; background: rgba(22, 93, 255, .08); color: var(--color-primary); font-size: 14px; white-space: nowrap; }
-    .purchase-order-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-    .purchase-order-item { border: 1px solid var(--color-border-2); border-radius: 7px; background: #fff; padding: 12px 14px; }
-    .purchase-order-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-    .purchase-order-title-wrap { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-    .purchase-order-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-    .purchase-order-no { font-size: 14px; font-weight: 600; color: var(--color-text-1); }
-    .purchase-upgrade-tags { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .purchase-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 20px; margin-top: 12px; }
-    .purchase-detail-item { display: flex; align-items: center; gap: 8px; min-width: 0; }
-    .purchase-detail-item.span-2 { grid-column: span 2; }
-    .purchase-detail-item.full { grid-column: 1 / -1; }
-    .purchase-detail-label { color: var(--color-text-3); font-size: 13px; line-height: 22px; flex: 0 0 auto; }
-    .purchase-detail-value { color: var(--color-text-1); font-size: 14px; line-height: 22px; word-break: break-word; min-width: 0; }
-    .purchase-reason-box { margin-top: 12px; padding: 10px 12px; border-radius: 7px; background: #fff7f7; border: 1px solid rgba(245, 63, 63, .14); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .purchase-reason-content { min-width: 0; flex: 1; }
-    .purchase-reason-title { color: var(--color-danger); font-size: 13px; font-weight: 600; margin-bottom: 6px; }
-    .purchase-reason-text { color: var(--color-text-1); font-size: 14px; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .purchase-more { display: inline-block; }
-    .purchase-more summary { list-style: none; cursor: pointer; color: var(--color-primary); font-size: 14px; line-height: 22px; }
-    .purchase-more summary::-webkit-details-marker { display: none; }
-    .purchase-more-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 20px; margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--color-border-1); }
-  .purchase-more-grid .purchase-detail-item { grid-template-columns: 70px minmax(0, 1fr); align-items: center; }
-  .purchase-more-grid .purchase-detail-item.no-label { grid-template-columns: minmax(0, 1fr); }
-    .purchase-order-cell { font-size: 13px; color: var(--color-text-2); }
-    .purchase-order-cell.strong { color: var(--color-text-1); font-weight: 600; }
-    .purchase-detail-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 20px; margin-top: 12px; }
-    .purchase-detail-item { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: 8px; min-width: 0; }
-    .purchase-detail-item.span-2 { grid-column: span 2; }
-    .purchase-detail-item.no-label { grid-template-columns: minmax(0, 1fr); }
-    .purchase-detail-label { color: var(--color-text-3); font-size: 13px; line-height: 22px; margin-bottom: 0; }
-    .purchase-detail-value { color: var(--color-text-1); font-size: 14px; line-height: 22px; word-break: break-word; min-width: 0; }
-    .purchase-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .source-channel { display: inline-flex; align-items: center; padding: 0 8px; min-height: 24px; border-radius: 4px; background: rgba(22, 93, 255, .08); color: var(--color-primary); font-size: 14px; white-space: nowrap; }
+    .purchase-detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px 20px; margin-top: 12px; }
+        .purchase-detail-item { min-width: 0; }
+        .purchase-detail-item.inline { display: flex; align-items: center; gap: 8px; }
+        .purchase-detail-item.inline .purchase-detail-label { margin-bottom: 0; white-space: nowrap; }
+        .purchase-detail-item.full { grid-column: 1 / -1; }
 
+        .purchase-detail-label { color: var(--color-text-3); font-size: 13px; line-height: 20px; margin-bottom: 4px; }
+        .purchase-detail-value { color: var(--color-text-1); font-size: 14px; line-height: 22px; word-break: break-word; min-width: 0; }
+
+
+
+
+                                                                .purchase-bottom-actions { margin-top: 16px; margin-left: auto; margin-right: -132px; width: max-content; padding-top: 0; border-top: 0; display: flex; flex-direction: row; justify-content: flex-end; align-items: center; gap: 8px; }
+
+            .purchase-more-info { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--color-border-2); }
+            .purchase-more-info.show { display: block; }
+
+            .btn-outline-danger { border: 1px solid var(--color-danger); color: var(--color-danger); background: #FFF; }
+            .btn-outline-danger:hover { background: rgba(245, 63, 63, 0.04); }
+            .btn-outline-secondary { border: 1px solid var(--color-border-1); color: var(--color-text-2); background: #FFF; }
+            .btn-outline-secondary:hover { background: var(--color-fill-2); }
+            .purchase-bottom-actions .btn { min-width: auto; height: 28px; padding: 0 10px; justify-content: center; }
+            .btn-icon-gap { display: inline-flex; align-items: center; gap: 4px; }
+
+
+            .arrow-icon { transition: transform 0.2s; }
+            .is-expanded .arrow-icon { transform: rotate(180deg); }
+
+            /* JSON 样式弹窗 */
+            .json-code-box { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 4px; font-family: 'Cascadia Code', Consolas, monospace; font-size: 13px; line-height: 1.6; overflow: auto; max-height: 400px; }
+            .json-key { color: #9cdcfe; }
+            .json-string { color: #ce9178; }
+            .json-number { color: #b5cea8; }
     .purchase-actions .btn { min-width: auto; padding: 0 12px; height: 32px; }
+
+
+
+
     .info-block + .info-block { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--color-border-1); }
     .right-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; }
-    .right-summary-item { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 20px; }
-    .right-summary-item.full { grid-column: 1 / -1; }
-    .right-summary-name { color: var(--color-text-3); font-size: 13px; line-height: 20px; }
-    .right-summary-value { color: var(--color-text-1); font-size: 14px; line-height: 20px; }
-    .status-value { display: block; line-height: 20px; }
-    .status-value .tag { margin-left: 6px; vertical-align: middle; }
-    .right-summary-item.full { align-items: start; }
+        .right-summary-item { display: grid; grid-template-columns: 72px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 24px; }
+    .right-summary-item.full { grid-column: 1 / -1; align-items: center; }
+    .status-value { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .status-value .tag { margin-left: 0; font-size: 14px; }
+
     .summary-item.center { align-items: center; }
     .right-summary-value.strong { font-size: 16px; font-weight: 700; }
     .right-summary-value.danger { color: var(--color-danger); }
@@ -147,7 +208,8 @@
     .bottom-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); display: none; align-items: center; justify-content: center; z-index: 90; padding: 20px; }
     .modal-mask.show { display: flex; }
-    .modal { width: min(720px, 100%); max-height: 80vh; overflow: auto; background: #fff; border-radius: 8px; box-shadow: 0 18px 48px rgba(15, 23, 42, .2); }
+        .modal { width: min(720px, 100%); max-height: 80vh; overflow: auto; background: #fff; border-radius: 4px; box-shadow: 0 18px 48px rgba(15, 23, 42, .2); }
+
     .modal-head { padding: 16px 18px; border-bottom: 1px solid var(--color-border-2); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .modal-title { font-size: 16px; font-weight: 600; }
     .modal-body { padding: 18px; }
@@ -162,8 +224,18 @@
     .failure-sub { color: var(--color-text-3); font-size: 12px; margin-top: 6px; }
     .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-12px); min-width: 220px; max-width: 520px; padding: 12px 16px; border-radius: 10px; background: rgba(29, 33, 41, .92); color: #fff; font-size: 14px; opacity: 0; pointer-events: none; transition: all .2s ease; z-index: 1000; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    @media (max-width: 1200px) { .top-panel-grid { grid-template-columns: 1fr; } .purchase-entry { grid-template-columns: 1fr; } .purchase-actions { justify-content: flex-start; } }
-    @media (max-width: 768px) { .summary-grid, .detail-grid, .purchase-detail-grid, .right-summary-grid, .info-grid, .purchase-more-grid { grid-template-columns: 1fr; } .purchase-process-head, .purchase-process-row { grid-template-columns: 1fr; } .section-head, .purchase-order-top, .purchase-reason-box { flex-direction: column; align-items: stretch; } .purchase-detail-item, .purchase-more-grid .purchase-detail-item { grid-template-columns: 70px minmax(0, 1fr); align-items: start; } .purchase-detail-item.no-label, .purchase-more-grid .purchase-detail-item.no-label { grid-template-columns: minmax(0, 1fr); } .task-tab-btn { min-width: 100%; } }
+        @media (max-width: 1200px) { .top-panel-grid { grid-template-columns: 1fr; } .purchase-actions { justify-content: flex-start; } }
+                                                                @media (max-width: 768px) { .summary-grid, .detail-grid, .purchase-detail-grid, .right-summary-grid, .info-grid, .purchase-more-grid { grid-template-columns: 1fr; } .section-head, .purchase-order-top, .purchase-reason-box, .purchase-date-tab-row, .purchase-date-tab-meta { flex-direction: column; align-items: stretch; } .purchase-order-item { grid-template-columns: 1fr; } .purchase-order-time::after { display: none; } .purchase-date-tab { min-width: 100%; } .purchase-date-tab-status-group { justify-content: flex-start; } .purchase-order-content { padding-right: 0; } .purchase-order-status { position: static; transform: none; margin-left: auto; } .purchase-order-side { position: static; top: auto; width: auto; margin-top: 10px; align-items: flex-start; } .purchase-bottom-actions { width: auto; margin-left: 0; margin-right: 0; align-items: flex-start; } }
+
+
+
+
+
+
+
+
+
+
   </style>
 </head>
 <body>
@@ -176,14 +248,16 @@
           </div>
         </div>
         <div class="summary-grid">
-          <div class="summary-item"><div class="summary-label">系统单号</div><div class="summary-value mono">HTL202604228899<button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div></div>
-          <div class="summary-item"><div class="summary-label">外部单号</div><div class="summary-value mono">DOUYIN-OUT-8877349921<button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div></div>
+                    <div class="summary-item"><div class="summary-label">系统</div><div class="summary-value mono">HTL202604228899<button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div></div>
+          <div class="summary-item"><div class="summary-label">外部</div><div class="summary-value mono">DOUYIN-OUT-8877349921<button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div></div>
+
           <div class="summary-item"><div class="summary-label">酒店名称</div><div class="summary-value"><strong>杭州西湖万豪酒店</strong> <span class="tooltip-anchor"><span class="tooltip-item"><span class="id-info-icon">ID</span><span class="tooltip-popup"><span class="tooltip-row">聚合酒店ID：H-AI-330106-00028471</span><span class="tooltip-row">销售酒店ID：SALE-HOTEL-3301</span><span class="tooltip-row">平台酒店ID：DY-HOTEL-88921</span></span></span><span class="tooltip-item" aria-label="地址"><span class="meta-info-icon"><svg viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-11a6 6 0 1 1 12 0c0 5.8-6 11-6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></span><span class="tooltip-popup"><span class="tooltip-row">城市：杭州市</span><span class="tooltip-row">地址：杭州市西湖区曙光路188号</span></span></span><span class="tooltip-item" aria-label="电话"><span class="meta-info-icon"><svg viewBox="0 0 24 24"><path d="M21 16.2v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1A19.4 19.4 0 0 1 4 11.8 19.8 19.8 0 0 1 .9 3.2 2 2 0 0 1 2.9 1h3a2 2 0 0 1 2 1.7l.5 3a2 2 0 0 1-.6 1.8L6.6 8.6a16 16 0 0 0 8.8 8.8l1.1-1.2a2 2 0 0 1 1.8-.6l3 .5a2 2 0 0 1 1.7 2Z"></path></svg></span><span class="tooltip-popup"><span class="tooltip-row">电话：0571-32434243-0009</span></span></span></span></div></div>
           <div class="summary-item center"><div class="summary-label">订单来源</div><div class="summary-value"><span class="platform-icon">抖</span> 抖音 · 江浙运营号</div></div>
           <div class="summary-item"><div class="summary-label">房型名称</div><div class="summary-value">豪华大床房-双早</div></div>
           <div class="summary-item full"><div class="summary-label">取消规则</div><div class="summary-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
           <div class="summary-item"><div class="summary-label">入住人</div><div class="summary-value">张三</div></div>
-          <div class="summary-item"><div class="summary-label">联系人</div><div class="summary-value">李四-15948552082</div></div>
+                    <div class="summary-item"><div class="summary-label">联系人</div><div class="summary-value">李四 / 15948552082</div></div>
+
           <div class="summary-item"><div class="summary-label">入离时间</div><div class="summary-value">2026-04-27入住，2026-04-28离店　1间1晚</div></div>
           <div class="summary-item"><div class="summary-label">预订时间</div><div class="summary-value">2026-04-22 16:29:51</div></div>
           <div class="summary-item"><div class="summary-label">支付时间</div><div class="summary-value">2026-04-22 16:30:12</div></div>
@@ -209,7 +283,8 @@
           <div class="info-grid">
             <div class="right-summary-item"><div class="right-summary-name">系统状态</div><div class="right-summary-value"><span class="tag tag-blue">预订中</span></div></div>
             <div class="right-summary-item"><div class="right-summary-name">平台状态</div><div class="right-summary-value"><span class="tag tag-gray">已接单</span></div></div>
-            <div class="right-summary-item full"><div class="right-summary-name">售后状态</div><div class="right-summary-value status-value"><span class="tag tag-gray">未进入售后</span><span class="tag tag-orange">协商退款</span><span class="tag tag-green">已同意</span></div></div>
+                        <div class="right-summary-item full"><div class="right-summary-name">售后状态</div><div class="right-summary-value status-value"><span class="tag tag-gray">未进入售后</span><span class="tag tag-gray">协商退款</span><span class="tag tag-gray">已同意</span></div></div>
+
           </div>
         </div>
       </section>
@@ -217,258 +292,350 @@
 
     <div class="purchase-layout" style="margin-top:16px;">
       <div class="left-stack">
-        <section class="card section-card">
-          <div class="section-head">
-            <div>
-              <div class="section-title">采购单信息</div>
-            </div>
-          </div>
+                                <section class="card section-card">
+                    <div class="section-head">
+                      <div>
+                        <div class="section-title">采购单信息</div>
+                      </div>
+                      <div><span class="tag tag-emphasis tag-purchase-processing">采购中</span></div>
+                    </div>
 
+                                        <div class="purchase-date-tab-list">
+                      <button class="purchase-date-tab active" data-purchase-panel="purchasePanel1">
+                        <span class="purchase-date-tab-row"><span class="purchase-date-tab-range">4月25日-4月26日</span><span class="purchase-date-tab-status-group"><span class="purchase-date-tab-status success">成功 1</span><span class="purchase-date-tab-status fail">失败 1</span></span></span>
+                        <span class="purchase-date-tab-meta"><span class="purchase-date-tab-time">2026/4/25 20:09</span><span class="purchase-date-tab-room">2间</span></span>
+                      </button>
+                      <button class="purchase-date-tab" data-purchase-panel="purchasePanel2">
+                        <span class="purchase-date-tab-row"><span class="purchase-date-tab-range">4月27日-4月29日</span><span class="purchase-date-tab-status-group"><span class="purchase-date-tab-status fail">失败 1</span></span></span>
+                        <span class="purchase-date-tab-meta"><span class="purchase-date-tab-time">2026/4/26 20:13</span><span class="purchase-date-tab-room">2间</span></span>
+                      </button>
+                      <button class="purchase-date-tab" data-purchase-panel="purchasePanel3">
+                        <span class="purchase-date-tab-row"><span class="purchase-date-tab-range">4月27日-4月28日</span><span class="purchase-date-tab-status-group"><span class="purchase-date-tab-status success">成功 1</span></span></span>
+                        <span class="purchase-date-tab-meta"><span class="purchase-date-tab-time">2026/4/26 20:15</span><span class="purchase-date-tab-room">2间</span></span>
+                      </button>
+                      <button class="purchase-date-tab" data-purchase-panel="purchasePanel4">
+                        <span class="purchase-date-tab-row"><span class="purchase-date-tab-range">4月28日-4月29日</span><span class="purchase-date-tab-status-group"><span class="purchase-date-tab-status success">成功 1</span></span></span>
+                        <span class="purchase-date-tab-meta"><span class="purchase-date-tab-time">2026/4/27 20:17</span><span class="purchase-date-tab-room">2间</span></span>
+                      </button>
+                      <button class="purchase-date-tab" data-purchase-panel="purchasePanel5">
+                        <span class="purchase-date-tab-row"><span class="purchase-date-tab-range">4月29日-4月30日</span><span class="purchase-date-tab-status-group"><span class="purchase-date-tab-status empty">空缺 1</span></span></span>
+                        <span class="purchase-date-tab-meta"><span class="purchase-date-tab-time">2026/4/27 20:19</span><span class="purchase-date-tab-room">2间</span></span>
+                      </button>
+                    </div>
 
+                    <div class="purchase-panel active" id="purchasePanel1">
+                      <div class="purchase-order-list">
+                        <div class="purchase-order-item">
+                          <div class="purchase-order-time">
+                            <div class="purchase-timeline">
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">创建时间</div><div class="purchase-timeline-date">2026-04-25</div><div class="purchase-timeline-time-text">20:09:12</div></div>
+                                                            <div class="purchase-timeline-item"><div class="purchase-timeline-label">支付时间</div><div class="purchase-timeline-date">2026-04-25</div><div class="purchase-timeline-time-text">20:09:36</div></div>
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">取消时间</div><div class="purchase-timeline-date">2026-04-25</div><div class="purchase-timeline-time-text">20:10:07</div></div>
 
-                    <div class="task-tab-list">
-            <button class="task-tab-btn active" data-task-panel="taskPanel1">
-              <span class="task-tab-title">采购任务 PT-20260425-01</span>
-              <span class="task-tab-meta"><span class="tag tag-gray">已停止</span><span class="task-tab-time">2026-04-25 20:09:12</span></span>
-            </button>
-            <button class="task-tab-btn" data-task-panel="taskPanel2">
-              <span class="task-tab-title">采购任务 PT-20260426-01</span>
-              <span class="task-tab-meta"><span class="tag tag-green">采购成功</span><span class="task-tab-time">2026-04-26 20:11:08</span></span>
-            </button>
-          </div>
+                            </div>
+                          </div>
+                          <div class="purchase-order-content">
+                                                      <div class="purchase-order-top">
+                                                        <div class="purchase-order-title-wrap">
+                                                          <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260425-001</span><span class="purchase-order-status tag status-cancelled">已取消</span></div>
+                                                        </div>
+                                                        <div class="purchase-order-side"><div class="purchase-order-amount">¥432.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
+                                                      </div>
+                                                      <div class="purchase-detail-grid">
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">豪华大床房-双早</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026-04-25入住，2026-04-26离店</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
+                                                        <div class="purchase-detail-item full"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
+                                                      </div>
+                                                      <div class="purchase-more-info">
+                                                         <div class="purchase-detail-grid">
+                                                            <div class="purchase-detail-item inline"><div class="purchase-detail-label">下单账号:</div><div class="purchase-detail-value">elong_api_auto_01</div></div>
+                                                            <div class="purchase-detail-item inline"><div class="purchase-detail-label">开票类型:</div><div class="purchase-detail-value">酒店开发票</div></div>
+                                                         </div>
+                                                      </div>
+                                                                                                            <div class="purchase-bottom-actions">
+                                                         <button class="btn btn-outline-secondary btn-icon-gap" onclick="toggleMoreInfo(this)">
+                                                           <span>更多信息</span>
+                                                           <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                         </button>
+                                                         <button class="btn btn-outline-danger" data-modal="purchaseFailure">失败原因</button>
+                                                      </div>
 
-          <div class="purchase-task-panel active" id="taskPanel1">
-            <div class="purchase-process-table">
-              <div class="purchase-process-head">
-                <div>创建时间</div>
-                <div>入离时间</div>
-                <div>间数</div>
-                <div>采购订单状态</div>
-                <div>失败原因 / 异常原因</div>
-                <div>重试次数</div>
-                <div>采购单号</div>
-              </div>
-              <div class="purchase-process-row">
-                <div class="purchase-process-main">2026/4/25 20:09</div>
-                <div>4月25日-4月26日</div>
-                <div>2间</div>
-                <div><span class="tag tag-red">采购失败</span></div>
-                <div>房态不足</div>
-                <div class="process-muted">-</div>
-                <div>PO-20260425-001</div>
-              </div>
-              <div class="purchase-process-row">
-                <div class="purchase-process-main">2026/4/25 20:11</div>
-                <div>4月25日-4月26日</div>
-                <div>2间</div>
-                <div><span class="tag tag-green">采购成功</span></div>
-                <div>切换渠道后补采成功</div>
-                <div>1次</div>
-                <div>PO-20260425-002</div>
-              </div>
-              <div class="purchase-process-row">
-                <div class="purchase-process-main">2026/4/26 20:11</div>
-                <div>4月26日-4月27日</div>
-                <div>2间</div>
-                <div><span class="tag tag-gray">未发起</span></div>
-                <div>任务已停止，后续日期未继续创建采购单</div>
-                <div class="process-muted">-</div>
-                <div class="process-muted">-</div>
-              </div>
-            </div>
+                                                    </div>
+                        </div>
+                        <div class="purchase-order-item">
+                          <div class="purchase-order-time">
+                            <div class="purchase-timeline">
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">创建时间</div><div class="purchase-timeline-date">2026-04-25</div><div class="purchase-timeline-time-text">20:11:24</div></div>
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">支付时间</div><div class="purchase-timeline-date">2026-04-25</div><div class="purchase-timeline-time-text">20:11:31</div></div>
+                              <div class="purchase-timeline-item pending"><div class="purchase-timeline-label">取消时间</div></div>
+                            </div>
+                          </div>
+                          <div class="purchase-order-content">
+                                                      <div class="purchase-order-top">
+                                                        <div class="purchase-order-title-wrap">
+                                                          <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260425-002</span><span class="purchase-upgrade-tags"><span class="tag tag-orange">升级早餐</span></span><span class="purchase-order-status tag status-pending-confirm">待确认</span></div>
+                                                        </div>
+                                                        <div class="purchase-order-side"><div class="purchase-order-amount">¥428.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
+                                                      </div>
+                                                      <div class="purchase-detail-grid">
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">豪华大床房-双早</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026-04-25入住，2026-04-26离店</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
+                                                        <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
+                                                        <div class="purchase-detail-item full"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
+                                                      </div>
+                                                      <div class="purchase-more-info">
+                                                         <div class="purchase-detail-grid">
+                                                            <div class="purchase-detail-item inline"><div class="purchase-detail-label">下单账号:</div><div class="purchase-detail-value">ctrip_trip_07</div></div>
+                                                            <div class="purchase-detail-item inline"><div class="purchase-detail-label">开票类型:</div><div class="purchase-detail-value">携程开发票</div></div>
+                                                         </div>
+                                                      </div>
+                                                                                                            <div class="purchase-bottom-actions">
+                                                         <button class="btn btn-outline-secondary btn-icon-gap" onclick="toggleMoreInfo(this)">
+                                                           <span>更多信息</span>
+                                                           <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                                         </button>
+                                                      </div>
 
-            <div class="purchase-order-list">
-              <div class="purchase-order-item">
-                <div class="purchase-order-top">
-                  <div class="purchase-order-title-wrap">
-                    <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260425-001</span><span class="tag tag-red">采购失败</span></div>
-                  </div>
-                  <div class="purchase-actions"></div>
-                </div>
-                <div class="purchase-detail-grid">
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">豪华大床房-双早</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026年4月25日 - 2026年4月26日</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">订单金额</div><div class="purchase-detail-value">¥432.00</div></div>
-                  <div class="purchase-detail-item span-2"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">创建时间</div><div class="purchase-detail-value">2026-04-25 20:09:12</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">付款时间</div><div class="purchase-detail-value">-</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">取消时间</div><div class="purchase-detail-value">2026-04-25 20:10:07</div></div>
-                  <div class="purchase-detail-item no-label"><div class="purchase-detail-value"><details class="purchase-more"><summary>查看更多</summary><div class="purchase-more-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">下单账号</div><div class="purchase-detail-value">API直连，无账号</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">开票类型</div><div class="purchase-detail-value">酒店开发票</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">邮箱</div><div class="purchase-detail-value">-</div></div></div></details></div></div>
-                </div>
-                <div class="purchase-reason-box"><div class="purchase-reason-content"><div class="purchase-reason-title">失败原因</div><div class="purchase-reason-text">房态不足，渠道返回 ROOM_CLOSED</div></div><button class="btn" data-modal="purchaseFailure">查看详情</button></div>
+                                                    </div>
+                        </div>
+                      </div>
+                    </div>
 
-              </div>
+                                        <div class="purchase-panel" id="purchasePanel2">
+                      <div class="purchase-order-list">
+                        <div class="purchase-order-item">
+                          <div class="purchase-order-time">
+                            <div class="purchase-timeline">
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">创建时间</div><div class="purchase-timeline-date">2026-04-26</div><div class="purchase-timeline-time-text">20:13:08</div></div>
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">支付时间</div><div class="purchase-timeline-date">2026-04-26</div><div class="purchase-timeline-time-text">20:13:36</div></div>
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">取消时间</div><div class="purchase-timeline-date">2026-04-26</div><div class="purchase-timeline-time-text">20:14:09</div></div>
+                            </div>
+                          </div>
+                          <div class="purchase-order-content">
+                            <div class="purchase-order-top">
+                              <div class="purchase-order-title-wrap">
+                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260426-001</span><span class="purchase-order-status tag status-cancelled">已取消</span></div>
+                              </div>
+                              <div class="purchase-order-side"><div class="purchase-order-amount">¥1296.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
+                            </div>
+                            <div class="purchase-detail-grid">
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">行政双床房-双早</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026-04-27入住，2026-04-29离店</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间2晚</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
+                              <div class="purchase-detail-item full"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">不可免费取消，取消将按订单实付金额收取罚金。</div></div>
+                            </div>
+                            <div class="purchase-more-info">
+                              <div class="purchase-detail-grid">
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">下单账号:</div><div class="purchase-detail-value">elong_api_auto_02</div></div>
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">开票类型:</div><div class="purchase-detail-value">酒店开发票</div></div>
+                              </div>
+                            </div>
+                            <div class="purchase-bottom-actions">
+                              <button class="btn btn-outline-secondary btn-icon-gap" onclick="toggleMoreInfo(this)">
+                                <span>更多信息</span>
+                                <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              </button>
+                              <button class="btn btn-outline-danger" data-modal="purchaseFailure">失败原因</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-              <div class="purchase-order-item">
-                <div class="purchase-order-top">
-                  <div class="purchase-order-title-wrap">
-                    <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260425-002</span><span class="tag tag-green">采购成功</span><span class="purchase-upgrade-tags"><span class="tag tag-orange">升级早餐</span></span></div>
-                  </div>
-                  <div class="purchase-actions"></div>
+                    <div class="purchase-panel" id="purchasePanel3">
+                      <div class="purchase-order-list">
+                        <div class="purchase-order-item">
+                          <div class="purchase-order-time">
+                            <div class="purchase-timeline">
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">创建时间</div><div class="purchase-timeline-date">2026-04-26</div><div class="purchase-timeline-time-text">20:15:44</div></div>
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">支付时间</div><div class="purchase-timeline-date">2026-04-26</div><div class="purchase-timeline-time-text">20:16:03</div></div>
+                              <div class="purchase-timeline-item pending"><div class="purchase-timeline-label">取消时间</div></div>
+                            </div>
+                          </div>
+                          <div class="purchase-order-content">
+                            <div class="purchase-order-top">
+                              <div class="purchase-order-title-wrap">
+                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260426-002</span><span class="purchase-upgrade-tags"><span class="tag tag-hour-room">钟点房</span><span class="tag tag-blue">升级房型</span><span class="tag tag-orange">升级早餐</span></span><span class="purchase-order-status tag status-pending-checkin">待入住</span></div>
+                              </div>
+                              <div class="purchase-order-side"><div class="purchase-order-amount">¥864.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
+                            </div>
+                            <div class="purchase-detail-grid">
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">豪华套房-双早</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026-04-27入住，2026-04-28离店</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入住时长</div><div class="purchase-detail-value">6小时</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">已选时段</div><div class="purchase-detail-value">12:00 - 18:00</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">附加权益</div><div class="purchase-detail-value">升级房型 + 升级早餐</div></div>
+                              <div class="purchase-detail-item full"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">钟点房订单一经确认不可免费取消。</div></div>
+                            </div>
+                            <div class="purchase-more-info">
+                              <div class="purchase-detail-grid">
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">下单账号:</div><div class="purchase-detail-value">ctrip_trip_08</div></div>
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">开票类型:</div><div class="purchase-detail-value">携程开发票</div></div>
+                              </div>
+                            </div>
+                            <div class="purchase-bottom-actions">
+                              <button class="btn btn-outline-secondary btn-icon-gap" onclick="toggleMoreInfo(this)">
+                                <span>更多信息</span>
+                                <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-                </div>
-                <div class="purchase-detail-grid">
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">豪华大床房-双早</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026年4月25日 - 2026年4月26日</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">订单金额</div><div class="purchase-detail-value">¥428.00</div></div>
-                  <div class="purchase-detail-item span-2"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">创建时间</div><div class="purchase-detail-value">2026-04-25 20:11:24</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">付款时间</div><div class="purchase-detail-value">2026-04-25 20:11:31</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">取消时间</div><div class="purchase-detail-value">-</div></div>
-                  <div class="purchase-detail-item no-label"><div class="purchase-detail-value"><details class="purchase-more"><summary>查看更多</summary><div class="purchase-more-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">下单账号</div><div class="purchase-detail-value">ctrip_trip_07</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">开票类型</div><div class="purchase-detail-value">携程开发票</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">邮箱</div><div class="purchase-detail-value">ctrip_ops@demo.com</div></div></div></details></div></div>
-                </div>
-                <div class="purchase-reason-box"><div class="purchase-reason-content"><div class="purchase-reason-title">失败原因</div><div class="purchase-reason-text">上一单失败后自动切换渠道，本单采购成功。</div></div><button class="btn" data-modal="purchaseFailure">查看详情</button></div>
-              </div>
-            </div>
-          </div>
+                    <div class="purchase-panel" id="purchasePanel4">
+                      <div class="purchase-order-list">
+                        <div class="purchase-order-item">
+                          <div class="purchase-order-time">
+                            <div class="purchase-timeline">
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">创建时间</div><div class="purchase-timeline-date">2026-04-27</div><div class="purchase-timeline-time-text">20:17:17</div></div>
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">支付时间</div><div class="purchase-timeline-date">2026-04-27</div><div class="purchase-timeline-time-text">20:17:39</div></div>
+                              <div class="purchase-timeline-item pending"><div class="purchase-timeline-label">取消时间</div></div>
+                            </div>
+                          </div>
+                          <div class="purchase-order-content">
+                            <div class="purchase-order-top">
+                              <div class="purchase-order-title-wrap">
+                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260427-001</span><span class="purchase-order-status tag status-checked-out">已离店</span></div>
+                              </div>
+                              <div class="purchase-order-side"><div class="purchase-order-amount">¥436.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
+                            </div>
+                            <div class="purchase-detail-grid">
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">行政双床房-双早</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026-04-28入住，2026-04-29离店</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
+                              <div class="purchase-detail-item full"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">不可免费取消，取消将按订单实付金额收取罚金。</div></div>
+                            </div>
+                            <div class="purchase-more-info">
+                              <div class="purchase-detail-grid">
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">下单账号:</div><div class="purchase-detail-value">elong_api_auto_03</div></div>
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">开票类型:</div><div class="purchase-detail-value">酒店开发票</div></div>
+                              </div>
+                            </div>
+                            <div class="purchase-bottom-actions">
+                              <button class="btn btn-outline-secondary btn-icon-gap" onclick="toggleMoreInfo(this)">
+                                <span>更多信息</span>
+                                <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
-          <div class="purchase-task-panel" id="taskPanel2">
-            <div class="purchase-process-table">
-              <div class="purchase-process-head">
-                <div>创建时间</div>
-                <div>入离时间</div>
-                <div>间数</div>
-                <div>采购订单状态</div>
-                <div>失败原因 / 异常原因</div>
-                <div>重试次数</div>
-                <div>采购单号</div>
-              </div>
-              <div class="purchase-process-row">
-                <div class="purchase-process-main">2026/4/26 20:11</div>
-                <div>4月27日-4月29日</div>
-                <div>2间</div>
-                <div><span class="tag tag-red">采购失败</span></div>
-                <div>报价高于阈值 12%</div>
-                <div class="process-muted">-</div>
-                <div>PO-20260426-001</div>
-              </div>
-              <div class="purchase-process-row">
-                <div class="purchase-process-main">2026/4/26 20:19</div>
-                <div>4月27日-4月28日</div>
-                <div>2间</div>
-                <div><span class="tag tag-green">采购成功</span></div>
-                <div>拆分后补采成功</div>
-                <div>1次</div>
-                <div>PO-20260426-002</div>
-              </div>
-              <div class="purchase-process-row">
-                <div class="purchase-process-main">2026/4/27 20:11</div>
-                <div>4月29日</div>
-                <div>2间</div>
-                <div><span class="tag tag-green">采购成功</span></div>
-                <div>尾单补采成功</div>
-                <div>2次</div>
-                <div>PO-20260427-001</div>
-              </div>
-            </div>
-
-            <div class="purchase-order-list">
-              <div class="purchase-order-item">
-                <div class="purchase-order-top">
-                  <div class="purchase-order-title-wrap">
-                    <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260426-001</span><span class="tag tag-red">采购失败</span></div>
-                  </div>
-                  <div class="purchase-actions"></div>
-                </div>
-                <div class="purchase-detail-grid">
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">行政双床房-双早</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026年4月27日 - 2026年4月29日</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间2晚</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">订单金额</div><div class="purchase-detail-value">¥1,296.00</div></div>
-                  <div class="purchase-detail-item span-2"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">不可免费取消，取消将按订单实付金额收取罚金。</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">创建时间</div><div class="purchase-detail-value">2026-04-26 20:11:08</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">付款时间</div><div class="purchase-detail-value">-</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">取消时间</div><div class="purchase-detail-value">2026-04-26 20:12:09</div></div>
-                  <div class="purchase-detail-item no-label"><div class="purchase-detail-value"><details class="purchase-more"><summary>查看更多</summary><div class="purchase-more-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">下单账号</div><div class="purchase-detail-value">API直连，无账号</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">开票类型</div><div class="purchase-detail-value">酒店开发票</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">邮箱</div><div class="purchase-detail-value">-</div></div></div></details></div></div>
-                </div>
-                <div class="purchase-reason-box"><div class="purchase-reason-content"><div class="purchase-reason-title">失败原因</div><div class="purchase-reason-text">价格超限，渠道返回 PRICE_LIMIT。</div></div><button class="btn" data-modal="purchaseFailure">查看详情</button></div>
-              </div>
-
-              <div class="purchase-order-item">
-                <div class="purchase-order-top">
-                  <div class="purchase-order-title-wrap">
-                    <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260426-002</span><span class="tag tag-green">采购成功</span><span class="purchase-upgrade-tags"><span class="tag tag-blue">升级房型</span><span class="tag tag-orange">升级早餐</span></span><span class="tag tag-purple">钟点房</span></div>
-                  </div>
-                  <div class="purchase-actions"></div>
-
-                </div>
-                <div class="purchase-detail-grid">
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">豪华套房-双早</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026年4月27日 - 2026年4月28日</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">订单金额</div><div class="purchase-detail-value">¥864.00</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入住时长</div><div class="purchase-detail-value">6小时</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">已选时段</div><div class="purchase-detail-value">12:00 - 18:00</div></div>
-                  <div class="purchase-detail-item span-2"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">钟点房订单一经确认不可免费取消。</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">创建时间</div><div class="purchase-detail-value">2026-04-26 20:19:44</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">付款时间</div><div class="purchase-detail-value">2026-04-26 20:20:03</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">取消时间</div><div class="purchase-detail-value">-</div></div>
-                  <div class="purchase-detail-item no-label"><div class="purchase-detail-value"><details class="purchase-more"><summary>查看更多</summary><div class="purchase-more-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">下单账号</div><div class="purchase-detail-value">ctrip_trip_07</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">开票类型</div><div class="purchase-detail-value">携程开发票</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">邮箱</div><div class="purchase-detail-value">ctrip_ops@demo.com</div></div></div></details></div></div>
-                </div>
-                <div class="purchase-reason-box"><div class="purchase-reason-content"><div class="purchase-reason-title">失败原因</div><div class="purchase-reason-text">拆分后重采成功，并升级到更高房型且补齐早餐。</div></div><button class="btn" data-modal="purchaseFailure">查看详情</button></div>
-              </div>
-
-              <div class="purchase-order-item">
-                <div class="purchase-order-top">
-                  <div class="purchase-order-title-wrap">
-                    <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260427-001</span><span class="tag tag-green">采购成功</span></div>
-                  </div>
-                  <div class="purchase-actions"></div>
-
-                </div>
-                <div class="purchase-detail-grid">
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">行政双床房-双早</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026年4月29日</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">订单金额</div><div class="purchase-detail-value">¥436.00</div></div>
-                  <div class="purchase-detail-item span-2"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">不可免费取消，取消将按订单实付金额收取罚金。</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">创建时间</div><div class="purchase-detail-value">2026-04-27 20:11:17</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">付款时间</div><div class="purchase-detail-value">2026-04-27 20:11:39</div></div>
-                  <div class="purchase-detail-item"><div class="purchase-detail-label">取消时间</div><div class="purchase-detail-value">-</div></div>
-                  <div class="purchase-detail-item no-label"><div class="purchase-detail-value"><details class="purchase-more"><summary>查看更多</summary><div class="purchase-more-grid"><div class="purchase-detail-item"><div class="purchase-detail-label">下单账号</div><div class="purchase-detail-value">API直连，无账号</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">开票类型</div><div class="purchase-detail-value">酒店开发票</div></div><div class="purchase-detail-item"><div class="purchase-detail-label">邮箱</div><div class="purchase-detail-value">-</div></div></div></details></div></div>
-                </div>
-                <div class="purchase-reason-box"><div class="purchase-reason-content"><div class="purchase-reason-title">失败原因</div><div class="purchase-reason-text">前序大单失败后，尾单单独补采成功。</div></div><button class="btn" data-modal="purchaseFailure">查看详情</button></div>
-              </div>
-            </div>
-          </div>
+                    <div class="purchase-panel" id="purchasePanel5">
+                      <div class="purchase-order-list">
+                        <div class="purchase-order-item">
+                          <div class="purchase-order-time">
+                            <div class="purchase-timeline">
+                              <div class="purchase-timeline-item"><div class="purchase-timeline-label">创建时间</div><div class="purchase-timeline-date">2026-04-27</div><div class="purchase-timeline-time-text">20:19:11</div></div>
+                              <div class="purchase-timeline-item pending"><div class="purchase-timeline-label">支付时间</div></div>
+                              <div class="purchase-timeline-item pending"><div class="purchase-timeline-label">取消时间</div></div>
+                            </div>
+                          </div>
+                          <div class="purchase-order-content">
+                            <div class="purchase-order-top">
+                              <div class="purchase-order-title-wrap">
+                                <div class="purchase-order-title"><span class="purchase-order-no">采购单号：PO-20260427-002</span><span class="purchase-order-status tag status-empty">空缺</span></div>
+                              </div>
+                              <div class="purchase-order-side"><div class="purchase-order-amount">¥436.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
+                            </div>
+                            <div class="purchase-detail-grid">
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">房型信息</div><div class="purchase-detail-value">行政双床房-双早</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入离时间</div><div class="purchase-detail-value">2026-04-29入住，2026-04-30离店</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">间夜</div><div class="purchase-detail-value">2间1晚</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">入住人</div><div class="purchase-detail-value">张三</div></div>
+                              <div class="purchase-detail-item"><div class="purchase-detail-label">联系人</div><div class="purchase-detail-value">李四 / 13800000001</div></div>
+                              <div class="purchase-detail-item full"><div class="purchase-detail-label">取消规则</div><div class="purchase-detail-value">不可免费取消，取消将按订单实付金额收取罚金。</div></div>
+                            </div>
+                            <div class="purchase-more-info">
+                              <div class="purchase-detail-grid">
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">下单账号:</div><div class="purchase-detail-value">elong_api_auto_04</div></div>
+                                <div class="purchase-detail-item inline"><div class="purchase-detail-label">开票类型:</div><div class="purchase-detail-value">酒店开发票</div></div>
+                              </div>
+                            </div>
+                            <div class="purchase-bottom-actions">
+                              <button class="btn btn-outline-secondary btn-icon-gap" onclick="toggleMoreInfo(this)">
+                                <span>更多信息</span>
+                                <svg class="arrow-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor"><path d="M2.5 4.5L6 8L9.5 4.5" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                              </button>
+                              <button class="btn btn-outline-danger" data-modal="purchaseFailure">失败原因</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
         </section>
+
+
+
       </div>
     </div>
   </div>
 
-  <div class="modal-mask" id="purchaseFailureModal">
+        <div class="modal-mask" id="purchaseFailureModal">
     <div class="modal">
       <div class="modal-head"><div class="modal-title">采购失败原因明细</div><button class="btn" data-close-modal>关闭</button></div>
-      <div class="modal-body"><div class="failure-list"><div class="failure-item"><div class="failure-top"><strong>供应商 A · 杭州直连仓</strong><span class="failure-code">ROOM_CLOSED</span></div><div class="failure-text">供应商返回房态不足，目标日期库存已关闭，建议切换同城备采池。</div><div class="failure-sub">出现时间：2026-04-22 09:12:31 / 2026-04-23 08:33:10</div></div><div class="failure-item"><div class="failure-top"><strong>供应商 C · OTA 备采</strong><span class="failure-code">PRICE_LIMIT</span></div><div class="failure-text">报价高于系统允许采购线 12%，未满足利润阈值要求，系统自动终止。</div><div class="failure-sub">出现时间：2026-04-22 11:16:45</div></div></div></div>
+      <div class="modal-body">
+        <div class="json-code-box"><pre>{
+  <span class="json-key">"errorCode"</span>: <span class="json-string">"ROOM_CLOSED"</span>,
+  <span class="json-key">"message"</span>: <span class="json-string">"供应商返回房态不足，目标日期库存已关闭"</span>,
+  <span class="json-key">"supplier"</span>: <span class="json-string">"供应商 A · 杭州直连仓"</span>,
+  <span class="json-key">"timestamp"</span>: <span class="json-string">"2026-04-22 09:12:31"</span>,
+  <span class="json-key">"suggestion"</span>: <span class="json-string">"建议切换同城备采池"</span>,
+  <span class="json-key">"retryCount"</span>: <span class="json-number">3</span>
+}</pre></div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal-mask" id="priceDetailModal">
+    <div class="modal">
+      <div class="modal-head"><div class="modal-title">订单价格明细</div><button class="btn" data-close-modal>关闭</button></div>
+      <div class="modal-body"><div class="failure-list"><div class="failure-item"><div class="failure-top"><strong>订单金额</strong><strong>¥864.00</strong></div><div class="failure-text">优惠金额：¥300.00</div><div class="failure-sub">门店首单 ¥100　城市特惠 ¥100　黄金会员 ¥100</div></div></div></div>
     </div>
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <script>
+
+    <script>
     const toastEl = document.getElementById('toast');
     function showToast(message) { toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800); }
-    document.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(btn.dataset.copy); showToast(`已复制：${btn.dataset.copy}`); } catch { showToast('复制失败，请手动复制'); } }));
-    document.querySelectorAll('[data-task-panel]').forEach(btn => btn.addEventListener('click', () => {
-      document.querySelectorAll('[data-task-panel]').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.purchase-task-panel').forEach(panel => panel.classList.remove('active'));
+    window.toggleMoreInfo = function(btn) {
+      const content = btn.closest('.purchase-order-content');
+      const moreInfo = content.querySelector('.purchase-more-info');
+      const isShowing = moreInfo.classList.toggle('show');
+      btn.classList.toggle('is-expanded', isShowing);
+      const label = btn.querySelector('span');
+      if (label) label.textContent = isShowing ? '收起信息' : '更多信息';
+    };
+
+        document.querySelectorAll('[data-copy]').forEach(btn => btn.addEventListener('click', async () => { try { await navigator.clipboard.writeText(btn.dataset.copy); showToast(`已复制：${btn.dataset.copy}`); } catch { showToast('复制失败，请手动复制'); } }));
+    document.querySelectorAll('[data-purchase-panel]').forEach(btn => btn.addEventListener('click', () => {
+      document.querySelectorAll('[data-purchase-panel]').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.purchase-panel').forEach(panel => panel.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById(btn.dataset.taskPanel).classList.add('active');
+      document.getElementById(btn.dataset.purchasePanel).classList.add('active');
     }));
+
     document.querySelectorAll('.tooltip-item').forEach(item => {
+
       let hideTimer;
       const open = () => {
         clearTimeout(hideTimer);
@@ -491,10 +658,12 @@
         document.querySelectorAll('.tooltip-item.open').forEach(item => item.classList.remove('open'));
       }
     });
-    document.querySelectorAll('[data-modal]').forEach(btn => btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-modal]').forEach(btn => btn.addEventListener('click', () => {
       if (btn.dataset.modal === 'purchaseFailure') document.getElementById('purchaseFailureModal')?.classList.add('show');
+      if (btn.dataset.modal === 'priceDetail') document.getElementById('priceDetailModal')?.classList.add('show');
     }));
-    document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal-mask').classList.remove('show')));
+
+        document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal-mask').classList.remove('show')));
     document.querySelectorAll('.modal-mask').forEach(mask => mask.addEventListener('click', event => { if (event.target === mask) mask.classList.remove('show'); }));
   </script>
 </body>
