@@ -101,6 +101,28 @@
       overflow: hidden;
     }
 
+    .json-detail-drawer {
+      max-width: 100vw;
+    }
+
+    .json-detail-drawer .el-drawer {
+      width: min(960px, 92vw) !important;
+      background: #FFF;
+    }
+
+    .json-detail-drawer .el-drawer__header {
+      margin-bottom: 0;
+      padding: 16px 20px;
+      border-bottom: 1px solid #E2E8F0;
+      background: #FFF;
+    }
+
+    .json-detail-drawer .el-drawer__body {
+      padding: 16px 20px 20px;
+      overflow: hidden;
+      background: #0F172A;
+    }
+
     .expand-toggle-btn {
       min-height: auto !important;
       padding: 0 !important;
@@ -149,6 +171,66 @@
       border-color: #165DFF;
       color: #FFF;
     }
+
+    .phase-accordion-wrap { padding: 16px; background: #FFF; }
+    .phase-accordion-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+    .phase-accordion-count { color: #94A3B8; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+    .phase-accordion-list { position: relative; padding-left: 0; }
+    .phase-accordion-item { position: relative; padding-bottom: 0; }
+    .phase-accordion-item.is-clickable { cursor: pointer; }
+    .phase-accordion-item.is-open .phase-accordion-row.is-summary { background: #F5F7FA; }
+    .phase-accordion-row { position: relative; display: grid; grid-template-columns: 112px 22px minmax(180px, 340px) minmax(220px, 1fr) 88px 156px; align-items: center; column-gap: 12px; min-height: 66px; border-bottom: 1px solid #E2E8F0; background: #FFF; }
+    .phase-accordion-time { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; height: 66px; }
+    .phase-accordion-date { color: #94A3B8; font-size: 12px; line-height: 18px; }
+    .phase-accordion-clock { color: #1E293B; font-size: 14px; font-weight: 700; line-height: 20px; }
+    .phase-accordion-node-col { position: relative; display: flex; align-items: center; justify-content: center; height: 100%; align-self: stretch; }
+    .phase-accordion-node-col::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(-50%); border-left: 2px solid #E2E8F0; }
+    .phase-accordion-node { position: relative; width: 12px; height: 12px; border-radius: 999px; background: #FFF; border: 2px solid #CBD5E1; z-index: 1; }
+    .phase-accordion-card { background: #FFF; transition: background .2s ease; }
+    .phase-accordion-trigger { width: 100%; padding: 0 16px; min-height: 66px; background: #FFF; border: 0; display: block; cursor: pointer; text-align: left; transition: background .2s ease; }
+    .phase-accordion-trigger:hover { background: #F8FAFC; }
+    .phase-accordion-item.is-open .phase-accordion-card,
+    .phase-accordion-item.is-open .phase-accordion-trigger,
+    .phase-accordion-item.is-open .phase-accordion-body { background: #FFF; }
+    .phase-accordion-phase-wrap { display: flex; flex-direction: column; justify-content: center; min-width: 0; max-width: 340px; }
+    .phase-accordion-content-top { display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .phase-accordion-content-main { color: #0F172A; font-size: 14px; font-weight: 700; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .phase-accordion-phase-sub { color: #0F172A; font-size: 14px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .phase-accordion-merge-tag { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; background: #F0F7FF; border: 1px solid #CFE1FF; color: #165DFF; font-size: 12px; line-height: 20px; white-space: nowrap; flex: 0 0 auto; }
+    .phase-accordion-content { color: #334155; font-size: 14px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 600px; }
+    .phase-accordion-result { color: #334155; font-size: 14px; line-height: 20px; display: flex; align-items: center; min-height: 66px; }
+    .phase-accordion-operator { color: #475569; font-size: 13px; }
+    .phase-accordion-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
+    .phase-accordion-action-btn { min-width: 72px; height: 30px; padding: 0 10px; border-radius: 4px; border: 1px solid #D0D7E2; background: #FFF; color: #334155; font-size: 12px; line-height: 28px; display: inline-flex; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: all .2s ease; }
+    .phase-accordion-action-btn:hover { border-color: #94A3B8; color: #0F172A; background: #F8FAFC; }
+    .phase-accordion-action-btn.is-link { color: #165DFF; border-color: #BFD4FF; background: #F8FAFF; }
+    .phase-accordion-action-btn.is-link:hover { border-color: #94B9FF; background: #EFF6FF; }
+    .phase-accordion-action-btn.is-expand { min-width: 92px; }
+    .phase-accordion-action-btn.is-toggle .el-icon { transition: transform .2s ease; }
+    .phase-accordion-body { position: relative; padding: 0; background: #FFF; }
+    .phase-accordion-body::before { content: ""; position: absolute; left: 123px; top: 0; bottom: 0; border-left: 2px solid #E2E8F0; }
+    .log-record-list { display: flex; flex-direction: column; gap: 0; }
+    .phase-accordion-body .log-record-row { display: grid; grid-template-columns: 112px 22px minmax(180px, 340px) minmax(220px, 1fr) 88px 156px; column-gap: 12px; align-items: center; position: relative; min-height: 66px; padding: 0; border-bottom: 1px solid #E2E8F0; background: #F5F7FA; }
+    .log-record-time { display: flex; flex-direction: column; justify-content: center; }
+    .log-record-date { color: #94A3B8; font-size: 12px; line-height: 18px; }
+    .log-record-clock { color: #1E293B; font-size: 14px; font-weight: 700; line-height: 20px; }
+    .log-record-node-col { position: relative; display: flex; align-items: center; justify-content: center; height: 100%; align-self: stretch; }
+    .log-record-node-col::before { content: ""; position: absolute; left: 50%; top: 0; bottom: 0; transform: translateX(-50%); border-left: 2px solid #E2E8F0; }
+    .log-record-node { position: relative; width: 10px; height: 10px; border-radius: 999px; background: #FFF; border: 2px solid #CBD5E1; z-index: 1; }
+    .log-record-phase-wrap { display: flex; flex-direction: column; justify-content: center; min-width: 0; max-width: 340px; }
+    .phase-accordion-body .log-record-action { display: flex; align-items: center; justify-content: flex-end; }
+    .log-record-phase-main { color: #0F172A; font-size: 14px; font-weight: 700; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-record-phase-sub { color: #0F172A; font-size: 14px; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .log-record-content, .log-record-result { color: #334155; font-size: 14px; line-height: 20px; }
+    .log-record-content { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 600px; }
+    .log-record-result { display: flex; align-items: center; min-height: 66px; }
+    .log-record-operator { color: #475569; font-size: 13px; }
+    .business-log-head, .business-log-row { display: grid; grid-template-columns: 112px minmax(260px, 1fr); column-gap: 16px; align-items: center; }
+    .business-log-head { min-height: 40px; padding: 0 12px; color: #64748B; font-size: 12px; font-weight: 600; background: #F8FAFC; border-radius: 6px 6px 0 0; }
+    .business-log-list { display: flex; flex-direction: column; gap: 0; }
+    .business-log-row { min-height: 66px; padding: 0 12px; border-bottom: 1px solid #E2E8F0; background: #FFF; }
+    .business-log-result { color: #334155; font-size: 14px; line-height: 20px; display: flex; align-items: center; min-height: 66px; }
+    .phase-json-btn { min-width: 72px; }
   </style>
 </head>
 <body>
@@ -159,11 +241,11 @@
           <div class="summary-bar rounded-xl border border-slate-200 px-3 py-2 shadow-sm">
             <div class="grid grid-cols-12 gap-2">
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
-                <div class="summary-label">系统</div>
+                <div class="summary-label">系统订单号</div>
                 <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.systemOrderNo }}</div>
               </div>
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
-                <div class="summary-label">外部</div>
+                <div class="summary-label">外部订单号</div>
                 <div class="summary-value mt-0.5 font-mono truncate">{{ orderSummary.externalOrderNo }}</div>
               </div>
               <div class="summary-chip rounded-lg px-2.5 py-1.5 col-span-2 min-w-0">
@@ -215,188 +297,150 @@
         </div>
 
         <div class="flex flex-1 overflow-hidden bg-[#F8FAFC]">
-          
-          <div v-if="activeTab === 'phase'" class="w-[600px] border-r bg-white overflow-y-auto custom-scroll p-4 shrink-0 flex-none">
-            <div class="text-gray-400 font-bold text-xs uppercase tracking-widest mb-3 flex justify-between items-center leading-none">
-              <span>阶段日志时间轴</span>
-              <span class="bg-gray-100 text-gray-500 px-2 py-0.5 rounded leading-none">共 {{ totalLogsCount }} 条日志</span>
-            </div>
-            
-            <el-timeline>
-              <el-timeline-item 
-                v-for="block in phaseBlocks" :key="block.id"
-                :type="block.themeColor"
-                :icon="block.themeIcon"
-                hide-timestamp
-              >
-                <div 
-                  class="timeline-row min-h-[66px] px-2 py-1 rounded-lg cursor-pointer border bg-white flex items-center"
-                  :class="selectedPhaseId === block.id ? 'active border-[#165DFF]' : 'border-gray-100'"
-                  @click="selectedPhaseId = block.id"
-                >
-                  <div class="grid grid-cols-[92px_minmax(0,1fr)_56px] auto-rows-auto gap-x-0.5 gap-y-0.5 items-center w-full">
-                    <div class="font-mono tracking-tight text-[13px] text-gray-500 leading-5 self-center">
-                      {{ block.time.split(' ')[0] }}
+          <div v-if="activeTab === 'phase'" ref="phaseScrollRef" class="phase-log-scroll flex-1 overflow-y-auto custom-scroll bg-white">
+            <div class="phase-accordion-wrap">
+              <div class="phase-accordion-head">
+                <span class="phase-accordion-count">共 {{ phaseBlocks.length }} 个阶段</span>
+                <button type="button" class="phase-accordion-action-btn is-toggle" @click="toggleAllPhases()">
+                  <el-icon><component :is="allPhaseExpanded ? 'ArrowDown' : 'ArrowUp'" /></el-icon>
+                  <span>{{ allPhaseExpanded ? '全部收起' : '全部展开' }}</span>
+                </button>
+              </div>
+              <div class="phase-accordion-list">
+                <div v-for="item in phaseDisplayItems" :key="item.id" class="phase-accordion-item" :class="[{ 'is-open': item.canExpand && isPhaseExpanded(item.id) }, item.canExpand ? 'is-clickable' : '']">
+                  <div class="phase-accordion-row" :class="item.canExpand ? 'is-summary' : ''" :data-phase-row-id="item.id" @click="item.canExpand && handlePhaseToggle(item.id)">
+                    <div class="phase-accordion-time">
+                      <div class="phase-accordion-date">{{ item.primaryLog.time.split(' ')[0] }}</div>
+                      <div class="phase-accordion-clock">{{ item.primaryLog.time.split(' ')[1] }}</div>
                     </div>
-                    <div class="min-w-0 flex items-center gap-0.5 min-h-[20px]">
-                      <span class="font-bold text-[14px] text-gray-900 truncate min-w-0">{{ block.displayContent }}</span>
-                      <span class="text-[14px] text-gray-900 shrink-0">&nbsp;</span>
-                      <el-tooltip v-if="shouldShowTooltip(block.displayPhase, 'phase')" effect="dark" popper-class="dark-tooltip" placement="top" :content="block.displayPhase">
-                        <span class="font-bold text-[14px] text-gray-900 truncate shrink-0 max-w-[208px]">{{ block.displayPhase }}</span>
-                      </el-tooltip>
-                      <span v-else class="font-bold text-[14px] text-gray-900 truncate shrink-0 max-w-[208px]">{{ block.displayPhase }}</span>
-                      <el-tooltip v-if="block.count > 1" effect="dark" popper-class="dark-tooltip" placement="top" content="这是当前最新命中的阶段，后续阶段变化时会自动更新。">
-                        <span class="ml-1 shrink-0 rounded bg-blue-50 px-1.5 py-0.5 text-[11px] font-semibold text-blue-600 border border-blue-200 leading-none">当前命中</span>
-                      </el-tooltip>
-                    </div>
-                    <div class="text-[12.5px] text-gray-500 flex items-center gap-1 justify-end whitespace-nowrap self-center text-right">
-                      <el-icon><Avatar /></el-icon> {{ block.operator }}
-                    </div>
-
-                    <div class="font-mono tracking-tight text-[14px] text-black leading-5 self-start">
-                      {{ block.time.split(' ')[1] }}
-                    </div>
-                    <div class="min-w-0 pr-0.5">
-                      <el-tooltip v-if="shouldShowTooltip(block.secondLineResult, 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="block.secondLineResult">
-                        <div class="text-[12px] leading-5 line-clamp-3" :class="block.secondLineResultClass">
-                          {{ block.secondLineResult }}
-                        </div>
-                      </el-tooltip>
-                      <div v-else class="text-[12px] leading-5 line-clamp-3" :class="block.secondLineResultClass">
-                        {{ block.secondLineResult }}
+                    <div class="phase-accordion-node-col"><span class="phase-accordion-node"></span></div>
+                    <div class="phase-accordion-phase-wrap">
+                      <div class="phase-accordion-content-top">
+                        <div class="phase-accordion-content-main">{{ item.primaryLog.content }}</div>
+                        <span v-if="item.canExpand" class="phase-accordion-merge-tag">最后命中阶段，共 {{ item.mergedCount }} 条</span>
                       </div>
+                      <div class="phase-accordion-phase-sub">{{ item.primaryLog.phase }}</div>
                     </div>
-                    <div class="flex justify-end self-start text-right">
-                      <span v-if="block.count > 1" class="text-[14px] text-black font-mono font-bold bg-gray-50 px-1.5 py-0.5 rounded">
-                        {{ block.count }}
-                      </span>
+                    <div class="phase-accordion-result" :class="getResultClass(item.primaryLog.result, item.primaryLog.isError)">{{ item.primaryLog.result }}</div>
+                    <div class="phase-accordion-operator">{{ item.primaryLog.operator }}</div>
+                    <div class="phase-accordion-actions">
+                      <button v-if="item.canExpand" type="button" class="phase-accordion-action-btn is-toggle is-expand" @click.stop="handlePhaseToggle(item.id)">
+                        <el-icon><component :is="isPhaseExpanded(item.id) ? 'ArrowDown' : 'ArrowUp'" /></el-icon>
+                        <span>{{ isPhaseExpanded(item.id) ? '收起' : '展开查看' }}</span>
+                      </button>
+                      <button type="button" class="phase-accordion-action-btn is-link" @click.stop="openJsonDialogByRows(item.detailRows)">
+                        <el-icon><Tickets /></el-icon>
+                        <span>详情</span>
+                      </button>
                     </div>
                   </div>
-
+                  <div v-if="item.canExpand && isPhaseExpanded(item.id)" class="phase-accordion-body">
+                    <div class="log-record-list">
+                      <div v-for="row in item.hiddenLogs" :key="row.id" class="log-record-row">
+                        <div class="log-record-time">
+                          <div class="log-record-date">{{ row.time.split(' ')[0] }}</div>
+                          <div class="log-record-clock">{{ row.time.split(' ')[1] }}</div>
+                        </div>
+                        <div class="log-record-node-col"><span class="log-record-node"></span></div>
+                        <div class="log-record-phase-wrap">
+                          <div class="log-record-phase-main">{{ row.content }}</div>
+                          <div class="log-record-phase-sub">{{ row.phase }}</div>
+                        </div>
+                        <div class="log-record-result" :class="getResultClass(row.result, row.isError)">{{ row.result }}</div>
+                        <div class="log-record-operator">{{ row.operator }}</div>
+                        <div class="log-record-action">
+                          <button type="button" class="phase-accordion-action-btn is-link" @click.stop="openJsonDialog(row)">
+                            <el-icon><Tickets /></el-icon>
+                            <span>日志</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div v-if="item.tailLog" class="phase-accordion-row is-tail">
+                    <div class="phase-accordion-time">
+                      <div class="phase-accordion-date">{{ item.tailLog.time.split(' ')[0] }}</div>
+                      <div class="phase-accordion-clock">{{ item.tailLog.time.split(' ')[1] }}</div>
+                    </div>
+                    <div class="phase-accordion-node-col"><span class="phase-accordion-node"></span></div>
+                    <div class="phase-accordion-phase-wrap">
+                      <div class="phase-accordion-content-top">
+                        <div class="phase-accordion-content-main">{{ item.tailLog.content }}</div>
+                      </div>
+                      <div class="phase-accordion-phase-sub">{{ item.tailLog.phase }}</div>
+                    </div>
+                    <div class="phase-accordion-result" :class="getResultClass(item.tailLog.result, item.tailLog.isError)">{{ item.tailLog.result }}</div>
+                    <div class="phase-accordion-operator">{{ item.tailLog.operator }}</div>
+                    <div class="phase-accordion-actions">
+                      <button type="button" class="phase-accordion-action-btn is-link" @click.stop="openJsonDialog(item.tailLog)">
+                        <el-icon><Tickets /></el-icon>
+                        <span>日志</span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </el-timeline-item>
-            </el-timeline>
-          </div>
-
-          <div v-if="activeTab === 'business'" class="w-[200px] border-r bg-white overflow-y-auto custom-scroll shrink-0 flex-none py-4">
-            <div class="px-6 text-gray-400 font-bold text-xs uppercase tracking-widest mb-4">分类筛选</div>
-            <div 
-              v-for="type in businessTypes" :key="type.name"
-              class="px-6 py-4 cursor-pointer flex flex-col gap-2 border-l-4 border-transparent hover:bg-gray-50"
-              :class="selectedBusinessType === type.name ? 'bg-[#EAF2FF] border-[#165DFF] font-bold text-[#165DFF]' : 'text-gray-700'"
-              @click="selectedBusinessType = type.name"
-            >
-              <div class="flex items-center justify-between gap-2">
-                <span>{{ type.name }}</span>
-                <span class="text-[12px] font-semibold" :class="type.status === '失败' ? 'text-red-500' : 'text-emerald-500'">{{ type.status }}</span>
               </div>
-              <span class="text-xs text-gray-400 font-normal">{{ type.count }} 条记录</span>
             </div>
           </div>
 
-          <div :class="activeTab === 'phase' ? 'w-[800px] shrink-0 flex-none' : 'flex-1 min-w-0'" class="p-4 overflow-y-auto custom-scroll">
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 min-h-full flex flex-col">
-              
-              <div class="px-4 pt-3 pb-2 flex justify-end shrink-0">
-                <div class="text-[13px] text-gray-500 font-mono">
-                  共 {{ rightSideLogs.length }} 条明细记录
+          <template v-else>
+            <div class="w-[200px] border-r bg-white overflow-y-auto custom-scroll shrink-0 flex-none py-4">
+              <div class="px-6 text-gray-400 font-bold text-xs uppercase tracking-widest mb-4">分类筛选</div>
+              <div 
+                v-for="type in businessTypes" :key="type.name"
+                class="px-6 py-4 cursor-pointer flex flex-col gap-2 border-l-4 border-transparent hover:bg-gray-50"
+                :class="selectedBusinessType === type.name ? 'bg-[#EAF2FF] border-[#165DFF] font-bold text-[#165DFF]' : 'text-gray-700'"
+                @click="selectedBusinessType = type.name"
+              >
+                <div class="flex items-center justify-between gap-2">
+                  <span>{{ type.name }}</span>
+                  <span class="text-[12px] font-semibold" :class="type.status === '失败' ? 'text-red-500' : 'text-emerald-500'">{{ type.status }}</span>
                 </div>
-              </div>
-
-              <div class="flex-1 overflow-x-hidden overflow-y-auto px-4 pb-4">
-                <el-table ref="logTableRef" :data="rightSideLogs" row-key="id" fit :show-header="true" :row-class-name="getRowClassName" style="width: 100%; table-layout: fixed" border>
-                  <el-table-column type="expand" width="42">
-                    <template #header>
-                      <div class="flex items-center justify-center w-full">
-                        <el-button class="expand-toggle-btn" link @click.stop="toggleAllLogs()">
-                          <el-icon size="14"><component :is="allExpanded ? 'CaretBottom' : 'CaretRight'" /></el-icon>
-                        </el-button>
-                      </div>
-                    </template>
-                    <template #default="{ row }">
-                      <div class="px-8 py-3 bg-gray-50">
-                        <div v-if="row.json" class="json-container">
-                          <div class="absolute right-4 top-4 flex items-center gap-3">
-                            <el-button type="primary" size="small" link @click="copyJson(row.json)">
-                              <el-icon class="mr-1"><CopyDocument /></el-icon>复制
-                            </el-button>
-                            <el-button type="primary" size="small" link @click="openJsonDialog(row)">
-                              <el-icon class="mr-1"><FullScreen /></el-icon>展开
-                            </el-button>
-                          </div>
-                          <pre>{{ row.json }}</pre>
-                        </div>
-                        <div v-else class="text-center py-6 text-gray-400 italic text-[13px]">
-                          该日志节点无附属 JSON 报文
-                        </div>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  
-                  <el-table-column prop="time" label="时间" width="100">
-                    <template #default="{ row }">
-                      <div class="font-mono flex flex-col leading-[1.15]">
-                        <span class="text-[13px] text-gray-500">{{ row.time.split(' ')[0] }}</span>
-                        <span class="mt-1 text-[14px] text-gray-800">{{ row.time.split(' ')[1] }}</span>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  
-                  <el-table-column v-if="activeTab === 'phase'" label="阶段" width="140">
-                    <template #default="{ row }">
-                      <div class="flex flex-col">
-                        <span class="text-gray-800 font-semibold">{{ row.phaseName }}</span>
-                        <span class="text-[12px] text-gray-400 font-mono mt-0.5">{{ row.phase }}</span>
-                      </div>
-                    </template>
-                  </el-table-column>
-
-                  <el-table-column v-if="activeTab === 'phase'" label="结果">
-                    <template #default="{ row }">
-                      <el-tooltip v-if="shouldShowTooltip(buildRowResult(row), 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="buildRowResult(row)">
-                        <div class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
-                      </el-tooltip>
-                      <div v-else class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
-                    </template>
-                  </el-table-column>
-
-                  <el-table-column v-else label="类型" width="110">
-                    <template #default="{ row }">
-                      <div class="flex flex-col leading-6">
-                        <span class="text-[14px] font-semibold text-gray-800">{{ row.businessType }}</span>
-                        <span :class="row.isError ? 'text-red-500' : 'text-emerald-500'" class="text-[12px]">{{ row.businessStatus }}</span>
-                      </div>
-                    </template>
-                  </el-table-column>
-
-                  <el-table-column v-else label="结果">
-                    <template #default="{ row }">
-                      <el-tooltip v-if="shouldShowTooltip(buildRowResult(row), 'multi')" effect="dark" popper-class="dark-tooltip" placement="top" :content="buildRowResult(row)">
-                        <div class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
-                      </el-tooltip>
-                      <div v-else class="line-clamp-3 leading-6 break-words" :class="getResultClass(buildRowResult(row), row.isError)">{{ buildRowResult(row) }}</div>
-                    </template>
-                  </el-table-column>
-
-                  <el-table-column v-if="activeTab === 'phase'" prop="operator" label="操作人" width="68">
-                    <template #default="{ row }">
-                      <span class="text-[12px] text-gray-600 whitespace-nowrap">{{ row.operator }}</span>
-                    </template>
-                  </el-table-column>
-
-                </el-table>
+                <span class="text-xs text-gray-400 font-normal">{{ type.count }} 条记录</span>
               </div>
             </div>
-          </div>
+
+            <div class="flex-1 min-w-0 p-4 overflow-y-auto custom-scroll">
+              <div class="bg-white rounded-xl shadow-sm border border-gray-200 min-h-full flex flex-col">
+                <div class="px-4 pt-3 pb-2 flex justify-end shrink-0">
+                  <div class="text-[13px] text-gray-500 font-mono">共 {{ rightSideLogs.length }} 条明细记录</div>
+                </div>
+                <div class="px-4 pb-4">
+                  <div class="business-log-head">
+                    <div>时间</div>
+                    <div>结果</div>
+                  </div>
+                  <div class="business-log-list">
+                    <div v-for="row in rightSideLogs" :key="row.id" class="business-log-row">
+                      <div class="log-record-time">
+                        <div class="log-record-date">{{ row.time.split(' ')[0] }}</div>
+                        <div class="log-record-clock">{{ row.time.split(' ')[1] }}</div>
+                      </div>
+                      <div class="business-log-result" :class="getResultClass(row.result, row.isError)">{{ row.result }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
 
         </div>
       </div>
 
-    <el-dialog v-model="jsonDialogVisible" width="1280px" top="3vh" append-to-body destroy-on-close>
+    <el-drawer
+      v-model="jsonDialogVisible"
+      direction="rtl"
+      :size="960"
+      :z-index="5000"
+      append-to-body
+      modal-append-to-body
+      destroy-on-close
+      class="json-detail-drawer"
+    >
       <template #header>
-        <div class="flex items-center justify-between w-full pr-8">
+        <div class="flex items-center justify-between w-full gap-4">
           <span class="font-semibold text-[16px] text-slate-900">日志报文详情</span>
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3 pr-8">
             <el-button type="primary" link @click="copyJson(jsonDialogContent)">
               <el-icon class="mr-1"><CopyDocument /></el-icon>复制
             </el-button>
@@ -406,10 +450,10 @@
           </div>
         </div>
       </template>
-      <div class="json-container !m-0 min-h-[520px] max-h-[82vh] overflow-auto custom-scroll">
+      <div class="json-container !m-0 h-full min-h-full max-h-full overflow-auto custom-scroll">
         <pre>{{ jsonDialogContent || '暂无可展示报文内容' }}</pre>
       </div>
-    </el-dialog>
+    </el-drawer>
   </div>
 
   <script>
@@ -417,13 +461,12 @@
     const app = createApp({
       setup() {
         const activeTab = ref('phase');
-        const selectedPhaseId = ref('');
+        const expandedPhaseIds = ref([]);
         const selectedBusinessType = ref('试单');
         const selectedLogScope = ref('');
         const jsonDialogVisible = ref(false);
         const jsonDialogContent = ref('');
-        const logTableRef = ref(null);
-        const allExpanded = ref(false);
+        const phaseScrollRef = ref(null);
 
         const orderSummary = ref({
           systemOrderNo: 'HTL202604228899',
@@ -549,134 +592,61 @@
           return latestRow && latestRow.id === row.id ? 'hit-row' : '';
         };
 
-        // ==== 核心：恢复实心图标逻辑 (SuccessFilled, CircleCloseFilled) ====
-        const applyThemeColor = (batch) => {
-            if (batch.hasError) {
-                batch.statusText = '失败';
-                batch.themeColor = 'danger';
-                batch.themeIcon = 'CircleCloseFilled'; 
-                batch.textColorClass = 'text-red-500';
-            } else {
-                if (batch.type === 'BATCH') {
-                    const lastLog = batch.logs[batch.logs.length - 1];
-                    if (lastLog.phase.includes('QUERY')) {
-                        batch.statusText = '进行中';
-                        batch.themeColor = 'primary';
-                        batch.themeIcon = 'Loading'; 
-                        batch.textColorClass = 'text-blue-500';
-                    } else {
-                        batch.statusText = '成功';
-                        batch.themeColor = 'success';
-                        batch.themeIcon = 'SuccessFilled'; 
-                        batch.textColorClass = 'text-emerald-500';
-                    }
-                } else {
-                    batch.statusText = '成功';
-                    batch.themeColor = 'success';
-                    batch.themeIcon = 'SuccessFilled';
-                    batch.textColorClass = 'text-emerald-500';
-                }
-            }
-            
-            // 被宏观动作中断，只要没有错误，就是成功
-            if (batch.isInterrupted && !batch.hasError) {
-                batch.statusText = '成功';
-                batch.themeColor = 'success';
-                batch.themeIcon = 'SuccessFilled';
-                batch.textColorClass = 'text-emerald-500';
-            }
-        };
-
         const phaseBlocks = computed(() => {
           const blocks = [];
-          let currentBatch = null;
+          let currentBlock = null;
 
           scopedLogs.value.forEach((log) => {
-            const isMicro = log.phase.includes('PURCHASE_TASK');
-            
-            let extractedId = null;
-            const match = log.content.match(/\d{15,}/) || log.result.match(/\d{15,}/);
-            if (match) extractedId = match[0];
-
-            if (!isMicro) {
-              if (currentBatch && currentBatch.type === 'MACRO' && currentBatch.subtitle === log.phase) {
-                  currentBatch.logs.push(log);
-                  currentBatch.count++;
-                  currentBatch.time = log.time;
-                  currentBatch.latestPhaseName = log.phaseName;
-                  currentBatch.displayContent = log.content;
-                  currentBatch.latestResult = log.result;
-                  if (log.isError) currentBatch.hasError = true;
-              } else {
-                  if (currentBatch) {
-                      currentBatch.isInterrupted = true;
-                      applyThemeColor(currentBatch);
-                  }
-                  
-                  currentBatch = {
-                    type: 'MACRO', id: 'macro_' + log.id,
-                    title: log.phaseName, subtitle: log.phase,
-                    time: log.time, count: 1, hasError: log.isError,
-                    operator: log.operator,
-                    latestPhaseName: log.phaseName,
-                    displayContent: log.content,
-                    latestResult: log.result,
-                    isInterrupted: false,
-                    logs: [log]
-                  };
-                  applyThemeColor(currentBatch);
-                  blocks.push(currentBatch);
-              }
-            } 
-            else {
-              if (currentBatch && currentBatch.type === 'BATCH' && currentBatch.taskId === (extractedId || currentBatch.taskId)) {
-                  currentBatch.logs.push(log);
-                  currentBatch.count++;
-                  currentBatch.time = log.time;
-                  currentBatch.latestPhaseName = log.phaseName;
-                  currentBatch.displayContent = log.content;
-                  currentBatch.latestResult = log.result;
-                  if (log.isError) currentBatch.hasError = true;
-                  if (extractedId && currentBatch.taskId === '未知单号') currentBatch.taskId = extractedId;
-              } else {
-                  if (currentBatch) {
-                      currentBatch.isInterrupted = true;
-                      applyThemeColor(currentBatch);
-                  }
-                  
-                  currentBatch = {
-                    type: 'BATCH', id: 'batch_' + log.id, 
-                    taskId: extractedId || '未知单号',
-                    title: '采购任务', 
-                    time: log.time, count: 1, hasError: log.isError,
-                    latestPhaseName: log.phaseName,
-                    displayContent: log.content,
-                    latestResult: log.result,
-                    isInterrupted: false,
-                    logs: [log]
-                  };
-                  applyThemeColor(currentBatch);
-                  blocks.push(currentBatch);
-              }
+            if (currentBlock && currentBlock.phase === log.phase) {
+              currentBlock.logs.push(log);
+              currentBlock.count += 1;
+              currentBlock.hasError = currentBlock.hasError || log.isError;
+            } else {
+              currentBlock = {
+                id: `phase_${log.id}`,
+                phase: log.phase,
+                count: 1,
+                hasError: log.isError,
+                logs: [log]
+              };
+              blocks.push(currentBlock);
             }
-          });
-
-          if (currentBatch) applyThemeColor(currentBatch);
-
-          blocks.forEach(block => {
-             const ops = [...new Set(block.logs.map(l => l.operator))];
-             block.operator = ops.find(o => o !== '系统') || '系统';
-             if (block.type === 'BATCH') {
-               block.displayContent = block.logs[block.logs.length - 1]?.phaseName || block.displayContent;
-               block.displayPhase = block.logs[block.logs.length - 1]?.phase || block.latestPhaseName;
-             } else {
-               block.displayPhase = block.subtitle;
-             }
-             block.secondLineResult = block.latestResult;
-             block.secondLineResultClass = getResultClass(block.secondLineResult, block.hasError);
           });
 
           return blocks;
+        });
+
+        const phaseDisplayItems = computed(() => {
+          const items = [];
+          phaseBlocks.value.forEach((block) => {
+            if (block.count > 2) {
+              items.push({
+                id: block.id,
+                canExpand: true,
+                totalCount: block.count,
+                mergedCount: block.count - 1,
+                primaryLog: block.logs[0],
+                hiddenLogs: block.logs.slice(1, -1),
+                tailLog: block.logs[block.logs.length - 1],
+                detailRows: block.logs
+              });
+              return;
+            }
+
+            block.logs.forEach((log) => {
+              items.push({
+                id: `phase_single_${log.id}`,
+                canExpand: false,
+                totalCount: 1,
+                mergedCount: 1,
+                primaryLog: log,
+                hiddenLogs: [],
+                tailLog: null,
+                detailRows: [log]
+              });
+            });
+          });
+          return items;
         });
 
         const businessTypes = computed(() => {
@@ -694,23 +664,17 @@
           }).filter(type => type.count > 0);
         });
 
-        const currentPhaseSelection = computed(() => phaseBlocks.value.find(b => b.id === selectedPhaseId.value));
         const currentBusinessSelection = computed(() => businessTypes.value.find(t => t.name === selectedBusinessType.value));
 
-        const rightSideLogs = computed(() => {
-          if (activeTab.value === 'phase') return currentPhaseSelection.value ? currentPhaseSelection.value.logs : [];
-          else return currentBusinessSelection.value ? currentBusinessSelection.value.logs : [];
-        });
+        const rightSideLogs = computed(() => currentBusinessSelection.value ? currentBusinessSelection.value.logs : []);
 
         watch([phaseBlocks, selectedLogScope], ([val]) => {
           if (!val.length) {
-            selectedPhaseId.value = '';
+            expandedPhaseIds.value = [];
             return;
           }
-          const hit = val.find(item => item.id === selectedPhaseId.value);
-          if (!hit) {
-            nextTick(() => { selectedPhaseId.value = val[0].id; });
-          }
+          const validIds = new Set(val.map(item => item.id));
+          expandedPhaseIds.value = expandedPhaseIds.value.filter(id => validIds.has(id));
         }, { immediate: true });
 
         watch([businessTypes, selectedLogScope], ([val]) => {
@@ -722,9 +686,31 @@
           if (!hit) selectedBusinessType.value = val[0].name;
         }, { immediate: true });
 
-        watch([activeTab, rightSideLogs], () => {
-          allExpanded.value = false;
-        });
+        const togglePhaseExpand = (id) => {
+          expandedPhaseIds.value = expandedPhaseIds.value.includes(id)
+            ? expandedPhaseIds.value.filter(item => item !== id)
+            : [...expandedPhaseIds.value, id];
+        };
+
+        const handlePhaseToggle = async (id) => {
+          const scrollEl = phaseScrollRef.value;
+          const rowEl = scrollEl?.querySelector?.(`[data-phase-row-id="${id}"]`);
+          const beforeTop = rowEl ? rowEl.getBoundingClientRect().top : 0;
+          togglePhaseExpand(id);
+          await nextTick();
+          const nextRowEl = scrollEl?.querySelector?.(`[data-phase-row-id="${id}"]`);
+          if (scrollEl && nextRowEl) {
+            const afterTop = nextRowEl.getBoundingClientRect().top;
+            scrollEl.scrollTop += afterTop - beforeTop;
+          }
+        };
+
+        const isPhaseExpanded = (id) => expandedPhaseIds.value.includes(id);
+        const expandablePhaseIds = computed(() => phaseDisplayItems.value.filter(item => item.canExpand).map(item => item.id));
+        const allPhaseExpanded = computed(() => expandablePhaseIds.value.length > 0 && expandablePhaseIds.value.every(id => expandedPhaseIds.value.includes(id)));
+        const toggleAllPhases = () => {
+          expandedPhaseIds.value = allPhaseExpanded.value ? [] : [...expandablePhaseIds.value];
+        };
 
         const toggleLogScope = (scope) => {
           selectedLogScope.value = selectedLogScope.value === scope ? '' : scope;
@@ -740,43 +726,30 @@
         };
 
         const openJsonDialog = (row) => {
-          jsonDialogContent.value = row?.json || '';
+          if (!row?.json) {
+            ElementPlus.ElMessage.warning('该日志节点无附属 JSON 报文');
+            return;
+          }
+          jsonDialogContent.value = row.json;
           jsonDialogVisible.value = true;
         };
 
         const openJsonDialogByRows = (rows) => {
-          const content = (rows || []).filter(row => row.json).map(row => `[${row.time}] ${row.phaseName || row.businessType || '日志'}\n${row.json}`).join('\n\n------------------------------\n\n');
-          jsonDialogContent.value = content || '暂无可展示报文内容';
+          const content = (rows || []).filter(row => row.json).map(row => `[${row.time}] ${row.phase}\n${row.json}`).join('\n\n------------------------------\n\n');
+          if (!content) {
+            ElementPlus.ElMessage.warning('该阶段无附属 JSON 报文');
+            return;
+          }
+          jsonDialogContent.value = content;
           jsonDialogVisible.value = true;
         };
 
-        const copyAllExpandableJson = () => {
-          const content = rightSideLogs.value.filter(row => row.json).map(row => `[${row.time}] ${row.phaseName || row.businessType || '日志'}\n${row.json}`).join('\n\n------------------------------\n\n');
-          copyJson(content);
-        };
-
-        const expandAllLogs = () => {
-          rightSideLogs.value.forEach(row => logTableRef.value?.toggleRowExpansion(row, true));
-          allExpanded.value = true;
-        };
-
-        const collapseAllLogs = () => {
-          rightSideLogs.value.forEach(row => logTableRef.value?.toggleRowExpansion(row, false));
-          allExpanded.value = false;
-        };
-
-        const toggleAllLogs = () => {
-          if (allExpanded.value) collapseAllLogs();
-          else expandAllLogs();
-        };
-
         return {
-          activeTab, totalLogsCount, orderSummary, selectedLogScope, toggleLogScope,
-          selectedPhaseId, phaseBlocks, currentPhaseSelection,
-          selectedBusinessType, businessTypes, 
+          activeTab, totalLogsCount, orderSummary, selectedLogScope, toggleLogScope, phaseScrollRef,
+          expandedPhaseIds, phaseBlocks, phaseDisplayItems, togglePhaseExpand, handlePhaseToggle, isPhaseExpanded, expandablePhaseIds, allPhaseExpanded, toggleAllPhases,
+          selectedBusinessType, businessTypes,
           rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip, getRowClassName,
-          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows, copyAllExpandableJson,
-          logTableRef, allExpanded, expandAllLogs, collapseAllLogs, toggleAllLogs
+          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows
         };
       }
     });
