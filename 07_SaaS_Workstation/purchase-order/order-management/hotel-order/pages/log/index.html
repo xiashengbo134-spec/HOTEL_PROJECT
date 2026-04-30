@@ -318,10 +318,6 @@
                 <button type="button" :class="['log-filter-chip-btn', selectedLogScope === 'order' ? 'active' : '']" @click="toggleLogScope('order')">只看订单</button>
                 <button type="button" :class="['log-filter-chip-btn', selectedLogScope === 'purchase' ? 'active' : '']" @click="toggleLogScope('purchase')">只看采购单</button>
               </div>
-              <button type="button" class="header-action-btn" @click="openOrderDetailOverlay()">
-                <el-icon><Document /></el-icon>
-                <span>订单详情</span>
-              </button>
             </div>
           </div>
         </div>
@@ -825,23 +821,13 @@
           } catch {}
           return false;
         };
-        const openOrderDetailOverlay = () => {
-          if (window.parent && window.parent !== window) {
-            emitOverlayOpen({ type: 'detail', orderNo: currentOrderNo });
-            return;
-          }
-          const url = new URL('../detail/side-drawer.html', window.location.href);
-          url.searchParams.set('orderNo', currentOrderNo);
-          url.searchParams.set('viewMode', 'drawer');
-          window.location.href = url.toString();
-        };
 
         return {
           activeTab, totalLogsCount, orderSummary, selectedLogScope, toggleLogScope, phaseScrollRef,
           expandedPhaseIds, phaseBlocks, phaseDisplayItems, togglePhaseExpand, handlePhaseToggle, isPhaseExpanded, expandablePhaseIds, allPhaseExpanded, toggleAllPhases,
           selectedBusinessType, businessTypes,
           rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip, getRowClassName,
-          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows, openOrderDetailOverlay
+          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows
         };
       }
     });
