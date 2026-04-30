@@ -71,14 +71,16 @@
 
     .dark-tooltip {
       max-width: 520px;
-      background: #0F172A !important;
+      background: #000 !important;
       color: #FFFFFF !important;
-      border: 1px solid #1E293B !important;
+      border: 1px solid #000 !important;
       box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35) !important;
+      font-size: 14px !important;
+      line-height: 1.6 !important;
     }
     .dark-tooltip .el-popper__arrow::before {
-      background: #0F172A !important;
-      border-color: #1E293B !important;
+      background: #000 !important;
+      border-color: #000 !important;
     }
 
     .el-table .cell {
@@ -171,6 +173,28 @@
       border-color: #165DFF;
       color: #FFF;
     }
+    .header-action-btn {
+      min-width: 96px;
+      height: 32px;
+      padding: 0 14px;
+      border-radius: 6px;
+      border: 1px solid #D0D7E2;
+      background: #FFF;
+      color: #334155;
+      font-size: 13px;
+      line-height: 30px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+    .header-action-btn:hover {
+      border-color: #94A3B8;
+      color: #0F172A;
+      background: #F8FAFC;
+    }
 
     .phase-accordion-wrap { padding: 16px; background: #FFF; }
     .phase-accordion-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -254,7 +278,7 @@
                 <div class="summary-label">酒店名称</div>
                 <div class="summary-value mt-0.5 flex items-center gap-1 min-w-0">
                   <span class="truncate">{{ orderSummary.hotelName }}</span>
-                  <el-tooltip effect="light" placement="top">
+                  <el-tooltip effect="dark" placement="top" popper-class="dark-tooltip" :enterable="true">
                     <template #content>酒店聚合ID：{{ orderSummary.hotelAggregateId }}</template>
                     <el-icon class="summary-id-icon shrink-0"><InfoFilled /></el-icon>
                   </el-tooltip>
@@ -264,7 +288,7 @@
                 <div class="summary-label">房型名称 - 早餐</div>
                 <div class="summary-value mt-0.5 flex items-center gap-1 min-w-0">
                   <span class="truncate">{{ orderSummary.roomName }} - {{ orderSummary.breakfast }}</span>
-                  <el-tooltip effect="light" placement="top">
+                  <el-tooltip effect="dark" placement="top" popper-class="dark-tooltip" :enterable="true">
                     <template #content>房型聚合ID：{{ orderSummary.roomAggregateId }}</template>
                     <el-icon class="summary-id-icon shrink-0"><InfoFilled /></el-icon>
                   </el-tooltip>
@@ -294,6 +318,10 @@
                 <button type="button" :class="['log-filter-chip-btn', selectedLogScope === 'order' ? 'active' : '']" @click="toggleLogScope('order')">只看订单</button>
                 <button type="button" :class="['log-filter-chip-btn', selectedLogScope === 'purchase' ? 'active' : '']" @click="toggleLogScope('purchase')">只看采购单</button>
               </div>
+              <button type="button" class="header-action-btn" @click="openOrderDetailOverlay()">
+                <el-icon><Document /></el-icon>
+                <span>订单详情</span>
+              </button>
             </div>
           </div>
         </div>
@@ -353,7 +381,7 @@
                         <div class="log-record-action">
                           <button type="button" class="phase-accordion-action-btn is-link" @click.stop="openJsonDialog(row)">
                             <el-icon><Tickets /></el-icon>
-                            <span>日志</span>
+                            <span>详情</span>
                           </button>
                         </div>
                       </div>
@@ -376,7 +404,7 @@
                     <div class="phase-accordion-actions">
                       <button type="button" class="phase-accordion-action-btn is-link" @click.stop="openJsonDialog(item.tailLog)">
                         <el-icon><Tickets /></el-icon>
-                        <span>日志</span>
+                        <span>详情</span>
                       </button>
                     </div>
                   </div>
@@ -469,9 +497,10 @@
         const jsonDialogVisible = ref(false);
         const jsonDialogContent = ref('');
         const phaseScrollRef = ref(null);
+        const currentOrderNo = new URLSearchParams(window.location.search).get('orderNo') || 'HTL202604228899';
 
         const orderSummary = ref({
-          systemOrderNo: 'HTL202604228899',
+          systemOrderNo: currentOrderNo,
           externalOrderNo: 'MEITUAN-OUT-8877349921',
           hotelName: '杭州西湖万豪酒店',
           hotelAggregateId: 'H-AI-330106-00028471',
@@ -726,10 +755,33 @@
           navigator.clipboard.writeText(text);
           ElementPlus.ElMessage.success('报文内容已成功复制');
         };
+        const openGlobalJsonOverlay = (content) => {
+          if (!content) return false;
+          try {
+            const storageKey = `hotel-order-json-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+            sessionStorage.setItem(storageKey, content);
+            if (window.HotelOrderLayer?.openOverlay) {
+              window.HotelOrderLayer.openOverlay({ type: 'json', storageKey });
+              return true;
+            }
+            if (window.parent && window.parent !== window && window.parent.HotelOrderLayer?.openOverlay) {
+              window.parent.HotelOrderLayer.openOverlay({ type: 'json', storageKey });
+              return true;
+            }
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload: { type: 'json', storageKey } }, '*');
+              return true;
+            }
+          } catch {}
+          return false;
+        };
 
         const openJsonDialog = (row) => {
           if (!row?.json) {
             ElementPlus.ElMessage.warning('该日志节点无附属 JSON 报文');
+            return;
+          }
+          if (window.parent && window.parent !== window && openGlobalJsonOverlay(row.json)) {
             return;
           }
           jsonDialogContent.value = row.json;
@@ -742,8 +794,46 @@
             ElementPlus.ElMessage.warning('该阶段无附属 JSON 报文');
             return;
           }
+          if (window.parent && window.parent !== window && openGlobalJsonOverlay(content)) {
+            return;
+          }
           jsonDialogContent.value = content;
           jsonDialogVisible.value = true;
+        };
+        const emitOverlayOpen = (payload) => {
+          try {
+            if (window.HotelOrderLayer?.openOverlay) {
+              window.HotelOrderLayer.openOverlay(payload);
+              return true;
+            }
+          } catch {}
+          try {
+            if (window.parent && window.parent !== window && window.parent.HotelOrderLayer?.openOverlay) {
+              window.parent.HotelOrderLayer.openOverlay(payload);
+              return true;
+            }
+          } catch {}
+          try {
+            if (window.parent && window.parent !== window) {
+              window.parent.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload }, '*');
+            }
+          } catch {}
+          try {
+            if (window.top && window.top !== window && window.top !== window.parent) {
+              window.top.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload }, '*');
+            }
+          } catch {}
+          return false;
+        };
+        const openOrderDetailOverlay = () => {
+          if (window.parent && window.parent !== window) {
+            emitOverlayOpen({ type: 'detail', orderNo: currentOrderNo });
+            return;
+          }
+          const url = new URL('../detail/side-drawer.html', window.location.href);
+          url.searchParams.set('orderNo', currentOrderNo);
+          url.searchParams.set('viewMode', 'drawer');
+          window.location.href = url.toString();
         };
 
         return {
@@ -751,7 +841,7 @@
           expandedPhaseIds, phaseBlocks, phaseDisplayItems, togglePhaseExpand, handlePhaseToggle, isPhaseExpanded, expandablePhaseIds, allPhaseExpanded, toggleAllPhases,
           selectedBusinessType, businessTypes,
           rightSideLogs, copyJson, buildRowResult, getResultClass, shouldShowTooltip, getRowClassName,
-          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows
+          jsonDialogVisible, jsonDialogContent, openJsonDialog, openJsonDialogByRows, openOrderDetailOverlay
         };
       }
     });

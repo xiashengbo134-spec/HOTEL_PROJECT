@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>订单详情抽屉</title>
+  <style>
+    :root {
+      --color-primary: #165dff;
+      --color-success: #00b42a;
+      --color-warning: #ff7d00;
+      --color-danger: #f53f3f;
+      --color-text-1: #1d2129;
+      --color-text-2: #4e5969;
+      --color-text-3: #86909c;
+      --color-border-1: #e5e6eb;
+      --color-border-2: #f2f3f5;
+      --color-fill-1: #f7f8fa;
+      --color-bg-1: #fff;
+      --color-bg-2: #f5f7fa;
+      --shadow-card: 0 8px 24px rgba(29, 33, 41, 0.06);
+      --radius: 8px;
+      --bottom-bar-height: 66px;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: var(--color-bg-2); color: var(--color-text-1); font: 14px/1.5 "PingFang SC", "Microsoft YaHei", sans-serif; }
+    button { font: inherit; }
+    .page-shell { min-height: 100%; padding: 16px 16px calc(var(--bottom-bar-height) + 16px); }
+    .stack { display: flex; flex-direction: column; gap: 16px; }
+    .card { background: var(--color-bg-1); border: 1px solid var(--color-border-2); border-radius: var(--radius); box-shadow: var(--shadow-card); }
+    .section { padding: 16px; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+    .section-title { font-size: 16px; font-weight: 600; }
+    .section-meta { color: var(--color-text-3); font-size: 12px; }
+    .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 20px; }
+    .summary-item, .detail-item { min-width: 0; }
+    .label { color: var(--color-text-3); font-size: 12px; margin-bottom: 4px; }
+    .value { color: var(--color-text-1); font-size: 14px; word-break: break-word; }
+    .value.strong { font-size: 22px; font-weight: 700; }
+    .value.danger { color: var(--color-danger); }
+    .mono { font-family: Consolas, "JetBrains Mono", monospace; }
+    .tag { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 0 10px; border-radius: 4px; font-size: 13px; white-space: nowrap; }
+    .tag-blue { background: rgba(22,93,255,.08); color: var(--color-primary); }
+    .tag-green { background: rgba(0,180,42,.08); color: var(--color-success); }
+    .tag-orange { background: rgba(255,125,0,.12); color: var(--color-warning); }
+    .tag-red { background: rgba(245,63,63,.08); color: var(--color-danger); }
+    .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); }
+    .summary-top { display: grid; grid-template-columns: minmax(0, 1fr) 220px; gap: 16px; align-items: start; }
+    .amount-card { border: 1px solid var(--color-border-2); border-radius: 10px; padding: 14px; background: var(--color-fill-1); }
+    .amount-stack { display: grid; gap: 12px; }
+    .detail-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 20px; }
+    .detail-item.full { grid-column: 1 / -1; }
+    .timeline { display: grid; gap: 12px; }
+    .timeline-item { display: grid; grid-template-columns: 120px 16px minmax(0, 1fr); gap: 14px; align-items: start; }
+    .timeline-time { color: var(--color-text-3); font-size: 13px; padding-top: 2px; }
+    .timeline-node { position: relative; width: 16px; min-height: 48px; display: flex; justify-content: center; }
+    .timeline-node::before { content: ""; position: absolute; top: 0; bottom: -12px; left: 7px; width: 2px; background: var(--color-border-1); }
+    .timeline-item:last-child .timeline-node::before { display: none; }
+    .timeline-dot { position: relative; z-index: 1; width: 12px; height: 12px; margin-top: 4px; border-radius: 50%; background: var(--color-primary); }
+    .timeline-content { border: 1px solid var(--color-border-2); border-radius: 8px; padding: 12px 14px; background: #fff; }
+    .timeline-title { font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+    .timeline-desc { color: var(--color-text-2); }
+    .purchase-list { display: grid; gap: 12px; }
+    .purchase-card { border: 1px solid var(--color-border-2); border-radius: 8px; padding: 14px; }
+    .purchase-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+    .purchase-title { display: flex; align-items: center; gap: 10px; min-width: 0; flex-wrap: wrap; }
+    .purchase-no { font-size: 14px; font-weight: 600; }
+    .purchase-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px 18px; }
+    .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; height: var(--bottom-bar-height); background: rgba(255,255,255,.96); border-top: 1px solid var(--color-border-1); backdrop-filter: blur(10px); z-index: 20; }
+    .bottom-bar-inner { height: 100%; display: flex; align-items: center; justify-content: flex-end; padding: 0 16px; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; min-width: 88px; height: 36px; padding: 0 16px; border: 1px solid var(--color-border-1); border-radius: 4px; background: #fff; color: var(--color-text-2); cursor: pointer; }
+    .btn:hover { color: var(--color-primary); border-color: var(--color-primary); }
+    .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%); min-width: 220px; max-width: 520px; padding: 10px 16px; border-radius: 10px; background: rgba(29,33,41,.92); color: #fff; opacity: 0; pointer-events: none; transition: opacity .2s ease; z-index: 99; }
+    .toast.show { opacity: 1; }
+    @media (max-width: 1100px) {
+      .summary-top, .detail-grid, .purchase-grid, .summary-grid { grid-template-columns: 1fr; }
+      .timeline-item { grid-template-columns: 1fr; }
+      .timeline-node { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-shell">
+    <div class="stack">
+      <section class="card section">
+        <div class="section-head">
+          <div>
+            <div class="section-title">订单信息</div>
+            <div class="section-meta">用于全局抽屉查看的重写版本</div>
+          </div>
+          <span class="tag tag-blue" id="systemStatusTag">预订中</span>
+        </div>
+        <div class="summary-top">
+          <div class="summary-grid">
+            <div class="summary-item"><div class="label">系统订单号</div><div class="value mono" id="systemOrderNo"></div></div>
+            <div class="summary-item"><div class="label">外部订单号</div><div class="value mono" id="outerOrderNo"></div></div>
+            <div class="summary-item"><div class="label">酒店名称</div><div class="value" id="hotelName"></div></div>
+            <div class="summary-item"><div class="label">订单来源</div><div class="value" id="sourceText"></div></div>
+            <div class="summary-item"><div class="label">房型 / 早餐</div><div class="value" id="roomInfo"></div></div>
+            <div class="summary-item"><div class="label">入离时间</div><div class="value" id="dateInfo"></div></div>
+            <div class="summary-item"><div class="label">入住人</div><div class="value" id="guestInfo"></div></div>
+            <div class="summary-item"><div class="label">联系人</div><div class="value" id="contactInfo"></div></div>
+            <div class="summary-item"><div class="label">取消规则</div><div class="value" id="cancelRule"></div></div>
+          </div>
+          <div class="amount-card">
+            <div class="amount-stack">
+              <div><div class="label">支付金额</div><div class="value strong danger" id="payAmount"></div></div>
+              <div><div class="label">结算金额</div><div class="value" id="settlementAmount"></div></div>
+              <div><div class="label">采购状态</div><div class="value"><span class="tag tag-orange" id="purchaseStatusTag">采购中</span></div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div class="section-title">状态与时间</div>
+        </div>
+        <div class="detail-grid">
+          <div class="detail-item"><div class="label">平台状态</div><div class="value" id="platformStatus"></div></div>
+          <div class="detail-item"><div class="label">售后状态</div><div class="value" id="afterSaleStatus"></div></div>
+          <div class="detail-item"><div class="label">售卖模式</div><div class="value" id="saleMode"></div></div>
+          <div class="detail-item"><div class="label">预订时间</div><div class="value" id="bookingTime"></div></div>
+          <div class="detail-item"><div class="label">支付时间</div><div class="value" id="payTime"></div></div>
+          <div class="detail-item"><div class="label">取消时间</div><div class="value" id="cancelTime"></div></div>
+          <div class="detail-item full"><div class="label">酒店地址</div><div class="value" id="hotelAddress"></div></div>
+        </div>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div class="section-title">订单轨迹</div>
+        </div>
+        <div class="timeline" id="timelineList"></div>
+      </section>
+
+      <section class="card section">
+        <div class="section-head">
+          <div class="section-title">采购单信息</div>
+        </div>
+        <div class="purchase-list" id="purchaseList"></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="bottom-bar-inner">
+      <button class="btn" id="openLogBtn">日志</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const orderNo = new URLSearchParams(window.location.search).get('orderNo') || 'HTL202604228899';
+    const orders = {
+      'HTL202604228899': {
+        systemOrderNo: 'HTL202604228899', outerOrderNo: 'DOUYIN-OUT-8877349921', hotelName: '杭州西湖万豪酒店', sourceText: '抖音 · 江浙运营号', roomInfo: '豪华大床房（高楼层城景）-双早', dateInfo: '2026-04-28 至 2026-04-29 · 2间1晚', guestInfo: '张三', contactInfo: '李四 / 13800000001', cancelRule: '入住前1天18:00前可免费取消，之后取消收取首晚房费。', payAmount: '￥251.24', settlementAmount: '￥224.61', systemStatus: '预订中', purchaseStatus: '采购中', platformStatus: '已接单', afterSaleStatus: '未进入售后', saleMode: '卖价', bookingTime: '2026-04-22 16:29:51', payTime: '2026-04-22 16:30:12', cancelTime: '-', hotelAddress: '杭州市西湖区曙光路188号',
+        timeline: [
+          ['2026-04-22 16:29:51', '订单创建', '订单创建成功，进入待处理队列'],
+          ['2026-04-22 16:30:12', '订单支付', '用户完成支付，等待采购执行'],
+          ['2026-04-22 16:31:06', '采购执行', '系统已发起采购，当前供应商处理中']
+        ],
+        purchases: [
+          { no: 'PO-20260422-001', channel: '艺龙-api', status: '已取消', room: '豪华大床房-双早', date: '2026-04-28 至 2026-04-29', guest: '张三', contact: '李四 / 13800000001', amount: '￥432.00' },
+          { no: 'PO-20260422-002', channel: '携程-trip', status: '待确认', room: '豪华大床房-双早', date: '2026-04-28 至 2026-04-29', guest: '张三', contact: '李四 / 13800000001', amount: '￥428.00' }
+        ]
+      }
+    };
+    const data = orders[orderNo] || orders['HTL202604228899'];
+    const fields = ['systemOrderNo','outerOrderNo','hotelName','sourceText','roomInfo','dateInfo','guestInfo','contactInfo','cancelRule','payAmount','settlementAmount','platformStatus','afterSaleStatus','saleMode','bookingTime','payTime','cancelTime','hotelAddress'];
+    fields.forEach(key => { const el = document.getElementById(key); if (el) el.textContent = data[key] || '-'; });
+    document.getElementById('systemStatusTag').textContent = data.systemStatus;
+    document.getElementById('purchaseStatusTag').textContent = data.purchaseStatus;
+
+    document.getElementById('timelineList').innerHTML = data.timeline.map(item => `
+      <div class="timeline-item">
+        <div class="timeline-time">${item[0]}</div>
+        <div class="timeline-node"><span class="timeline-dot"></span></div>
+        <div class="timeline-content"><div class="timeline-title">${item[1]}</div><div class="timeline-desc">${item[2]}</div></div>
+      </div>
+    `).join('');
+
+    document.getElementById('purchaseList').innerHTML = data.purchases.map(item => `
+      <div class="purchase-card">
+        <div class="purchase-head">
+          <div class="purchase-title"><span class="tag tag-blue">${item.channel}</span><span class="purchase-no">采购单号：${item.no}</span></div>
+          <div><span class="tag tag-gray">${item.status}</span></div>
+        </div>
+        <div class="purchase-grid">
+          <div><div class="label">房型信息</div><div class="value">${item.room}</div></div>
+          <div><div class="label">入离时间</div><div class="value">${item.date}</div></div>
+          <div><div class="label">订单金额</div><div class="value danger">${item.amount}</div></div>
+          <div><div class="label">入住人</div><div class="value">${item.guest}</div></div>
+          <div><div class="label">联系人</div><div class="value">${item.contact}</div></div>
+        </div>
+      </div>
+    `).join('');
+
+    const toastEl = document.getElementById('toast');
+    function showToast(message) { toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1600); }
+    function emitOverlayOpen(payload) {
+      try {
+        if (window.HotelOrderLayer?.openOverlay) { window.HotelOrderLayer.openOverlay(payload); return true; }
+      } catch {}
+      try {
+        if (window.parent && window.parent !== window && window.parent.HotelOrderLayer?.openOverlay) { window.parent.HotelOrderLayer.openOverlay(payload); return true; }
+      } catch {}
+      try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload }, '*'); } catch {}
+      try { if (window.top && window.top !== window && window.top !== window.parent) window.top.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload }, '*'); } catch {}
+      return false;
+    }
+    document.getElementById('openLogBtn').addEventListener('click', () => {
+      if (window.parent && window.parent !== window) {
+        emitOverlayOpen({ type: 'log', orderNo });
+        return;
+      }
+      const url = new URL('../log/index.html', window.location.href);
+      url.searchParams.set('orderNo', orderNo);
+      window.location.href = url.toString();
+    });
+    showToast('已加载新版详情抽屉');
+  </script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
@@ -30,9 +30,13 @@
     button, input, select { font-family: inherit; }
     .layout { min-height: 100vh; display: flex; flex-direction: column; }
     .topbar { height: 56px; background: #fff; border-bottom: 1px solid var(--color-border-1); display: flex; align-items: center; justify-content: space-between; padding: 0 20px; position: sticky; top: 0; z-index: 50; }
-    .topbar-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .topbar-left { display: flex; align-items: center; gap: 18px; min-width: 0; }
     .topbar-title { font-size: 16px; font-weight: 600; white-space: nowrap; }
-    .breadcrumb { display: flex; align-items: center; gap: 8px; color: var(--color-text-3); font-size: 14px; white-space: nowrap; }
+    .tenant-brand { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+    .tenant-name { color: var(--color-text-1); font-size: 16px; font-weight: 600; white-space: nowrap; }
+    .top-nav { display: inline-flex; align-items: center; gap: 8px; padding-left: 18px; border-left: 1px solid var(--color-border-2); }
+    .top-nav-item { display: inline-flex; align-items: center; justify-content: center; min-width: 96px; height: 32px; padding: 0 14px; border-radius: 8px; color: var(--color-text-2); font-size: 14px; font-weight: 500; background: transparent; }
+    .top-nav-item.active { background: var(--color-bg-blue); color: var(--color-primary); font-weight: 600; }
     .avatar-chip { display: inline-flex; align-items: center; gap: 10px; padding: 6px 10px 6px 6px; border-radius: 999px; background: var(--color-fill-1); border: 1px solid var(--color-border-2); }
     .avatar-circle { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #165dff, #36cfc9); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; }
     .avatar-name { color: var(--color-text-2); font-size: 14px; font-weight: 500; }
@@ -43,6 +47,9 @@
     .menu-children { padding-left: 12px; }
     .menu-item { display: flex; align-items: center; min-height: 40px; padding: 0 12px; border-radius: 10px; color: var(--color-text-2); font-size: 14px; font-weight: 500; }
     .menu-item.parent { justify-content: space-between; }
+    .menu-item-main { display: inline-flex; align-items: center; gap: 8px; }
+    .menu-item-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; color: currentColor; }
+    .menu-item-icon svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .menu-item.active { background: var(--color-bg-blue); color: var(--color-primary); font-weight: 600; }
     .content { flex: 1; min-width: 0; padding: 10px; }
     .container { width: 100%; }
@@ -56,7 +63,7 @@
     .field-control:focus, .range-control:focus, .date-select:focus, .inline-field:focus-within { border-color: var(--color-primary); box-shadow: 0 0 0 2px rgba(22, 93, 255, 0.1); }
     .field-control::placeholder { color: var(--color-text-4); }
     .inline-field { display: flex; align-items: center; min-height: 36px; border: 1px solid var(--color-border-1); border-radius: var(--radius-small); background: #fff; padding: 0 10px; gap: 10px; }
-    .field-prefix { flex: 0 0 auto; color: var(--color-text-3); font-size: 14px; white-space: nowrap; }
+    .field-prefix { flex: 0 0 auto; color: var(--color-text-1); font-size: 14px; white-space: nowrap; }
     .field-split { width: 1px; height: 16px; background: var(--color-border-1); flex-shrink: 0; }
     .inline-field .field-control,
     .inline-field .date-select { border: 0; min-height: 34px; padding: 0; background: transparent; box-shadow: none; }
@@ -68,8 +75,8 @@
     .field-time .date-select { flex: 0 0 88px; min-width: 88px; font-size: 14px; }
     .field-time .field-split { margin: 0 1px; }
     .range-control { display: flex; align-items: center; gap: 8px; padding: 0; border: 0; min-height: auto; background: transparent; }
-    .field-time .range-control { flex: 1; min-width: 0; }
-    .range-control input { border: 0; outline: none; min-width: 0; width: 100%; flex: 1; color: var(--color-text-1); background: transparent; padding: 0; }
+    .field-time .range-control { flex: 1; min-width: 0; cursor: pointer; }
+    .range-control input { border: 0; outline: none; min-width: 0; width: 100%; flex: 1; color: var(--color-text-1); background: transparent; padding: 0; cursor: pointer; }
     .field-time .range-control input { flex: 1 1 96px; }
     .range-sep { color: var(--color-text-4); font-size: 12px; }
     .toolbar-actions { margin-top: 0; display: flex; flex: 0 0 100px; padding-left: 16px; border-left: 1px solid var(--color-border-1); }
@@ -104,7 +111,7 @@
     .order-top { display: grid; grid-template-columns: minmax(420px,1.38fr) minmax(460px,1.82fr) minmax(210px,.82fr) minmax(220px,.86fr); gap: 12px; align-items: start; }
     .section-title { margin-bottom: 6px; color: var(--color-text-3); font-size: 12px; font-weight: 500; }
     .order-title-line { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
-    .source-line { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+    .source-line { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; width: max-content; }
     .channel-badge { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; color: #fff; font-weight: 700; font-size: 12px; flex-shrink: 0; }
     .channel-feizhu { background: linear-gradient(135deg, #ff7d00, #ffb400); }
     .channel-douyin { background: linear-gradient(135deg, #111827, #4b5563); }
@@ -121,12 +128,17 @@
     .hotel-name { font-size: 15px; font-weight: 600; color: var(--color-text-1); display: inline-flex; align-items: center; gap: 6px; min-width: 0; }
     .id-info-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 18px; padding: 0 4px; border-radius: 4px; border: 1px solid var(--color-border-1); color: var(--color-text-3); font-size: 10px; font-weight: 600; background: #fff; flex-shrink: 0; line-height: 1; }
     .text-ellipsis { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; }
-    .sub-line { color: var(--color-text-2); font-size: 14px; line-height: 1.35; }
+    .sub-line { display: flex; align-items: center; gap: 8px; color: var(--color-text-2); font-size: 14px; line-height: 1.35; margin: 4px 0; }
     .sub-line strong { color: var(--color-text-3); font-size: 12px; line-height: 20px; font-weight: 500; }
     .sub-line-value { color: var(--color-text-1); font-weight: 500; }
     .pair-line { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 40px; row-gap: 6px; align-items: start; }
     .pair-item { display: flex; align-items: flex-start; min-width: 0; }
     .pair-item strong { width: auto; flex: initial; }
+    .order-inline-icon { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; color: #86909c; flex: 0 0 22px; vertical-align: middle; }
+    .order-inline-icon svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .inline-icon-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 18px; padding: 0 4px; border-radius: 4px; border: 1px solid var(--color-border-1); color: var(--color-text-3); background: #fff; cursor: help; flex-shrink: 0; line-height: 1; position: relative; }
+    .inline-icon-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .inline-separator { color: var(--color-text-4); margin: 0 8px; }
     .time-list, .action-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .time-stack, .status-stack, .amount-stack { display: flex; flex-direction: column; gap: 6px; }
     .time-item { display: flex; align-items: center; justify-content: flex-start; gap: 10px; min-height: 22px; }
@@ -156,12 +168,13 @@
     .metric-warning .metric-value { color: var(--color-warning); }
     .sale-mode-badge { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; width: auto; max-width: max-content; min-height: 24px; padding: 0 10px; border-radius: 4px; font-size: 14px; font-weight: 500; background: rgba(22, 93, 255, 0.08); color: var(--color-primary); flex: 0 0 auto; }
     .timer-label { display: none; }
-    .timer-value { font-family: "JetBrains Mono", Consolas, monospace; font-size: 22px; font-weight: 700; letter-spacing: .5px; line-height: 1.1; color: var(--color-text-1); }
+    .timer-value { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 18px; font-weight: 700; letter-spacing: 0; line-height: 1.1; color: var(--color-text-1); }
 
         .timer-safe .timer-value { color: #00a870; }
         .timer-warning .timer-value { color: var(--color-warning); }
         .timer-danger .timer-value, .timer-timeout .timer-value { color: var(--color-danger); }
-        .timer-result { color: var(--color-text-1); font-weight: 600; font-size: 14px; line-height: 1.35; }
+        .timer-result { color: var(--color-text-1); font-weight: 600; font-size: 18px; line-height: 1.35; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; }
+        .timer-result-text { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 18px; font-weight: 600; line-height: 1.2; letter-spacing: 0; color: var(--color-text-1); }
 
 
     .order-bottom { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--color-border-1); display: flex; justify-content: space-between; gap: 12px; align-items: center; flex-wrap: wrap; }
@@ -187,8 +200,21 @@
     .drawer-close-icon { width: 32px; min-width: 32px; height: 32px; padding: 0; font-size: 18px; line-height: 1; }
     .drawer-body { flex: 1; min-height: 0; background: var(--color-bg-2); }
     .drawer-iframe { width: 100%; height: 100%; border: 0; background: #fff; }
-    [data-tooltip] { position: relative; cursor: help; }
-    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; left: 0; top: calc(100% + 8px); min-width: 220px; max-width: 340px; padding: 10px 12px; border-radius: 10px; background: rgba(29, 33, 41, 0.96); color: #fff; white-space: pre-line; font-size: 12px; line-height: 1.6; z-index: 10; }
+    .global-overlay-mask { position: fixed; inset: 0; background: rgba(29, 33, 41, 0.48); display: none; justify-content: flex-end; z-index: 1200; }
+    .global-overlay-mask.show { display: flex; }
+    .global-overlay-mask.level-3 { z-index: 1300; background: rgba(15, 23, 42, 0.56); }
+    .global-overlay-panel { width: 1400px; max-width: 100vw; height: 100vh; background: #fff; box-shadow: -12px 0 32px rgba(29, 33, 41, 0.22); display: flex; flex-direction: column; }
+    .global-overlay-panel.is-log { width: 1200px; }
+    .global-overlay-panel.is-detail { width: 1400px; }
+    .global-overlay-panel.is-json { width: 960px; }
+    .global-overlay-head { height: 56px; padding: 0 20px; border-bottom: 1px solid var(--color-border-1); display: flex; align-items: center; justify-content: space-between; gap: 12px; background: #fff; }
+    .global-overlay-title { font-size: 16px; font-weight: 600; }
+    .global-overlay-body { flex: 1; min-height: 0; background: var(--color-bg-2); }
+    .global-overlay-iframe { width: 100%; height: 100%; border: 0; background: #fff; }
+    [data-tooltip], [data-rich-tooltip] { position: relative; cursor: help; }
+    .hover-tooltip-layer { position: absolute; left: 0; top: 0; display: none; width: max-content; max-width: min(420px, calc(100vw - 32px)); padding: 10px 12px; border-radius: 8px; background: #000; color: #fff; white-space: pre-wrap; font-size: 14px; line-height: 1.6; z-index: 3000; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35); pointer-events: auto; }
+    .hover-tooltip-layer.show { display: block; }
+
     @media (max-width: 1360px) { .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .composite-control { grid-template-columns: 108px minmax(0, 1fr); } .order-top { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { .content { padding: 8px; } .form-grid { grid-template-columns: 1fr; } .toolbar-actions, .order-bottom, .tabs-toolbar, .main, .pagination { flex-direction: column; align-items: stretch; } .sidebar { width: 100%; border-right: 0; border-bottom: 1px solid var(--color-border-1); } .btn-group, .action-list, .tabs, .pagination-controls { width: 100%; } .btn-group .btn, .action-list .btn { flex: 1; } }
 
@@ -198,17 +224,16 @@
   <div class="layout">
     <header class="topbar">
       <div class="topbar-left">
-        <div class="topbar-title">采购 / 订单</div>
-        <div class="breadcrumb"><span>订单管理</span><span>/</span><span>酒店订单</span></div>
+        <div class="tenant-brand"><span class="avatar-circle">租</span><span class="tenant-name">畅行酒店租户</span></div>
+        <div class="top-nav"><span class="top-nav-item active">采购/订单</span></div>
       </div>
       <div class="avatar-chip"><span class="avatar-circle">LX</span><span class="avatar-name">林开新</span></div>
     </header>
 
     <div class="main">
       <aside class="sidebar">
-        <div class="menu-group-title">二级 / 三级菜单</div>
         <div class="menu-tree">
-          <div class="menu-item parent">订单管理 <span>▾</span></div>
+          <div class="menu-item parent"><span class="menu-item-main"><span class="menu-item-icon"><svg viewBox="0 0 24 24"><path d="M4 6.5h16"></path><path d="M4 12h16"></path><path d="M4 17.5h16"></path><path d="M8 4v16"></path></svg></span><span>订单管理</span></span><span>▾</span></div>
           <div class="menu-children"><div class="menu-item active">酒店订单</div></div>
         </div>
       </aside>
@@ -218,8 +243,8 @@
           <section class="card toolbar-card">
             <div class="toolbar-main">
               <div class="form-grid">
-              <div class="field inline-field"><span class="field-prefix">系统</span><span class="field-split"></span><input class="field-control" id="filterOrderNo" placeholder="支持完整单号或尾 6 位" /></div>
-              <div class="field inline-field"><span class="field-prefix">外部</span><span class="field-split"></span><input class="field-control" id="filterOuterOrderNo" placeholder="支持完整单号或尾 6 位" /></div>
+              <div class="field inline-field"><span class="field-prefix">系统订单号</span><span class="field-split"></span><input class="field-control" id="filterOrderNo" placeholder="支持完整单号或尾 6 位" /></div>
+              <div class="field inline-field"><span class="field-prefix">外部订单号</span><span class="field-split"></span><input class="field-control" id="filterOuterOrderNo" placeholder="支持完整单号或尾 6 位" /></div>
               <div class="field inline-field"><span class="field-prefix">入住人 / 联系人</span><span class="field-split"></span><input class="field-control" id="filterGuestKeyword" placeholder="支持入住人、联系人、手机号聚合搜索" /></div>
               <div class="field inline-field"><span class="field-prefix">酒店名称 / ID</span><span class="field-split"></span><input class="field-control" id="filterHotelKeyword" placeholder="支持酒店名称、聚合ID、平台ID、销售ID" /></div>
               <div class="field field-time inline-field"><div class="composite-control"><select class="date-select" id="filterTimeType"><option value="bookingTime">预订时间</option><option value="checkInDate">入住时间</option><option value="checkOutDate">离店时间</option></select><span class="field-split"></span><div class="range-control"><input id="filterStartDate" type="date" placeholder="开始日期" /><span class="range-sep">至</span><input id="filterEndDate" type="date" placeholder="结束日期" /></div></div></div>
@@ -279,6 +304,28 @@
       </div>
     </div>
   </div>
+  <div class="global-overlay-mask" id="globalOverlayDrawer">
+    <div class="global-overlay-panel is-log" id="globalOverlayPanel">
+      <div class="global-overlay-head">
+        <div class="global-overlay-title" id="globalOverlayTitle">订单日志</div>
+        <button class="btn drawer-close-icon" id="closeGlobalOverlayBtn" aria-label="关闭">×</button>
+      </div>
+      <div class="global-overlay-body">
+        <iframe class="global-overlay-iframe" id="globalOverlayFrame" src="../log/index.html" title="二级抽屉"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="global-overlay-mask level-3" id="globalOverlayDrawerLevel3">
+    <div class="global-overlay-panel is-json" id="globalOverlayPanelLevel3">
+      <div class="global-overlay-head">
+        <div class="global-overlay-title" id="globalOverlayTitleLevel3">详情</div>
+        <button class="btn drawer-close-icon" id="closeGlobalOverlayBtnLevel3" aria-label="关闭">×</button>
+      </div>
+      <div class="global-overlay-body">
+        <iframe class="global-overlay-iframe" id="globalOverlayFrameLevel3" src="../log/json-viewer.html" title="三级抽屉"></iframe>
+      </div>
+    </div>
+  </div>
 
 
   <script>
@@ -308,6 +355,10 @@
     const paginationEl = document.getElementById('pagination');
     const sortWrapEl = document.getElementById('sortWrap');
     const sortSelectEl = document.getElementById('sortSelect');
+    const filterTimeTypeEl = document.getElementById('filterTimeType');
+    const filterStartDateEl = document.getElementById('filterStartDate');
+    const filterEndDateEl = document.getElementById('filterEndDate');
+    const filterTimeFieldEl = document.querySelector('.field-time');
     const toastEl = document.getElementById('toast');
     const confirmMask = document.getElementById('confirmMask');
     const confirmTitle = document.getElementById('confirmTitle');
@@ -317,12 +368,81 @@
     const logDrawer = document.getElementById('logDrawer');
     const logDrawerFrame = document.getElementById('logDrawerFrame');
     const submitConfirmBtn = document.getElementById('submitConfirmBtn');
+  const globalOverlayDrawer = document.getElementById('globalOverlayDrawer');
+  const globalOverlayPanel = document.getElementById('globalOverlayPanel');
+  const globalOverlayTitle = document.getElementById('globalOverlayTitle');
+  const globalOverlayFrame = document.getElementById('globalOverlayFrame');
+  const globalOverlayDrawerLevel3 = document.getElementById('globalOverlayDrawerLevel3');
+  const globalOverlayPanelLevel3 = document.getElementById('globalOverlayPanelLevel3');
+  const globalOverlayTitleLevel3 = document.getElementById('globalOverlayTitleLevel3');
+  const globalOverlayFrameLevel3 = document.getElementById('globalOverlayFrameLevel3');
+  function buildChildPageUrl(basePath, orderNo, extraParams = {}) {
+    const url = new URL(basePath, window.location.href);
+    if (orderNo) url.searchParams.set('orderNo', orderNo);
+    url.searchParams.set('overlayHost', 'list');
+    Object.entries(extraParams).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') url.searchParams.set(key, value);
+    });
+    return url.toString();
+  }
+  function attachOverlayBridge(frame) {
+    try {
+      const childWindow = frame?.contentWindow;
+      if (!childWindow) return;
+      childWindow.HotelOrderLayer = window.HotelOrderLayer;
+      childWindow.__HOTEL_ORDER_FORCE_OVERLAY__ = true;
+    } catch {}
+  }
+  const hoverTooltipEl = document.createElement('div');
+  hoverTooltipEl.className = 'hover-tooltip-layer';
+  document.body.appendChild(hoverTooltipEl);
+  let activeTooltipTarget = null;
+  let hideTooltipTimer = null;
+  function closeHoverTooltip() {
+    activeTooltipTarget = null;
+    hoverTooltipEl.classList.remove('show');
+    hoverTooltipEl.textContent = '';
+  }
+  function scheduleCloseHoverTooltip() {
+    clearTimeout(hideTooltipTimer);
+    hideTooltipTimer = setTimeout(closeHoverTooltip, 80);
+  }
+  function placeHoverTooltip(target) {
+    const rect = target.getBoundingClientRect();
+    const tooltipRect = hoverTooltipEl.getBoundingClientRect();
+    const gap = 8;
+    const maxLeft = window.scrollX + window.innerWidth - tooltipRect.width - 16;
+    const left = Math.max(window.scrollX + 16, Math.min(window.scrollX + rect.left, maxLeft));
+    const top = window.scrollY + rect.bottom + gap;
+    hoverTooltipEl.style.left = `${left}px`;
+    hoverTooltipEl.style.top = `${top}px`;
+  }
+  function openHoverTooltip(target) {
+    const text = target.getAttribute('data-rich-tooltip') || target.getAttribute('data-tooltip');
+    if (!text) return;
+    clearTimeout(hideTooltipTimer);
+    activeTooltipTarget = target;
+    hoverTooltipEl.textContent = text;
+    hoverTooltipEl.classList.add('show');
+    placeHoverTooltip(target);
+  }
 
     const cancelConfirmBtn = document.getElementById('cancelConfirmBtn');
 
     function formatCountdown(deadline) { const diff = Math.max(0, deadline - Date.now()); const totalSeconds = Math.floor(diff / 1000); const minutes = Math.floor(totalSeconds / 60); const seconds = totalSeconds % 60; return `${String(minutes).padStart(2, '0')}分${String(seconds).padStart(2, '0')}秒`; }
     function getSlaLevel(deadline) { const diff = Math.max(0, deadline - Date.now()); const minutes = diff / 1000 / 60; if (diff <= 0) return 'timeout'; if (minutes < 5) return 'danger'; if (minutes < 15) return 'warning'; return 'safe'; }
     function escapeHtml(text) { return String(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+    function buildHotelMetaTooltip(order) { return `城市：${order.city}\n地址：${order.hotelAddress}`; }
+    function renderLineIcon(type) {
+      const icons = {
+        room: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M2.5 10.5v-4a1 1 0 0 1 1-1h8a2 2 0 0 1 2 2v3"></path><path d="M2.5 10.5h11"></path><path d="M2.5 12.5v-2"></path><path d="M13.5 12.5v-2"></path><path d="M4.5 8.5h2"></path></svg>',
+        date: '<svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2.5" y="3.5" width="11" height="10" rx="2"></rect><path d="M5 2.5v2"></path><path d="M11 2.5v2"></path><path d="M2.5 6.5h11"></path></svg>',
+        guest: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"></circle><path d="M3 13c.8-2 2.6-3 5-3s4.2 1 5 3"></path></svg>',
+        time: '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5.5"></circle><path d="M8 5.2v3.2l2.2 1.3"></path></svg>',
+        location: '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 13s4-3.3 4-6.4A4 4 0 1 0 4 6.6C4 9.7 8 13 8 13Z"></path><circle cx="8" cy="6.5" r="1.4"></circle></svg>'
+      };
+      return `<span class="order-inline-icon">${icons[type] || ''}</span>`;
+    }
 
     function getFilteredOrders() {
       return orders.filter(order => {
@@ -379,10 +499,15 @@
         const showAcceptReject = order.bizStatus === 'pending' || (state.activeTab === 'all' && order.bizStatus === 'pending');
         const amountTooltip = escapeHtml(order.amountTooltip);
         const timerHtml = order.sla.enabled
-          ? `<div class="time-stack timer-${getSlaLevel(order.sla.deadline)}"><div class="time-item"><span class="timer-value" data-deadline="${order.sla.deadline}">${formatCountdown(order.sla.deadline)}</span></div>${order.actionSummary.title ? `<div class="time-item"><span class="time-label">处理结果</span><span class="timer-result">${order.actionSummary.title}</span></div>` : ''}</div>`
-          : `<div class="time-stack"><div class="time-item"><span class="time-label">处理结果</span><span class="timer-result">${order.actionSummary.detail}</span></div></div>`;
+          ? `<div class="time-stack timer-${getSlaLevel(order.sla.deadline)}" data-tooltip="订单剩余处理时间"><div class="time-item"><span class="timer-value" data-deadline="${order.sla.deadline}">${formatCountdown(order.sla.deadline)}</span></div>${order.actionSummary.title ? `<div class="time-item"><span class="timer-result-text">${order.actionSummary.title}</span></div>` : ''}</div>`
+          : `<div class="time-stack" data-tooltip="订单剩余处理时间"><div class="time-item"><span class="timer-result-text">${order.actionSummary.detail}</span></div></div>`;
+        const hotelMetaTooltip = escapeHtml(buildHotelMetaTooltip(order));
+        const roomInfoText = `${order.roomName}-${order.breakfast}`;
+        const stayInfoText = order.isHourlyRoom ? `${order.roomCount}间` : `${order.roomCount}间${order.nightCount}晚`;
+        const contactInfoText = `${order.contactName}<span class="inline-separator">|</span>${order.guestName}-${order.contactMobile}`;
+        const dateInfoText = `${order.checkInDate}${order.checkOutDate !== '-' ? ` 至 ${order.checkOutDate}` : ''}`;
 
-        return `<div class="order-item"><div class="order-top"><div><div class="section-title">订单号</div><div class="id-row"><div class="id-cell"><span class="tag tag-blue">外部</span><span class="mono">${order.outerOrderNo}</span><button class="copy-btn" data-copy="${order.outerOrderNo}" aria-label="复制外部单号"><span class="copy-icon">⧉</span></button></div><div class="id-cell"><span class="tag tag-gray">系统</span><span class="mono">${order.orderNo}</span><button class="copy-btn" data-copy="${order.orderNo}" aria-label="复制系统单号"><span class="copy-icon">⧉</span></button></div></div><div class="source-line"><div class="channel-badge ${order.channelClass}">${order.channelText}</div><span class="tag tag-gray">${order.source}</span></div><div style="margin-top: 8px;">${timerHtml}</div></div><div><div class="section-title">酒店信息</div><div class="order-title-line"><div class="order-main"><div class="hotel-line"><span class="hotel-name"><span class="text-ellipsis" data-tooltip="${escapeHtml(order.hotelName)}">${order.hotelName}</span><span class="id-info-icon" data-tooltip="${escapeHtml(order.hotelIdTooltip)}">ID</span></span>${order.isHourlyRoom ? '<span class="tag tag-purple">钟点房</span>' : ''}<span class="tag tag-gray" data-tooltip="${escapeHtml(order.cancelRule)}">取消规则</span></div><div class="sub-line"><strong>地址：</strong><span class="sub-line-value">${order.city} | ${order.hotelAddress}</span></div><div class="sub-line"><strong>房型：</strong><span class="sub-line-value text-ellipsis" style="max-width:320px;" data-tooltip="${escapeHtml(`${order.roomName}-${order.breakfast}`)}">${order.roomName}-${order.breakfast}</span></div><div class="sub-line pair-line"><span class="pair-item"><strong>入住人：</strong><span class="sub-line-value">${order.guestName}</span></span><span class="pair-item"><strong>联系人：</strong><span class="sub-line-value">${order.contactName} / ${order.contactMobile}</span></span></div><div class="sub-line pair-line"><span class="pair-item"><strong>入离时间：</strong><span class="sub-line-value">${order.checkInDate}${order.checkOutDate !== '-' ? ` 至 ${order.checkOutDate}` : ''}</span></span><span class="pair-item"><strong>${order.isHourlyRoom ? '房间数' : '间夜'}：</strong><span class="sub-line-value">${order.isHourlyRoom ? `${order.roomCount}间` : `${order.roomCount}间${order.nightCount}晚`}</span></span></div>${order.isHourlyRoom ? `<div class="sub-line pair-line"><span class="pair-item"><strong>入住时长：</strong><span class="sub-line-value">${order.stayDuration}</span></span><span class="pair-item"><strong>已选时段：</strong><span class="sub-line-value">${order.selectedTimeRange}</span></span></div>` : ''}</div></div></div><div><div class="section-title">金额信息</div><div class="amount-stack"><div class="metric metric-danger" data-tooltip="${amountTooltip}"><div class="metric-label">支付金额</div><div class="metric-value">${order.payAmount}</div></div><div class="metric metric-warning" data-tooltip="${amountTooltip}"><div class="metric-label">结算金额</div><div class="metric-value">${order.settlementAmount}</div></div><div class="sale-mode-row"><span class="sale-mode-label">售卖模式</span><span class="sale-mode-badge">${order.saleMode}</span></div></div></div><div><div class="section-title">状态信息</div><div class="status-stack"><div class="status-item"><span class="status-name">${order.systemStatus.label}</span><div class="status-tags"><span class="tag ${order.systemStatus.type}">${order.systemStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.platformStatus.label}</span><div class="status-tags"><span class="tag tag-gray">${order.platformStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.purchaseTaskStatus.label}</span><div class="status-tags"><span class="tag ${order.purchaseTaskStatus.type}">${order.purchaseTaskStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.afterSaleStatus.label}</span><div class="status-tags"><span class="tag ${order.afterSaleStatus.type}">${order.afterSaleStatus.text}</span>${afterSaleTags}</div></div></div></div></div><div class="order-bottom"><div class="time-list"><span class="summary-chip">预订时间：${order.bookingTime}</span><span class="summary-chip">支付时间：${order.payTime}</span><span class="summary-chip">取消时间：${order.cancelTime}</span></div><div class="action-list">${showAcceptReject ? `<button class="btn btn-outline-primary" data-action="accept" data-order="${order.orderNo}">接单</button><button class="btn btn-outline-danger" data-action="reject" data-order="${order.orderNo}">拒单</button>` : ''}<button class="btn" data-action="detail" data-order="${order.orderNo}">订单详情</button><button class="btn" data-action="log" data-order="${order.orderNo}">日志</button></div></div></div>`;
+        return `<div class="order-item"><div class="order-top"><div><div class="section-title">订单号</div><div class="id-row"><div class="id-cell"><span class="tag tag-blue">外部</span><span class="mono">${order.outerOrderNo}</span><button class="copy-btn" data-copy="${order.outerOrderNo}" aria-label="复制外部单号"><span class="copy-icon">⧉</span></button></div><div class="id-cell"><span class="tag tag-gray">系统</span><span class="mono">${order.orderNo}</span><button class="copy-btn" data-copy="${order.orderNo}" aria-label="复制系统单号"><span class="copy-icon">⧉</span></button></div></div><div class="source-line" data-tooltip="订单来源"><div class="channel-badge ${order.channelClass}">${order.channelText}</div><span class="tag tag-gray">${order.source}</span></div><div style="margin-top: 8px;">${timerHtml}</div></div><div><div class="section-title">酒店信息</div><div class="order-title-line"><div class="order-main"><div class="hotel-line"><span class="hotel-name"><span class="text-ellipsis" data-tooltip="${escapeHtml(order.hotelName)}">${order.hotelName}</span><span class="id-info-icon" data-tooltip="${escapeHtml(order.hotelIdTooltip)}">ID</span></span><span class="inline-icon-btn" data-rich-tooltip="${hotelMetaTooltip}">${renderLineIcon('location').replace('order-inline-icon', '')}</span>${order.isHourlyRoom ? '<span class="tag tag-purple">钟点房</span>' : ''}<span class="tag tag-gray" data-tooltip="${escapeHtml(order.cancelRule)}">取消规则</span></div><div class="sub-line">${renderLineIcon('room').replace('order-inline-icon', 'order-inline-icon" data-tooltip="房型')}<span class="sub-line-value text-ellipsis" style="max-width:320px;" data-tooltip="${escapeHtml(roomInfoText)}">${roomInfoText}</span></div>${order.isHourlyRoom ? `<div class="sub-line">${renderLineIcon('time').replace('order-inline-icon', 'order-inline-icon" data-tooltip="钟点房信息')}<span class="sub-line-value">${order.stayDuration}<span class="inline-separator">|</span>${order.selectedTimeRange}</span></div>` : ''}<div class="sub-line">${renderLineIcon('date').replace('order-inline-icon', 'order-inline-icon" data-tooltip="入离时间')}<span class="sub-line-value">${dateInfoText}<span class="inline-separator">|</span>${stayInfoText}</span></div><div class="sub-line">${renderLineIcon('guest').replace('order-inline-icon', 'order-inline-icon" data-tooltip="入住人信息')}<span class="sub-line-value text-ellipsis" style="max-width:360px;">${contactInfoText}</span></div></div></div></div><div><div class="section-title">金额信息</div><div class="amount-stack"><div class="metric metric-danger" data-tooltip="${amountTooltip}"><div class="metric-label">支付金额</div><div class="metric-value">${order.payAmount}</div></div><div class="metric metric-warning" data-tooltip="${amountTooltip}"><div class="metric-label">结算金额</div><div class="metric-value">${order.settlementAmount}</div></div><div class="sale-mode-row"><span class="sale-mode-label">售卖模式</span><span class="sale-mode-badge">${order.saleMode}</span></div></div></div><div><div class="section-title">状态信息</div><div class="status-stack"><div class="status-item"><span class="status-name">${order.systemStatus.label}</span><div class="status-tags"><span class="tag ${order.systemStatus.type}">${order.systemStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.platformStatus.label}</span><div class="status-tags"><span class="tag tag-gray">${order.platformStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.purchaseTaskStatus.label}</span><div class="status-tags"><span class="tag ${order.purchaseTaskStatus.type}">${order.purchaseTaskStatus.text}</span></div></div><div class="status-item"><span class="status-name">${order.afterSaleStatus.label}</span><div class="status-tags"><span class="tag ${order.afterSaleStatus.type}">${order.afterSaleStatus.text}</span>${afterSaleTags}</div></div></div></div></div><div class="order-bottom"><div class="time-list"><span class="summary-chip">预订时间：${order.bookingTime}</span><span class="summary-chip">支付时间：${order.payTime}</span><span class="summary-chip">取消时间：${order.cancelTime}</span></div><div class="action-list">${showAcceptReject ? `<button class="btn btn-outline-primary" data-action="accept" data-order="${order.orderNo}">接单</button><button class="btn btn-outline-danger" data-action="reject" data-order="${order.orderNo}">拒单</button>` : ''}<button class="btn" data-action="detail" data-order="${order.orderNo}">订单详情</button><button class="btn" data-action="log" data-order="${order.orderNo}">日志</button></div></div></div>`;
 
       }).join('');
 
@@ -396,11 +521,89 @@
     function showToast(message) { toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800); }
     function openConfirm(action, orderNo) { const actionText = action === 'accept' ? '接单' : '拒单'; state.confirmAction = { action, orderNo }; confirmTitle.textContent = `确认${actionText}`; confirmContent.textContent = `确认要对订单 ${orderNo} 执行“${actionText}”操作吗？`; confirmMask.classList.add('show'); }
     function closeConfirm() { confirmMask.classList.remove('show'); state.confirmAction = null; }
-        function openDetailDrawer(orderNo) { detailDrawerFrame.src = `../detail/side-drawer.html?orderNo=${encodeURIComponent(orderNo)}`; detailDrawer.classList.add('show'); document.body.style.overflow = 'hidden'; }
-    function closeDetailDrawer() { detailDrawer.classList.remove('show'); document.body.style.overflow = ''; }
-    function openLogDrawer(orderNo) { logDrawerFrame.src = `../log/index.html?orderNo=${encodeURIComponent(orderNo)}`; logDrawer.classList.add('show'); document.body.style.overflow = 'hidden'; }
-    function closeLogDrawer() { logDrawer.classList.remove('show'); document.body.style.overflow = ''; }
+        function updateBodyScrollLock() { document.body.style.overflow = detailDrawer.classList.contains('show') || logDrawer.classList.contains('show') || globalOverlayDrawer.classList.contains('show') || globalOverlayDrawerLevel3.classList.contains('show') ? 'hidden' : ''; }
+  function openDetailDrawer(orderNo) { detailDrawerFrame.src = buildChildPageUrl('../detail/side-drawer.html', orderNo, { viewMode: 'drawer' }); detailDrawer.classList.add('show'); updateBodyScrollLock(); }
+  function closeDetailDrawer() { detailDrawer.classList.remove('show'); updateBodyScrollLock(); }
+  function openLogDrawer(orderNo) { logDrawerFrame.src = buildChildPageUrl('../log/index.html', orderNo, { viewMode: 'drawer' }); logDrawer.classList.add('show'); updateBodyScrollLock(); }
+  function closeLogDrawer() { logDrawer.classList.remove('show'); updateBodyScrollLock(); }
+    function setOverlayPanelState(panel, titleEl, frameEl, targetType, orderNo, extraPayload = {}, level = '2') {
+    panel.classList.remove('is-detail', 'is-log', 'is-json');
+    panel.classList.add(targetType === 'detail' ? 'is-detail' : targetType === 'json' ? 'is-json' : 'is-log');
+    titleEl.textContent = targetType === 'detail' ? '订单详情' : targetType === 'json' ? '日志报文详情' : '订单日志';
+    frameEl.src = targetType === 'detail'
+      ? buildChildPageUrl('../detail/side-drawer.html', orderNo || '', { viewMode: 'overlay', overlayLevel: level })
+      : targetType === 'json'
+        ? buildChildPageUrl('../log/json-viewer.html', '', { storageKey: extraPayload.storageKey || '', viewMode: 'overlay', overlayLevel: level })
+        : buildChildPageUrl('../log/index.html', orderNo || '', { viewMode: 'overlay', overlayLevel: level });
+  }
+  function openGlobalOverlay(type, orderNo, extraPayload = {}) {
+    const targetType = type === 'detail' || type === 'json' ? type : 'log';
+    const useLevel3 = globalOverlayDrawer.classList.contains('show') && targetType === 'json';
+    if (useLevel3) {
+      setOverlayPanelState(globalOverlayPanelLevel3, globalOverlayTitleLevel3, globalOverlayFrameLevel3, targetType, orderNo, extraPayload, '3');
+      globalOverlayDrawerLevel3.classList.add('show');
+      updateBodyScrollLock();
+      return;
+    }
+    setOverlayPanelState(globalOverlayPanel, globalOverlayTitle, globalOverlayFrame, targetType, orderNo, extraPayload, '2');
+    globalOverlayDrawer.classList.add('show');
+    updateBodyScrollLock();
+  }
+
+  function closeGlobalOverlay() {
+    if (globalOverlayDrawerLevel3.classList.contains('show')) {
+      globalOverlayDrawerLevel3.classList.remove('show');
+      globalOverlayFrameLevel3.src = 'about:blank';
+      updateBodyScrollLock();
+      return;
+    }
+    globalOverlayDrawer.classList.remove('show');
+    globalOverlayFrame.src = 'about:blank';
+    updateBodyScrollLock();
+  }
+  window.HotelOrderLayer = {
+    openOverlay(payload = {}) {
+      const config = typeof payload === 'string' ? { type: payload } : payload;
+      openGlobalOverlay(config.type, config.orderNo, config);
+    },
+    closeOverlay: closeGlobalOverlay
+  };
+  window.addEventListener('message', event => {
+    const data = event.data || {};
+    if (data.type === 'HOTEL_ORDER_OPEN_OVERLAY') {
+      openGlobalOverlay(data.payload?.type, data.payload?.orderNo, data.payload || {});
+    }
+    if (data.type === 'HOTEL_ORDER_CLOSE_OVERLAY') {
+      closeGlobalOverlay();
+    }
+  });
+
+
     function updateCountdowns() { document.querySelectorAll('.timer-value[data-deadline]').forEach(el => { const deadline = Number(el.dataset.deadline); const box = el.closest('.time-stack'); const level = getSlaLevel(deadline); el.textContent = formatCountdown(deadline); if (box) { box.classList.remove('timer-safe', 'timer-warning', 'timer-danger', 'timer-timeout'); box.classList.add(`timer-${level}`); } }); }
+    document.addEventListener('mouseover', event => {
+      const target = event.target.closest('[data-tooltip], [data-rich-tooltip]');
+      if (!target) return;
+      if (target === activeTooltipTarget) {
+        clearTimeout(hideTooltipTimer);
+        return;
+      }
+      openHoverTooltip(target);
+    });
+    document.addEventListener('mouseout', event => {
+      const target = event.target.closest('[data-tooltip], [data-rich-tooltip]');
+      if (!target || target !== activeTooltipTarget) return;
+      const related = event.relatedTarget;
+      if (related && (target.contains(related) || hoverTooltipEl.contains(related))) return;
+      scheduleCloseHoverTooltip();
+    });
+    hoverTooltipEl.addEventListener('mouseenter', () => clearTimeout(hideTooltipTimer));
+    hoverTooltipEl.addEventListener('mouseleave', scheduleCloseHoverTooltip);
+    window.addEventListener('scroll', () => {
+      if (activeTooltipTarget && hoverTooltipEl.classList.contains('show')) placeHoverTooltip(activeTooltipTarget);
+    }, true);
+    window.addEventListener('resize', () => {
+      if (activeTooltipTarget && hoverTooltipEl.classList.contains('show')) placeHoverTooltip(activeTooltipTarget);
+    });
 
 
     tabsEl.addEventListener('click', event => { const tabBtn = event.target.closest('[data-tab]'); if (!tabBtn) return; state.activeTab = tabBtn.dataset.tab; state.pageNum = 1; if (state.activeTab !== 'pending') state.sortBy = 'default'; render(); });
@@ -408,6 +611,15 @@
 
     paginationEl.addEventListener('click', event => { const pageBtn = event.target.closest('[data-page]'); const actionBtn = event.target.closest('[data-page-action]'); const totalPages = Math.max(1, Math.ceil(getFilteredOrders().length / state.pageSize)); if (pageBtn) { state.pageNum = Number(pageBtn.dataset.page); render(); return; } if (actionBtn) { const action = actionBtn.dataset.pageAction; if (action === 'prev' && state.pageNum > 1) state.pageNum -= 1; if (action === 'next' && state.pageNum < totalPages) state.pageNum += 1; render(); } });
     sortSelectEl.addEventListener('change', event => { state.sortBy = event.target.value; state.pageNum = 1; render(); });
+    filterTimeFieldEl?.addEventListener('click', event => {
+      const target = event.target;
+      if (target.closest('#filterTimeType')) return;
+      if (target.closest('#filterEndDate')) {
+        filterEndDateEl?.showPicker?.();
+        return;
+      }
+      filterStartDateEl?.showPicker?.();
+    });
     document.getElementById('searchBtn').addEventListener('click', () => { syncFiltersFromDom(); render(); showToast('已按当前筛选条件刷新列表'); });
     document.getElementById('resetBtn').addEventListener('click', resetFilters);
     submitConfirmBtn.addEventListener('click', () => { if (!state.confirmAction) return; showToast(`已确认${state.confirmAction.action === 'accept' ? '接单' : '拒单'}：${state.confirmAction.orderNo}`); closeConfirm(); });
@@ -415,8 +627,16 @@
     confirmMask.addEventListener('click', event => { if (event.target === confirmMask) closeConfirm(); });
         document.getElementById('closeDetailDrawerBtn').addEventListener('click', closeDetailDrawer);
     document.getElementById('closeLogDrawerBtn').addEventListener('click', closeLogDrawer);
+    document.getElementById('closeGlobalOverlayBtn').addEventListener('click', closeGlobalOverlay);
     detailDrawer.addEventListener('click', event => { if (event.target === detailDrawer) closeDetailDrawer(); });
     logDrawer.addEventListener('click', event => { if (event.target === logDrawer) closeLogDrawer(); });
+    globalOverlayDrawer.addEventListener('click', event => { if (event.target === globalOverlayDrawer) closeGlobalOverlay(); });
+    globalOverlayDrawerLevel3.addEventListener('click', event => { if (event.target === globalOverlayDrawerLevel3) closeGlobalOverlay(); });
+    document.getElementById('closeGlobalOverlayBtnLevel3').addEventListener('click', closeGlobalOverlay);
+    detailDrawerFrame.addEventListener('load', () => attachOverlayBridge(detailDrawerFrame));
+    logDrawerFrame.addEventListener('load', () => attachOverlayBridge(logDrawerFrame));
+    globalOverlayFrame.addEventListener('load', () => attachOverlayBridge(globalOverlayFrame));
+    globalOverlayFrameLevel3.addEventListener('load', () => attachOverlayBridge(globalOverlayFrameLevel3));
 
 
     syncFiltersFromDom();

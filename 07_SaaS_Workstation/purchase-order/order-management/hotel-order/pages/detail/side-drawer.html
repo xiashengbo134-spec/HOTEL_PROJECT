@@ -24,7 +24,8 @@
 
 
 
-      --bottom-bar-height: 72px;
+            --bottom-bar-height: 66px;
+
     }
     * { box-sizing: border-box; }
     body { margin: 0; background: var(--color-bg-2); font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--color-text-1); }
@@ -234,11 +235,14 @@
     .cost-row-label { color: var(--color-text-3); font-size: 12px; }
     .cost-row-value { color: var(--color-text-1); font-size: 14px; }
     .cost-row-value.emphasis { font-weight: 700; }
-    .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; padding: 10px 16px; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-top: 1px solid var(--color-border-1); }
-    .bottom-bar-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+        .bottom-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; height: 66px; padding: 0 16px; background: rgba(255,255,255,.96); backdrop-filter: blur(12px); border-top: 1px solid var(--color-border-1); }
+    .bottom-bar-inner { height: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 16px; }
     .bottom-summary { color: var(--color-text-2); font-size: 13px; }
-    .bottom-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .bottom-actions { display: flex; align-items: center; height: 100%; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .detail-log-btn { min-width: 88px; }
     .modal-mask { position: fixed; inset: 0; background: rgba(15, 23, 42, .45); display: none; align-items: center; justify-content: center; z-index: 90; padding: 20px; }
+
+
     .modal-mask.show { display: flex; }
         .modal { width: min(720px, 100%); max-height: 80vh; overflow: auto; background: #fff; border-radius: 4px; box-shadow: 0 18px 48px rgba(15, 23, 42, .2); }
 
@@ -624,7 +628,18 @@
     </div>
   </div>
 
+  <div class="bottom-bar">
+    <div class="bottom-bar-inner">
+      <div class="bottom-actions">
+        <button class="btn detail-log-btn" id="openDetailLogBtn">日志</button>
+      </div>
+    </div>
+  </div>
+
+  
+
         <div class="modal-mask" id="purchaseFailureModal">
+
     <div class="modal">
       <div class="modal-head"><div class="modal-title">采购失败原因明细</div><button class="btn" data-close-modal>关闭</button></div>
       <div class="modal-body">
@@ -653,8 +668,50 @@
 
 
     <script>
-    const toastEl = document.getElementById('toast');
+                const toastEl = document.getElementById('toast');
+    const openDetailLogBtn = document.getElementById('openDetailLogBtn');
+    const currentOrderNo = new URLSearchParams(window.location.search).get('orderNo') || 'HTL202604228899';
     function showToast(message) { toastEl.textContent = message; toastEl.classList.add('show'); clearTimeout(showToast.timer); showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800); }
+                function emitOverlayOpen(payload) {
+                  try {
+                    if (window.HotelOrderLayer?.openOverlay) {
+                      window.HotelOrderLayer.openOverlay(payload);
+                      return true;
+                    }
+                  } catch {}
+                  try {
+                    if (window.parent && window.parent !== window && window.parent.HotelOrderLayer?.openOverlay) {
+                      window.parent.HotelOrderLayer.openOverlay(payload);
+                      return true;
+                    }
+                  } catch {}
+                  try {
+                    if (window.parent && window.parent !== window) {
+                      window.parent.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload }, '*');
+                    }
+                  } catch {}
+                  try {
+                    if (window.top && window.top !== window && window.top !== window.parent) {
+                      window.top.postMessage({ type: 'HOTEL_ORDER_OPEN_OVERLAY', payload }, '*');
+                    }
+                  } catch {}
+                  return false;
+                }
+
+                function openDetailLogDrawer() {
+          if (window.parent && window.parent !== window) {
+            emitOverlayOpen({ type: 'log', orderNo: currentOrderNo });
+            return;
+          }
+          const url = new URL('../log/index.html', window.location.href);
+          url.searchParams.set('orderNo', currentOrderNo);
+          url.searchParams.set('viewMode', 'drawer');
+          window.location.href = url.toString();
+        }
+
+
+
+
     window.toggleMoreInfo = function(btn) {
       const content = btn.closest('.purchase-order-content');
       const moreInfo = content.querySelector('.purchase-more-info');
@@ -701,8 +758,11 @@
       if (btn.dataset.modal === 'priceDetail') document.getElementById('priceDetailModal')?.classList.add('show');
     }));
 
-        document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal-mask').classList.remove('show')));
-    document.querySelectorAll('.modal-mask').forEach(mask => mask.addEventListener('click', event => { if (event.target === mask) mask.classList.remove('show'); }));
+                document.querySelectorAll('[data-close-modal]').forEach(btn => btn.addEventListener('click', () => btn.closest('.modal-mask').classList.remove('show')));
+        document.querySelectorAll('.modal-mask').forEach(mask => mask.addEventListener('click', event => { if (event.target === mask) mask.classList.remove('show'); }));
+        openDetailLogBtn?.addEventListener('click', openDetailLogDrawer);
+
+
   </script>
 </body>
 </html>

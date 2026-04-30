@@ -1,356 +1,406 @@
 # 酒店订单字段说明
 
 ## 文档目的
-本文件用于梳理酒店订单模块中列表页、详情页、日志页涉及的核心字段，统一字段名称、业务含义、展示规则与口径说明。
 
-本文档当前以页面展示字段为主，后续可继续扩展为接口字段字典。
+本文件用于根据当前页面原型梳理列表页、详情页、日志页涉及的核心字段，统一字段名称、业务含义与展示口径。
+
+本次已按当前页面修正以下重点：
+
+- 列表页状态区为四段式：系统 / 平台 / 采购 / 售后
+- 列表页已兼容钟点房字段
+- 详情页主 `index.html` 以总览页结构为主，不再按旧版左右三段式拆解
+- 日志页头部已是多芯片摘要，不再是简单标题栏
+- 日志页已支持“只看订单 / 只看采购单”范围切换
 
 ---
 
-## 一、字段使用范围
+## 一、通用字段
 
-当前模块字段主要分为三类：
-
-1. 列表页字段
-2. 详情页字段
-3. 日志页字段
-
-同时建议统一沉淀以下通用信息：
-
-- 字段中文名
-- 字段编码/接口 key
-- 说明
-- 是否必填
-- 展示位置
-- 展示规则
-- 枚举值说明
+| 字段名称 | 建议字段 key | 说明 |
+| --- | --- | --- |
+| 系统订单号 | `orderNo` | 系统内部订单号 |
+| 外部订单号 | `outerOrderNo` | 平台侧订单号 |
+| 订单来源 | `orderSource` | 平台 + 店铺/账号组合 |
+| 酒店名称 | `hotelName` | 酒店展示名称 |
+| 酒店聚合 ID | `hotelAggregateId` | 酒店统一识别 ID |
+| 房型名称 | `roomName` | 房型展示名称 |
+| 房型聚合 ID | `roomAggregateId` | 房型统一识别 ID |
+| 早餐信息 | `breakfast` | 如双早、无早 |
+| 入住人 | `guestName` | 主入住人 |
+| 联系人 | `contactName` | 联系人姓名 |
+| 联系电话 | `contactMobile` | 联系人电话 |
+| 入住日期 | `checkInDate` | 入住日期 |
+| 离店日期 | `checkOutDate` | 离店日期 |
+| 房间数 | `roomCount` | 房间数量 |
+| 间夜数 | `nightCount` | 晚数 |
+| 取消规则 | `cancelRule` | 订单取消政策 |
 
 ---
 
 ## 二、列表页字段定义
 
-### 1. 查询条件区字段
+## 1. 查询条件区字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示/输入规则 |
-| --- | --- | --- | --- |
-| 外部单号 | `outerOrderNo` | 外部平台订单号 | 支持精准/模糊搜索 |
-| 系统单号 | `orderNo` | 系统内部订单号 | 支持完整单号或尾 6 位搜索 |
-| 预订开始时间 | `bookingStartTime` | 预订时间开始 | 与结束时间组合使用 |
-| 预订结束时间 | `bookingEndTime` | 预订时间结束 | 与开始时间组合使用 |
-| 入住开始日期 | `checkInStartDate` | 入住日期范围开始 | 与结束日期组合使用 |
-| 入住结束日期 | `checkInEndDate` | 入住日期范围结束 | 与开始日期组合使用 |
-| 城市 | `cityName` | 酒店所在城市 | 支持下拉或模糊输入 |
-| 订单来源 | `orderSource` | 订单来源平台 | 如飞猪、抖音、携程等 |
-| 平台订单状态 | `platformOrderStatus` | 外部平台状态 | 使用统一平台状态文案 |
-| 业务状态 | `bizStatus` | 工作台父状态 | 对应 Tab 分类 |
-| 售后状态 | `afterSaleStatus` | 售后处理状态 | 仅在售后场景下使用 |
+| 字段名称 | 建议字段 key | 当前页面规则 |
+| --- | --- | --- |
+| 系统订单号 | `orderNo` | 独立输入框 |
+| 外部订单号 | `outerOrderNo` | 独立输入框 |
+| 入住人/联系人 | `guestKeyword` | 聚合搜索，建议覆盖姓名/手机号 |
+| 酒店名称/ID | `hotelKeyword` | 聚合搜索，建议覆盖名称与酒店相关 ID |
+| 时间类型 | `timeType` | 当前值：`bookingTime` / `checkInDate` / `checkOutDate` |
+| 开始日期 | `startDate` | 与时间类型组合 |
+| 结束日期 | `endDate` | 与时间类型组合 |
+| 订单来源 | `source` | 当前为单选下拉 |
+| 平台订单状态 | `platformStatus` | 当前为单选下拉 |
+| 当前 Tab | `bizStatus` | 对应待处理/售后中等业务视图 |
 
-### 2. 列表核心展示字段
+说明：
 
-#### 2.1 订单标识信息
+- 旧文档中的 `city` 当前页面状态对象中仍保留，但筛选区未直接呈现
+- 文档以当前已展示控件为准
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 外部单号 | `outerOrderNo` | 外部平台订单号 | 主展示字段之一 |
-| 系统单号 | `orderNo` | 系统内部订单号 | 主展示字段之一 |
-| 渠道标识 | `channelCode` | 订单来源渠道编码 | 用于匹配渠道 Icon |
-| 渠道 Icon | `channelIcon` | 渠道图标 | 与渠道名称组合展示 |
-| 订单来源 | `orderSource` | 平台来源名称 | 如抖音、飞猪 |
+## 2. 列表卡片字段
 
-#### 2.2 酒店与房型信息
+### 2.1 订单标识区
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 酒店名称 | `hotelName` | 酒店全称 | 优先完整展示，超长可省略 |
-| 房型名称 | `roomTypeName` | 房型名称 | 与酒店名称同组展示 |
-| 是否含早 | `hasBreakfast` | 早餐信息 | 是/否标签化展示 |
-| 城市 | `cityName` | 酒店所属城市 | 可作为辅助信息展示 |
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 外部订单号 | `outerOrderNo` | 主展示，带复制 |
+| 系统订单号 | `orderNo` | 主展示，带复制 |
+| 渠道简称 | `channelText` | 如抖音、飞猪 |
+| 渠道样式 | `channelClass` | 控制渠道色块 |
+| 订单来源 | `source` | 与渠道标识同组展示 |
 
-#### 2.3 入住人与行程信息
+### 2.2 酒店与入住区
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 入住人 | `guestName` | 主入住人姓名 | 多人时可展示首位 + 人数 |
-| 联系方式 | `guestMobile` | 入住人手机号 | 注意脱敏展示 |
-| 入住日期 | `checkInDate` | 入住日期 | 标准日期格式 |
-| 离店日期 | `checkOutDate` | 离店日期 | 标准日期格式 |
-| 间夜数 | `nightCount` | 入住总间夜 | 可自动计算或接口返回 |
-| 房间数 | `roomCount` | 房间数量 | 若为多间房需明确展示 |
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 酒店名称 | `hotelName` | 支持超长省略与 tooltip |
+| 酒店地址 | `hotelAddress` | 正文展示 |
+| 城市 | `city` | 与地址组合展示 |
+| 酒店 ID 提示 | `hotelIdTooltip` | 通过 ID tooltip 查看 |
+| 房型名称 | `roomName` | 与早餐组合展示 |
+| 早餐信息 | `breakfast` | 与房型拼接展示 |
+| 入住人 | `guestName` | 正文展示 |
+| 联系人 | `contactName` | 正文展示 |
+| 联系电话 | `contactMobile` | 与联系人拼接 |
+| 入住日期 | `checkInDate` | 正文展示 |
+| 离店日期 | `checkOutDate` | 正文展示 |
+| 房间数 | `roomCount` | 正文展示 |
+| 晚数 | `nightCount` | 正文展示 |
+| 取消规则 | `cancelRule` | 通过标签 tooltip 展示 |
 
-#### 2.4 财务信息
+### 2.3 钟点房补充字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 客户支付金额 | `saleAmount` | 用户实际支付金额 | 金额高亮展示 |
-| 采购底价 | `costAmount` | 实际采购成本 | 金额高亮展示 |
-| 预计利润 | `profitAmount` | 卖价减底价 | 可选字段，用于辅助判断 |
-| 币种 | `currency` | 金额币种 | 默认 CNY |
-| 支付状态 | `payStatus` | 用户支付状态 | 可作为辅助状态展示 |
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 是否钟点房 | `isHourlyRoom` | 为 `true` 时展示钟点房标签 |
+| 入住时长 | `stayDuration` | 钟点房场景展示 |
+| 已选时段 | `selectedTimeRange` | 钟点房场景展示 |
 
-> 金额展示建议统一保留两位小数，并带 `¥` 前缀。
+### 2.4 金额区字段
 
-#### 2.5 状态信息
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 支付金额 | `payAmount` | 卡片主展示 |
+| 结算金额 | `settlementAmount` | 卡片主展示 |
+| 售卖模式 | `saleMode` | badge 展示 |
+| 金额提示 | `amountTooltip` | tooltip 中补充佣金、退款、罚金等 |
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 业务状态 | `bizStatus` | 工作台主状态 | 对应 Tab 分类 |
-| 系统订单状态 | `systemStatus` | 内部订单生命周期状态 | Tag 展示 |
-| 平台状态 | `platformStatus` | 外部平台同步状态 | Tag 或辅助文案展示 |
-| 售后状态 | `afterSaleStatus` | 售后流程状态 | 有售后时展示 |
-| 采购状态 | `purchaseStatus` | 当前采购任务状态 | 可作为复合状态一部分 |
+### 2.5 状态区字段
 
-#### 2.6 时间轴信息
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 业务状态 | `bizStatus` | 决定 Tab 归类 |
+| 系统状态 | `systemStatus` | `{ label, text, type }` |
+| 平台状态 | `platformStatus` | `{ label, text, type }` |
+| 采购状态 | `purchaseTaskStatus` | `{ label, text, type }` |
+| 售后状态 | `afterSaleStatus` | `{ label, text, type }` |
+| 售后补充标签 | `afterSaleTags` | 如协商退款、已同意 |
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 预订时间 | `bookingTime` | 用户下单/预订时间 | 标准时间格式 |
-| 付款时间 | `payTime` | 用户支付完成时间 | 可为空 |
-| 取消时间 | `cancelTime` | 订单取消时间 | 已取消订单展示 |
-| 创建时间 | `createTime` | 系统订单创建时间 | 可与预订时间区分 |
-| 更新时间 | `updateTime` | 最后更新时间 | 便于排查状态变化 |
+### 2.6 时间与 SLA 字段
 
-#### 2.7 SLA 相关字段
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 预订时间 | `bookingTime` | 卡片底部摘要 |
+| 支付时间 | `payTime` | 卡片底部摘要 |
+| 取消时间 | `cancelTime` | 卡片底部摘要 |
+| SLA 启用标识 | `sla.enabled` | 仅待处理单启用 |
+| SLA 截止时间 | `sla.deadline` | 前端倒计时依据 |
+| SLA 等级 | `slaLevel` | 当前由前端根据 deadline 计算 |
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| SLA 截止时间 | `slaDeadlineTime` | 待处理时限截止点 | 前端倒计时计算依据 |
-| SLA 剩余秒数 | `slaRemainSeconds` | 剩余处理时间 | 可由后端直接返回 |
-| SLA 状态 | `slaLevel` | 时效等级 | 如 normal / warning / danger / timeout |
+### 2.7 操作字段
 
-### 3. 列表行级操作
-
-| 操作名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 采购详情 | `actionDetail` | 跳转详情页 | 全局可见 |
-| 接单 | `actionAccept` | 人工接单 | 仅待处理可见 |
-| 拒单 | `actionReject` | 人工拒单 | 仅待处理可见 |
-| 日志 | `actionLog` | 查看订单日志 | 全局可见 |
-| 导出 | `actionExport` | 导出列表/当前条件结果 | 按权限开放 |
+| 操作名称 | 建议字段 key | 当前规则 |
+| --- | --- | --- |
+| 接单 | `actionAccept` | 待处理可见 |
+| 拒单 | `actionReject` | 待处理可见 |
+| 订单详情 | `actionDetail` | 全局可见 |
+| 日志 | `actionLog` | 全局可见 |
+| 导出 | `actionExport` | 全局工具区 |
+| 导出记录 | `actionExportRecord` | 全局工具区 |
 
 ---
 
 ## 三、详情页字段定义
 
-详情页建议拆分为：
+当前详情能力建议拆成两个视角维护：
 
-1. 左侧采购任务区
-2. 右侧主订单信息区
-3. 右侧采购执行信息区
+1. 主页面版 `pages/detail/index.html`
+2. 抽屉版 `pages/detail/side-drawer.html`
 
-### 1. 左侧采购任务卡片字段
+## 1. 主页面版 index.html 字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 采购任务号 | `purchaseTaskNo` | 单次采购任务标识 | 卡片主标识 |
-| 任务状态 | `taskStatus` | 当前采购任务状态 | Tag 展示 |
-| 创建时间 | `taskCreateTime` | 任务创建时间 | 卡片辅助信息 |
-| 关联单号 | `relatedOrderNo` | 关联采购渠道单号/系统单号 | 可辅助排查 |
-| 是否当前选中 | `selected` | 当前高亮卡片 | 前端交互态 |
+### 1.1 总览卡片字段
 
-### 2. 主订单信息字段
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 渠道 | `channelText` | 头部 badge |
+| 酒店名称 | `hotelName` | 总览主标题 |
+| 房型名称 | `roomName` | 总览主标题 |
+| 早餐信息 | `breakfast` | 标签展示 |
+| 售卖模式 | `saleMode` | 标签展示 |
+| 订单来源 | `source` | 标签展示 |
+| 系统订单号 | `orderNo` | 支持复制 |
+| 外部订单号 | `outerOrderNo` | 支持复制 |
+| 系统状态 | `systemStatus` | 标签展示 |
+| 平台状态 | `platformStatus` | 标签展示 |
+| 售后状态 | `afterSaleStatus` | 标签展示 |
+| 采购结论 | `purchaseConclusion` | 标签 + 失败原因入口 |
+| 预订时间 | `bookingTime` | 元信息卡片 |
+| 支付时间 | `payTime` | 元信息卡片 |
+| 入住摘要 | `staySummary` | 入住 / 离店 / 房晚信息 |
+| 处理结果摘要 | `handlingSummary` | 元信息卡片 |
+| SLA 剩余时间 | `slaDeadline` | 倒计时展示 |
+| 风险提示 | `riskText` | 风险卡片 |
+| 快捷提示 | `quickHint` | 辅助说明卡片 |
 
-#### 2.1 订单基础字段
+### 1.2 订单与入住信息字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 系统单号 | `orderNo` | 内部订单号 | 详情头部主字段 |
-| 外部单号 | `outerOrderNo` | 平台订单号 | 与系统单号并列展示 |
-| 主订单状态 | `systemStatus` | 当前系统状态 | 独立状态 Tag |
-| 平台状态 | `platformStatus` | 平台同步状态 | 辅助 Tag |
-| 订单来源 | `orderSource` | 平台来源 | 搭配渠道 Icon |
-| 创建时间 | `createTime` | 订单创建时间 | 基础信息 |
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 酒店名称 | `hotelName` | 支持 ID tooltip |
+| 酒店地址 | `hotelAddress` | 正文展示 |
+| 房型 / 早餐 | `roomName` / `breakfast` | 正文展示 |
+| 取消规则 | `cancelRule` | 正文展示 |
+| 入住人 | `guestName` | 正文展示 |
+| 联系人 | `contactName` | 正文展示 |
+| 联系电话 | `contactMobile` | 正文展示 |
+| 入离时间 | `checkInDate` / `checkOutDate` | 正文展示 |
+| 间夜 / 房间数 | `nightCount` / `roomCount` | 正文展示 |
+| 平台确认号 | `platformConfirmNo` | 正文展示 |
+| 销售计划 / 房型 ID | `rpCode` / `saleRoomId` | 正文展示 |
 
-#### 2.2 酒店与行程字段
+### 1.3 采购过程字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 酒店名称 | `hotelName` | 酒店名称 | 重点展示 |
-| 酒店地址 | `hotelAddress` | 酒店地址 | 可选扩展字段 |
-| 城市 | `cityName` | 酒店城市 | 辅助展示 |
-| 房型名称 | `roomTypeName` | 客户下单房型 | 重点展示 |
-| 是否含早 | `hasBreakfast` | 早餐规则 | 标签化展示 |
-| 入住日期 | `checkInDate` | 入住日期 | 标准日期 |
-| 离店日期 | `checkOutDate` | 离店日期 | 标准日期 |
-| 间夜数 | `nightCount` | 行程间夜 | 可计算 |
-| 房间数 | `roomCount` | 房间数量 | 明确展示 |
+当前不是“单一采购任务详情”，而是按日期聚合的采购过程。
 
-#### 2.3 入住人与联系字段
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 采购日期 | `purchaseDate` | 日期分组头 |
+| 当日成功数 | `successCount` | 日期头摘要 |
+| 当日失败数 | `failureCount` | 日期头摘要 |
+| 采购时间 | `purchaseTime` | 单条记录展示 |
+| 采购单号 | `purchaseOrderNo` | 单条记录展示 |
+| 供应商/渠道 | `purchaseSupplier` | 单条记录展示 |
+| 采购结果 | `purchaseResult` | 成功/失败标签 |
+| 失败原因摘要 | `failureSummary` | 文本说明 |
+| 采购价 | `purchasePrice` | 明细字段 |
+| 处理情况 | `processSummary` | 明细字段 |
+| 处理人 | `processor` | 明细字段 |
+| 确认号 | `confirmNo` | 成功场景字段 |
+| 失败归因 | `failureReason` | 失败场景字段 |
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 入住人姓名 | `guestName` | 主入住人 | 多入住人需扩展 |
-| 入住人列表 | `guestList` | 全部入住人 | 可展开查看 |
-| 联系电话 | `guestMobile` | 入住人电话 | 脱敏展示 |
-| 联系备注 | `guestRemark` | 特殊入住要求 | 可选展示 |
+### 1.4 金额摘要字段
 
-#### 2.4 金额与规则字段
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 支付金额 | `payAmount` | 摘要卡片 |
+| 结算金额 | `settlementAmount` | 摘要卡片 |
+| 采购成本 | `purchaseCost` | 摘要卡片 |
+| 预估毛利 | `estimatedProfit` | 摘要卡片 |
+| 售卖模式 | `saleMode` | 摘要卡片 |
+| 佣金比例 | `commissionRate` | 摘要卡片 |
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 客户支付金额 | `saleAmount` | 客户实际支付金额 | 红色高亮 |
-| 优惠金额 | `discountAmount` | 用户优惠金额 | 可选字段 |
-| 实付金额 | `actualPayAmount` | 实际到账金额 | 可与支付金额区分 |
-| 取消规则 | `cancelRule` | 取消政策说明 | 文本描述 |
-| 备注 | `remark` | 订单备注 | 辅助说明 |
+### 1.5 价格明细展开字段
 
-### 3. 采购执行信息字段
+| 字段名称 | 建议字段 key |
+| --- | --- |
+| 房费原价 | `originalRoomAmount` |
+| 平台优惠 | `platformDiscountAmount` |
+| 店铺补贴 | `shopSubsidyAmount` |
+| 用户实付 | `userPaidAmount` |
+| 采购成本 | `purchaseCost` |
+| 结算金额 | `settlementAmount` |
+| 佣金 | `commissionAmount` |
+| 退款金额 | `refundAmount` |
+| 取消罚金 | `cancelPenaltyAmount` |
 
-#### 3.1 渠道采购信息
+### 1.6 底部动作字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 采购渠道 | `purchaseChannel` | 实际采购渠道 | 如携程/PTG |
-| 采购渠道单号 | `purchaseChannelOrderNo` | 渠道侧单号 | 核心排查字段 |
-| 采购状态 | `purchaseStatus` | 当前采购状态 | 独立状态 Tag |
-| 采购账号 | `purchaseAccount` | 实际采购使用账号 | 脱敏或部分展示 |
-| 采购执行时间 | `purchaseTime` | 发起采购时间 | 标准时间格式 |
+| 操作名称 | 建议字段 key |
+| --- | --- |
+| 接单 | `actionAccept` |
+| 拒单 | `actionReject` |
+| 人工补采 | `actionManualPurchase` |
+| 发起售后 | `actionAfterSale` |
+| 查看日志 | `actionLog` |
+| 确认采购结果 | `actionConfirmPurchaseResult` |
 
-#### 3.2 采购房型与入住信息
+## 2. 抽屉版 side-drawer.html 字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 采购房型 | `purchaseRoomTypeName` | 实际采购房型 | 与主单房型对照展示 |
-| 采购入住人 | `purchaseGuestName` | 渠道侧入住人 | 与主单信息对照 |
-| 入住日期 | `purchaseCheckInDate` | 采购侧入住日期 | 通常应与主单一致 |
-| 离店日期 | `purchaseCheckOutDate` | 采购侧离店日期 | 通常应与主单一致 |
+抽屉版更强调单笔订单快速核查，核心字段包括：
 
-#### 3.3 采购财务字段
-
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 采购底价 | `costAmount` | 实际采购成本 | 红色高亮 |
-| 采购支付金额 | `purchasePayAmount` | 渠道实际支付金额 | 如与底价不同需说明 |
-| 利润差额 | `profitAmount` | 主单售价 - 采购底价 | 可选高亮 |
-| 是否倒挂 | `isLossOrder` | 是否亏损单 | 是时加风险提示 |
-
-#### 3.4 采购扩展字段
-
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 采购备注 | `purchaseRemark` | 采购执行备注 | 文本展示 |
-| 异常说明 | `exceptionDesc` | 失败/取消等异常信息 | 红色或警示样式 |
-| 采购日志入口 | `purchaseLogEntry` | 查看采购日志入口 | 按钮或链接 |
+- 酒店名称 / 房型名称 / 入住人 / 联系人 / 取消规则
+- 创建时间 / 支付时间 / 取消时间
+- 采购单号 / 采购状态 / 下单账号 / 开票类型
+- 订单金额 / 价格明细
+- 钟点房的入住时长 / 已选时段
+- 失败原因入口
 
 ---
 
 ## 四、日志页字段定义
 
-### 1. 头部摘要字段
+## 1. 顶部摘要字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 系统单号 | `orderNo` | 当前订单号 | 头部主信息 |
-| 酒店名称 | `hotelName` | 酒店名称 | 头部展示 |
-| 外部单号 | `outerOrderNo` | 平台订单号 | 头部辅助展示 |
-| 渠道单号 | `channelOrderNo` | 渠道订单号 | 可选展示 |
-| 当前状态 | `systemStatus` | 当前订单状态 | Tag 展示 |
-| traceId | `traceId` | 日志链路标识 | 排查用 |
+| 字段名称 | 建议字段 key | 当前展示规则 |
+| --- | --- | --- |
+| 系统订单号 | `orderSummary.systemOrderNo` | 摘要芯片 |
+| 外部订单号 | `orderSummary.externalOrderNo` | 摘要芯片 |
+| 酒店名称 | `orderSummary.hotelName` | 摘要芯片 |
+| 酒店聚合 ID | `orderSummary.hotelAggregateId` | tooltip |
+| 房型名称 | `orderSummary.roomName` | 摘要芯片 |
+| 房型聚合 ID | `orderSummary.roomAggregateId` | tooltip |
+| 早餐信息 | `orderSummary.breakfast` | 与房型拼接 |
+| 入离时间 | `orderSummary.checkInDate` / `orderSummary.checkOutDate` | 摘要芯片 |
+| 房间数 | `orderSummary.rooms` | 摘要芯片 |
+| 晚数 | `orderSummary.nights` | 摘要芯片 |
+| RP 编码 | `orderSummary.rpCode` | 摘要芯片 |
 
-### 2. 日志聚合节点字段
+## 2. 视图控制字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 节点编码 | `phase` | 日志阶段编码 | 如 `ORDER_CREATE` |
-| 节点名称 | `phaseName` | 日志阶段名称 | 中文展示 |
-| 业务分类 | `businessType` | 试单/下单/采购/售后 | 业务视图使用 |
-| 节点状态 | `nodeStatus` | 成功/失败/进行中 | 节点颜色依据 |
-| 日志条数 | `logCount` | 聚合日志数量 | 节点角标展示 |
-| 操作人 | `operator` | 执行人 | 聚合后展示 |
-| 时间 | `time` | 阶段发生时间 | 节点展示 |
-| 采购任务号 | `taskId` | 采购任务批次号 | 采购类节点展示 |
+| 字段名称 | 建议字段 key | 当前规则 |
+| --- | --- | --- |
+| 当前 Tab | `activeTab` | `phase` / `business` |
+| 查看范围 | `selectedLogScope` | `order` / `purchase` |
+| 业务分类 | `selectedBusinessType` | 试单、下单、采购、取消 |
 
-### 3. 日志明细字段
+## 3. 原始日志字段
 
-| 字段名称 | 建议字段 key | 说明 | 展示规则 |
-| --- | --- | --- | --- |
-| 明细时间 | `time` | 精确到秒/毫秒的时间 | 日期与时间可分行显示 |
-| 阶段编码 | `phase` | 系统阶段码 | 与中文名称组合展示 |
-| 阶段名称 | `phaseName` | 中文阶段名称 | 主要展示字段 |
-| 执行内容 | `content` | 本次执行描述 | 明细展示 |
-| 执行结果 | `result` | 结果说明 | 成功/失败颜色区分 |
-| 操作人 | `operator` | 执行人 | 系统/人工都需体现 |
-| 是否错误 | `isError` | 错误标识 | 控制红色展示 |
-| JSON 报文 | `json` | 请求/响应或上下文报文 | 支持展开查看 |
-| traceId | `traceId` | 请求链路标识 | 排查定位 |
+| 字段名称 | 建议字段 key | 说明 |
+| --- | --- | --- |
+| ID | `id` | 唯一标识 |
+| 时间 | `time` | 精确时间 |
+| 阶段码 | `phase` | 如 `PURCHASE_TASK_PAY` |
+| 业务分类 | `businessType` | 试单/下单/采购/售后取消 |
+| 阶段名称 | `phaseName` | 中文/业务化名称 |
+| 执行内容 | `content` | 主描述字段 |
+| 执行结果 | `result` | 结果摘要 |
+| 操作人 | `operator` | 系统或人工 |
+| 是否错误 | `isError` | 控制异常高亮 |
+| 报文 | `json` | JSON 报文内容 |
+| 范围 | `scope` | 订单 / 采购单 |
+
+## 4. 阶段聚合字段
+
+| 字段名称 | 建议字段 key | 说明 |
+| --- | --- | --- |
+| 阶段项 ID | `phaseItemId` | 聚合后唯一 ID |
+| 主日志 | `primaryLog` | 当前摘要行主记录 |
+| 隐藏日志 | `hiddenLogs` | 展开后显示 |
+| 合并数量 | `mergedCount` | 同阶段合并数 |
+| 是否可展开 | `canExpand` | 控制手风琴 |
+| 尾日志 | `tailLog` | 单独保留的尾部记录 |
+
+## 5. 报文抽屉字段
+
+| 字段名称 | 建议字段 key | 说明 |
+| --- | --- | --- |
+| 抽屉是否显示 | `jsonDialogVisible` | 控制抽屉开关 |
+| 报文内容 | `jsonDialogContent` | 展示的 JSON 文本 |
 
 ---
 
 ## 五、字段展示规则补充
 
-### 1. 金额字段规则
+### 1. 金额字段
+
 - 统一保留两位小数
-- 默认使用人民币符号 `¥`
-- 主单售价与采购底价使用红色高亮
-- 若存在倒挂或利润异常，可附加风险标签
+- 默认使用 `¥`
+- 列表页以摘要为主，详情页可展示更完整明细
 
-### 2. 手机号规则
-- 默认脱敏展示，如 `138****5678`
-- 完整号码查看需结合权限控制
+### 2. 状态字段
 
-### 3. 状态字段规则
-- 同一页面中不要混用状态口径
-- 业务状态、系统状态、平台状态、采购状态需分开展示
-- Tag 颜色保持统一规范
+- 页面层统一按四段式理解：系统 / 平台 / 采购 / 售后
+- 业务状态 `bizStatus` 仅用于列表 Tab 分流
+- 状态颜色需在全模块保持一致
 
-### 4. 时间字段规则
-- 日期建议格式：`YYYY-MM-DD`
-- 时间建议格式：`YYYY-MM-DD HH:mm:ss`
-- 倒计时字段建议由后端返回剩余秒数，前端做动态刷新
+### 3. 时间字段
 
-### 5. 文本字段规则
-- 超长文本支持省略和悬浮查看
-- 异常说明、取消规则、备注支持多行展示
+- 日期格式建议：`YYYY-MM-DD`
+- 时间格式建议：`YYYY-MM-DD HH:mm:ss`
+- SLA 倒计时可由前端基于 deadline 动态刷新
+
+### 4. 长文本字段
+
+- 酒店名、房型名、结果说明支持省略 + tooltip
+- 取消规则、失败原因、风险提示支持多行文本
+- 报文内容统一收敛至独立抽屉展示
+
+### 5. 敏感信息
+
+- 当前原型直接展示手机号与下单账号
+- 正式版本建议补充权限控制与脱敏规则
 
 ---
 
 ## 六、枚举建议
 
-### 1. 早餐字段
+### 1. 列表页 SLA 等级
 
 | 值 | 含义 |
 | --- | --- |
-| `true` | 含早 |
-| `false` | 不含早 |
-
-### 2. SLA 等级字段
-
-| 值 | 含义 |
-| --- | --- |
-| `normal` | 正常 |
+| `safe` | 安全 |
 | `warning` | 预警 |
 | `danger` | 高危 |
-| `timeout` | 已超时 |
+| `timeout` | 超时 |
 
-### 3. 日志节点状态字段
+### 2. 业务视图 Tab
 
 | 值 | 含义 |
 | --- | --- |
-| `success` | 成功 |
-| `processing` | 进行中 |
-| `failed` | 失败 |
+| `phase` | 阶段日志 |
+| `business` | 业务日志 |
+
+### 3. 日志范围
+
+| 值 | 含义 |
+| --- | --- |
+| `order` | 订单范围 |
+| `purchase` | 采购范围 |
 
 ---
 
 ## 七、后续补充建议
 
-后续建议继续扩展以下内容：
+建议后续继续扩展：
 
-1. 增加接口字段与页面字段映射表
-2. 增加状态枚举字典文件
-3. 增加导出字段定义
-4. 增加权限字段定义
-5. 增加日志报文字段口径
-6. 增加采购任务对象字段说明
+1. 页面字段与接口字段映射表
+2. 状态枚举字典
+3. 动作按钮权限字段
+4. 导出字段定义
+5. 报文字段结构说明
+6. 风险提示与 SLA 数据来源说明
 
 ---
 
 ## 八、结论
 
-该字段文档的目标不是一次性穷尽所有字段，而是先建立页面层统一口径，确保：
+当前字段文档的目标是先与页面原型严格对齐，确保：
 
-- 列表页字段可对齐原型与接口
-- 详情页字段可支撑主单与采购单对照
-- 日志页字段可支撑排查与回溯
-- 后续新增字段时有统一归档位置
+- 列表页字段反映真实工作台布局
+- 详情页字段能区分主页面版与抽屉版
+- 日志页字段反映当前聚合与报文查看模型
 
-建议后续每次页面或接口变更时，同步更新本文件。
+后续每次页面结构、字段口径或状态模型变更时，应同步更新本文件。

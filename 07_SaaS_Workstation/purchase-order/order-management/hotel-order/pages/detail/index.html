@@ -77,8 +77,9 @@
     .copy-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border-1); border-radius: 4px; font-size: 10px; background: #fff; }
     .tooltip-anchor { position: relative; display: inline-flex; align-items: center; }
     .id-info-icon { display: inline-flex; align-items: center; justify-content: center; min-width: 24px; height: 18px; padding: 0 4px; border-radius: 4px; border: 1px solid var(--color-border-1); color: var(--color-text-3); font-size: 10px; font-weight: 600; background: #fff; line-height: 1; cursor: pointer; }
-    [data-tooltip] { position: relative; }
-    [data-tooltip]:hover::after { content: attr(data-tooltip); position: absolute; left: 50%; top: calc(100% + 8px); transform: translateX(-50%); min-width: 220px; max-width: 320px; padding: 10px 12px; border-radius: 8px; background: rgba(29, 33, 41, .94); color: #fff; font-size: 12px; line-height: 1.55; white-space: pre-line; box-shadow: 0 8px 24px rgba(15, 23, 42, .24); z-index: 20; }
+    [data-tooltip] { position: relative; cursor: help; }
+    .hover-tooltip-layer { position: absolute; left: 0; top: 0; display: none; width: max-content; max-width: min(420px, calc(100vw - 32px)); padding: 10px 12px; border-radius: 8px; background: #000; color: #fff; white-space: pre-wrap; font-size: 14px; line-height: 1.6; z-index: 3000; box-shadow: 0 10px 30px rgba(15, 23, 42, 0.35); pointer-events: auto; }
+    .hover-tooltip-layer.show { display: block; }
     .overview-meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px 18px; margin-top: 14px; }
     .meta-card { padding: 12px 14px; border-radius: 12px; background: var(--color-fill-1); border: 1px solid var(--color-border-2); }
     .meta-label { color: var(--color-text-3); font-size: 12px; margin-bottom: 6px; }
@@ -585,12 +586,42 @@
     const toastEl = document.getElementById('toast');
     const countdownValueEl = document.getElementById('countdownValue');
     const countdownMiniEl = document.getElementById('countdownMini');
+    const hoverTooltipEl = document.createElement('div');
+    hoverTooltipEl.className = 'hover-tooltip-layer';
+    document.body.appendChild(hoverTooltipEl);
+    let activeTooltipTarget = null;
+    let hideTooltipTimer = null;
 
     function showToast(message) {
       toastEl.textContent = message;
       toastEl.classList.add('show');
       clearTimeout(showToast.timer);
       showToast.timer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+    }
+    function closeHoverTooltip() {
+      activeTooltipTarget = null;
+      hoverTooltipEl.classList.remove('show');
+      hoverTooltipEl.textContent = '';
+    }
+    function scheduleCloseHoverTooltip() {
+      clearTimeout(hideTooltipTimer);
+      hideTooltipTimer = setTimeout(closeHoverTooltip, 80);
+    }
+    function placeHoverTooltip(target) {
+      const rect = target.getBoundingClientRect();
+      const tooltipRect = hoverTooltipEl.getBoundingClientRect();
+      const left = Math.max(window.scrollX + 16, Math.min(window.scrollX + rect.left, window.scrollX + window.innerWidth - tooltipRect.width - 16));
+      hoverTooltipEl.style.left = `${left}px`;
+      hoverTooltipEl.style.top = `${window.scrollY + rect.bottom + 8}px`;
+    }
+    function openHoverTooltip(target) {
+      const text = target.getAttribute('data-tooltip');
+      if (!text) return;
+      clearTimeout(hideTooltipTimer);
+      activeTooltipTarget = target;
+      hoverTooltipEl.textContent = text;
+      hoverTooltipEl.classList.add('show');
+      placeHoverTooltip(target);
     }
 
     function formatCountdown(deadline) {
@@ -629,6 +660,31 @@
           showToast('复制失败，请手动复制');
         }
       });
+    });
+
+    document.addEventListener('mouseover', event => {
+      const target = event.target.closest('[data-tooltip]');
+      if (!target) return;
+      if (target === activeTooltipTarget) {
+        clearTimeout(hideTooltipTimer);
+        return;
+      }
+      openHoverTooltip(target);
+    });
+    document.addEventListener('mouseout', event => {
+      const target = event.target.closest('[data-tooltip]');
+      if (!target || target !== activeTooltipTarget) return;
+      const related = event.relatedTarget;
+      if (related && (target.contains(related) || hoverTooltipEl.contains(related))) return;
+      scheduleCloseHoverTooltip();
+    });
+    hoverTooltipEl.addEventListener('mouseenter', () => clearTimeout(hideTooltipTimer));
+    hoverTooltipEl.addEventListener('mouseleave', scheduleCloseHoverTooltip);
+    window.addEventListener('scroll', () => {
+      if (activeTooltipTarget && hoverTooltipEl.classList.contains('show')) placeHoverTooltip(activeTooltipTarget);
+    }, true);
+    window.addEventListener('resize', () => {
+      if (activeTooltipTarget && hoverTooltipEl.classList.contains('show')) placeHoverTooltip(activeTooltipTarget);
     });
 
     document.querySelectorAll('[data-toggle]').forEach(btn => {

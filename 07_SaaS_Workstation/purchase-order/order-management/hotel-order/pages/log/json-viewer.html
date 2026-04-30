@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日志报文详情</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body { margin: 0; background: #0f172a; color: #e2e8f0; font: 14px/1.6 "PingFang SC", "Microsoft YaHei", sans-serif; }
+    .page { height: 100%; display: flex; flex-direction: column; }
+    .toolbar { height: 56px; padding: 0 20px; border-bottom: 1px solid rgba(148, 163, 184, 0.18); background: #111827; display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
+    .btn { min-width: 88px; height: 32px; padding: 0 14px; border: 1px solid rgba(148, 163, 184, 0.32); border-radius: 6px; background: transparent; color: #e2e8f0; cursor: pointer; }
+    .btn:hover { border-color: #60a5fa; color: #bfdbfe; }
+    .content { flex: 1; min-height: 0; padding: 16px; overflow: auto; }
+    pre { margin: 0; min-height: 100%; white-space: pre-wrap; word-break: break-word; font: 13px/1.7 Consolas, "JetBrains Mono", monospace; color: #a7f3d0; }
+    .empty { color: #94a3b8; }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="toolbar">
+      <button class="btn" id="copyBtn">复制</button>
+      <button class="btn" id="closeBtn">关闭</button>
+    </div>
+    <div class="content">
+      <pre id="contentEl" class="empty">暂无可展示报文内容</pre>
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const storageKey = params.get('storageKey') || '';
+    const contentEl = document.getElementById('contentEl');
+    const content = storageKey ? sessionStorage.getItem(storageKey) || '' : '';
+    if (content) {
+      contentEl.textContent = content;
+      contentEl.classList.remove('empty');
+    }
+    document.getElementById('copyBtn').addEventListener('click', async () => {
+      if (!content) return;
+      try { await navigator.clipboard.writeText(content); } catch {}
+    });
+    document.getElementById('closeBtn').addEventListener('click', () => {
+      try {
+        if (window.HotelOrderLayer?.closeOverlay) {
+          window.HotelOrderLayer.closeOverlay();
+          return;
+        }
+      } catch {}
+      try {
+        if (window.parent && window.parent !== window && window.parent.HotelOrderLayer?.closeOverlay) {
+          window.parent.HotelOrderLayer.closeOverlay();
+          return;
+        }
+      } catch {}
+      try { if (window.parent && window.parent !== window) window.parent.postMessage({ type: 'HOTEL_ORDER_CLOSE_OVERLAY' }, '*'); } catch {}
+    });
+  </script>
+</body>
+</html>
