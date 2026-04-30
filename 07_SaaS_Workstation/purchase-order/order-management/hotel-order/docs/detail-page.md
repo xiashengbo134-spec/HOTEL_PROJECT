@@ -249,6 +249,19 @@
 - 当前详情页与列表页一样，已经统一成四段式状态口径
 - 采购状态是当前页面的重要主状态，不应再作为可选字段描述
 
+当前详情页与抽屉详情页已统一使用以下状态色：
+
+| 状态类别 | 颜色类名 | 典型状态 |
+| --- | --- | --- |
+| 待确认/待处理 | `tag-state-pending` | `PENDING`、平台待处理 |
+| 处理中 | `tag-state-processing` | `BOOKING`、`CANCELING`、采购中 |
+| 成功/履约完成 | `tag-state-success` | `BOOKED`、`CHECKED_IN`、`COMPLETED`、采购完成、采购单已确认 |
+| 失败/拒绝/超时 | `tag-state-failed` | `BOOK_REJECTED`、`BOOK_FAILED`、`CANCEL_FAILED`、采购失败 |
+| 履约异常定责 | `tag-state-no-show` | `NO_SHOW` |
+| 已取消/关闭 | `tag-state-cancelled` | `CANCELLED`、采购已取消、采购单取消成功 |
+| 售后中 | `tag-state-aftersale` | 已售后 |
+| 说明性中性状态 | `tag-state-neutral` | 未进入售后、已处理、未采购、未知状态 |
+
 ### 9. 底部固定操作栏
 
 当前页面底部已实现固定操作栏，包含：

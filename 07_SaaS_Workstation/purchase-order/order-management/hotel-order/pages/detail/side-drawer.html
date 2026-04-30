@@ -41,19 +41,28 @@
     .btn-outline-danger { color: var(--color-danger); border-color: rgba(245, 63, 63, .35); background: rgba(245, 63, 63, .04); }
     .btn-link { border: 0; background: transparent; color: var(--color-primary); padding: 0; min-width: auto; height: auto; }
         .tag { display: inline-flex; align-items: center; justify-content: center; min-height: 24px; padding: 0 10px; border-radius: 4px; border: 0; font-size: 14px; line-height: 20px; white-space: nowrap; box-shadow: none; }
-    .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); }
+        .tag-blue { background: rgba(22, 93, 255, .08); color: var(--color-primary); }
     .tag-green { background: rgba(0, 180, 42, .08); color: var(--color-success); }
     .tag-orange { background: rgba(255, 125, 0, .1); color: var(--color-warning); }
     .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
     .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; }
     .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); }
     .tag-cyan { background: rgba(20, 184, 166, .1); color: #0f766e; }
+    .tag-state-pending { background: rgba(22, 93, 255, .10); color: #165dff; }
+    .tag-state-processing { background: rgba(255, 125, 0, .14); color: #b75d00; }
+    .tag-state-success { background: rgba(0, 180, 42, .12); color: #087c2e; }
+    .tag-state-failed { background: rgba(245, 63, 63, .12); color: #b71d1d; }
+    .tag-state-cancelled { background: rgba(134, 144, 156, .18); color: #4e5969; }
+    .tag-state-no-show { background: rgba(114, 46, 209, .12); color: #722ed1; }
+    .tag-state-aftersale { background: rgba(245, 63, 63, .10); color: #cf1322; }
+    .tag-state-neutral { background: rgba(229, 230, 235, .90); color: #86909c; }
     .tag-emphasis { min-height: 32px; padding: 0 16px; font-size: 16px; font-weight: 700; box-shadow: none; }
-    .tag-purchase-success { background: rgba(0, 180, 42, .16); color: #087c2e; }
-    .tag-purchase-processing { background: rgba(255, 125, 0, .18); color: #b75d00; }
-    .tag-purchase-failed { background: rgba(245, 63, 63, .16); color: #b71d1d; }
+    .tag-purchase-success { background: rgba(0, 180, 42, .12); color: #087c2e; }
+    .tag-purchase-processing { background: rgba(255, 125, 0, .14); color: #b75d00; }
+    .tag-purchase-failed { background: rgba(245, 63, 63, .12); color: #b71d1d; }
     .tag-purchase-stopped { background: rgba(134, 144, 156, .18); color: #4e5969; }
-    .tag-purchase-none { background: rgba(229, 230, 235, .9); color: #86909c; }
+    .tag-purchase-none { background: rgba(229, 230, 235, .90); color: #86909c; }
+
 
                                 .summary-card, .section-card { padding: 10px; height: 100%; }
                                 .summary-card { position: relative; }
@@ -165,14 +174,15 @@
                         .purchase-order-amount { color: var(--color-text-1); font-size: 18px; font-weight: 700; line-height: 1.2; text-align: right; }
 
         .purchase-order-discount-link { color: var(--color-primary); font-size: 13px; line-height: 20px; cursor: pointer; background: none; border: 0; padding: 0; }
-        .status-pending-pay { background: rgba(255, 125, 0, .1); color: var(--color-warning); }
+        .status-pending-pay { background: rgba(255, 125, 0, .14); color: #b75d00; }
 
-        .status-pending-confirm { background: rgba(22, 93, 255, .08); color: var(--color-primary); }
-        .status-pending-checkin { background: rgba(114, 46, 209, .08); color: #722ed1; }
-        .status-checked-in { background: rgba(0, 180, 42, .08); color: var(--color-success); }
-        .status-checked-out { background: rgba(78, 89, 105, .12); color: var(--color-text-2); }
-        .status-cancelled { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
-        .status-empty { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
+        .status-pending-confirm { background: rgba(255, 125, 0, .14); color: #b75d00; }
+        .status-pending-checkin { background: rgba(0, 180, 42, .12); color: #087c2e; }
+        .status-checked-in { background: rgba(0, 180, 42, .12); color: #087c2e; }
+        .status-checked-out { background: rgba(20, 184, 166, .12); color: #0f766e; }
+        .status-cancelled { background: rgba(134, 144, 156, .18); color: #4e5969; }
+        .status-empty { background: rgba(245, 63, 63, .12); color: #b71d1d; }
+
 
     .purchase-upgrade-tags { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
     .tag-hour-room { background: rgba(114, 46, 209, .08); color: #722ed1; }
@@ -318,7 +328,8 @@
                 </div>
                 <div class="order-side-item">
                   <div class="order-side-label">系统状态</div>
-                  <div class="order-side-value"><span class="tag tag-blue">预订中</span></div>
+                                    <div class="order-side-value"><span class="tag tag-state-pending">预订中</span></div>
+
                 </div>
               </div>
             </div>
@@ -338,7 +349,8 @@
                       <div>
                         <div class="section-title">采购单信息</div>
                       </div>
-                      <div><span class="tag tag-emphasis tag-purchase-processing">采购中</span></div>
+                                            <div><span class="tag tag-emphasis tag-state-pending">采购中</span></div>
+
                     </div>
 
                                         <div class="purchase-date-tab-list">
@@ -378,7 +390,7 @@
                           <div class="purchase-order-content">
                                                       <div class="purchase-order-top">
                                                         <div class="purchase-order-title-wrap">
-                                                          <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260425-001</span><span class="purchase-order-status tag status-cancelled">已取消</span></div>
+                                                          <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260425-001</span><span class="purchase-order-status tag status-cancelled">取消成功</span></div>
                                                         </div>
                                                         <div class="purchase-order-side"><div class="purchase-order-amount">¥432.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
                                                       </div>
@@ -417,7 +429,7 @@
                           <div class="purchase-order-content">
                                                       <div class="purchase-order-top">
                                                         <div class="purchase-order-title-wrap">
-                                                          <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260425-002</span><span class="purchase-upgrade-tags"><span class="tag tag-orange">升级早餐</span></span><span class="purchase-order-status tag status-pending-confirm">待确认</span></div>
+                                                          <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260425-002</span><span class="purchase-upgrade-tags"><span class="tag tag-orange">升级早餐</span></span><span class="purchase-order-status tag status-pending-confirm">预订中</span></div>
                                                         </div>
                                                         <div class="purchase-order-side"><div class="purchase-order-amount">¥428.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
                                                       </div>
@@ -460,7 +472,7 @@
                           <div class="purchase-order-content">
                             <div class="purchase-order-top">
                               <div class="purchase-order-title-wrap">
-                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260426-001</span><span class="purchase-order-status tag status-cancelled">已取消</span></div>
+                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">艺</span><span class="source-channel">艺龙-api</span></span><span class="purchase-order-no">采购单号：PO-20260426-001</span><span class="purchase-order-status tag status-cancelled">取消成功</span></div>
                               </div>
                               <div class="purchase-order-side"><div class="purchase-order-amount">¥1296.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
                             </div>
@@ -503,7 +515,7 @@
                           <div class="purchase-order-content">
                             <div class="purchase-order-top">
                               <div class="purchase-order-title-wrap">
-                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260426-002</span><span class="purchase-upgrade-tags"><span class="tag tag-hour-room">钟点房</span><span class="tag tag-blue">升级房型</span><span class="tag tag-orange">升级早餐</span></span><span class="purchase-order-status tag status-pending-checkin">待入住</span></div>
+                                <div class="purchase-order-title"><span class="source-badge"><span class="source-platform">携</span><span class="source-channel">携程-trip</span></span><span class="purchase-order-no">采购单号：PO-20260426-002</span><span class="purchase-upgrade-tags"><span class="tag tag-hour-room">钟点房</span><span class="tag tag-blue">升级房型</span><span class="tag tag-orange">升级早餐</span></span><span class="purchase-order-status tag status-pending-checkin">已确认</span></div>
                               </div>
                               <div class="purchase-order-side"><div class="purchase-order-amount">¥864.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
                             </div>
@@ -590,7 +602,7 @@
                           <div class="purchase-order-content">
                             <div class="purchase-order-top">
                               <div class="purchase-order-title-wrap">
-                                <div class="purchase-order-title"><span class="purchase-order-no">采购单号：PO-20260427-002</span><span class="purchase-order-status tag status-empty">空缺</span></div>
+                                <div class="purchase-order-title"><span class="purchase-order-no">采购单号：PO-20260427-002</span><span class="purchase-order-status tag status-empty">售罄关闭</span></div>
                               </div>
                               <div class="purchase-order-side"><div class="purchase-order-amount">¥436.00</div><button class="purchase-order-discount-link" data-modal="priceDetail">查看优惠</button></div>
                             </div>

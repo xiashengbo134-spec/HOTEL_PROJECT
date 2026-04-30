@@ -242,6 +242,19 @@
 - 售后状态下可叠加补充标签，如“协商退款”“已同意”“已取消”
 - 采购状态已明确进入列表页主状态区，而不再只是详情页信息
 
+当前列表页已统一状态色规范：
+
+| 状态类别 | 颜色类名 | 典型状态 |
+| --- | --- | --- |
+| 待确认/待处理 | `tag-state-pending` | `PENDING`、平台待处理 |
+| 处理中 | `tag-state-processing` | `BOOKING`、`CANCELING`、采购中 |
+| 成功/履约完成 | `tag-state-success` | `BOOKED`、`CHECKED_IN`、`COMPLETED`、采购完成 |
+| 失败/拒绝/超时 | `tag-state-failed` | `BOOK_REJECTED`、`BOOK_FAILED`、`CANCEL_FAILED`、采购失败 |
+| 履约异常定责 | `tag-state-no-show` | `NO_SHOW` |
+| 已取消/关闭 | `tag-state-cancelled` | `CANCELLED`、采购已取消 |
+| 售后中 | `tag-state-aftersale` | 已售后 |
+| 说明性中性状态 | `tag-state-neutral` | 未进入售后、已处理、未采购 |
+
 这点与旧文档相比是重要变化，后续文档必须统一按四段式口径描述。
 
 ### 11. SLA 倒计时

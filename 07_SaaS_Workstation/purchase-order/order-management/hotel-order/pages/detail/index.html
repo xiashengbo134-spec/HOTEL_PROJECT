@@ -56,6 +56,14 @@
     .tag-red { background: rgba(245, 63, 63, .08); color: var(--color-danger); }
     .tag-purple { background: rgba(114, 46, 209, .08); color: #722ed1; }
     .tag-gray { background: var(--color-fill-1); color: var(--color-text-2); }
+    .tag-state-pending { background: rgba(22, 93, 255, .10); color: #165dff; }
+    .tag-state-processing { background: rgba(255, 125, 0, .14); color: #b75d00; }
+    .tag-state-success { background: rgba(0, 180, 42, .12); color: #087c2e; }
+    .tag-state-failed { background: rgba(245, 63, 63, .12); color: #b71d1d; }
+    .tag-state-cancelled { background: rgba(134, 144, 156, .18); color: #4e5969; }
+    .tag-state-no-show { background: rgba(114, 46, 209, .12); color: #722ed1; }
+    .tag-state-aftersale { background: rgba(245, 63, 63, .10); color: #cf1322; }
+    .tag-state-neutral { background: rgba(229, 230, 235, .90); color: #86909c; }
     .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
     .page-title { margin: 0; font-size: 24px; line-height: 1.25; }
     .page-subtitle { margin-top: 6px; color: var(--color-text-3); font-size: 13px; }
@@ -235,10 +243,11 @@
                 <div class="overview-id-grid">
                   <div class="info-line"><span class="info-label">系统</span><span class="info-value mono">HTL202604228899</span><button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div>
                   <div class="info-line"><span class="info-label">外部</span><span class="info-value mono">DOUYIN-OUT-8877349921</span><button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div>
-                  <div class="info-line"><span class="info-label">系统状态</span><span class="tag tag-blue">预订中</span></div>
-                  <div class="info-line"><span class="info-label">平台状态</span><span class="tag tag-gray">已接单</span></div>
-                  <div class="info-line"><span class="info-label">售后状态</span><span class="inline-tags"><span class="tag tag-gray">未进入售后</span></span></div>
-                  <div class="info-line"><span class="info-label">采购结论</span><span class="tag tag-orange">待人工补采</span><button class="btn btn-link" data-modal="purchaseFailure">查看失败原因</button></div>
+                  <div class="info-line"><span class="info-label">系统状态</span><span class="tag tag-state-pending">预订中</span></div>
+                  <div class="info-line"><span class="info-label">平台状态</span><span class="tag tag-state-success">已接单</span></div>
+                  <div class="info-line"><span class="info-label">售后状态</span><span class="inline-tags"><span class="tag tag-state-neutral">未进入售后</span></span></div>
+                  <div class="info-line"><span class="info-label">采购结论</span><span class="tag tag-state-failed">采购失败</span><button class="btn btn-link" data-modal="purchaseFailure">查看失败原因</button></div>
+
                 </div>
                 <div class="overview-meta">
                   <div class="meta-card"><div class="meta-label">预订时间</div><div class="meta-value">2026-04-22 16:29:51</div></div>
@@ -498,10 +507,11 @@
                   </div>
                 </div>
                 <div class="summary-grid">
-                  <div class="summary-item"><div class="summary-name">系统状态</div><div class="summary-value"><span class="tag tag-blue">预订中</span></div></div>
-                  <div class="summary-item"><div class="summary-name">平台状态</div><div class="summary-value"><span class="tag tag-gray">已接单</span></div></div>
-                  <div class="summary-item"><div class="summary-name">售后状态</div><div class="summary-value"><span class="tag tag-gray">未进入售后</span></div></div>
-                  <div class="summary-item"><div class="summary-name">采购状态</div><div class="summary-value"><span class="tag tag-orange">待人工补采</span></div></div>
+                  <div class="summary-item"><div class="summary-name">系统状态</div><div class="summary-value"><span class="tag tag-state-pending">预订中</span></div></div>
+                  <div class="summary-item"><div class="summary-name">平台状态</div><div class="summary-value"><span class="tag tag-state-success">已接单</span></div></div>
+                  <div class="summary-item"><div class="summary-name">售后状态</div><div class="summary-value"><span class="tag tag-state-neutral">未进入售后</span></div></div>
+                  <div class="summary-item"><div class="summary-name">采购状态</div><div class="summary-value"><span class="tag tag-state-failed">采购失败</span></div></div>
+
                 </div>
                 <div class="quiet-box" style="margin-top:14px;">
                   当前订单无退款动作。若后续进入售后，协商退款、已同意、已拒绝等附加状态建议在售后记录内展示，不与主状态并行堆叠。

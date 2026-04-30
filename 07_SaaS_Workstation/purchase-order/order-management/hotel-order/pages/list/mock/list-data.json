@@ -32,8 +32,8 @@
       "cancelTime": "-",
       "payAmount": "¥251.24",
       "settlementAmount": "¥224.61",
-      "systemStatus": "PENDING / 待确认",
-      "platformStatus": "已支付",
+      "systemStatus": "BOOKING / 预订中",
+      "platformStatus": "已接单",
       "afterSaleStatus": "未进入售后",
       "afterSaleTags": [],
       "sla": {
@@ -67,7 +67,7 @@
       "settlementAmount": "¥1028.40",
       "systemStatus": "CANCELING / 取消中",
       "platformStatus": "取消中",
-      "afterSaleStatus": "售后中",
+      "afterSaleStatus": "已售后",
       "afterSaleTags": ["协商退款", "已同意"]
     },
     {
@@ -119,7 +119,7 @@
       "cancelTime": "-",
       "payAmount": "¥1420.00",
       "settlementAmount": "¥1362.00",
-      "systemStatus": "REJECTED / 已拒单",
+      "systemStatus": "BOOK_REJECTED / 预订被拒",
       "platformStatus": "待处理",
       "afterSaleStatus": "未进入售后",
       "afterSaleTags": []
@@ -146,7 +146,7 @@
       "cancelTime": "2026-04-15 15:06:42",
       "payAmount": "¥598.00",
       "settlementAmount": "¥562.00",
-      "systemStatus": "CANCELED / 已取消",
+      "systemStatus": "CANCELLED / 已取消",
       "platformStatus": "已取消",
       "afterSaleStatus": "已处理",
       "afterSaleTags": ["已取消"],
