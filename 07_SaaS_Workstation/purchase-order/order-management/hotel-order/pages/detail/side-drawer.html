@@ -30,7 +30,8 @@
     body { margin: 0; background: var(--color-bg-2); font-family: "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--color-text-1); }
     button, input, select, textarea { font-family: inherit; }
     .page { padding: 12px 12px calc(var(--bottom-bar-height) + 16px); }
-    .top-panel-grid { display: grid; grid-template-columns: 900px 1fr; gap: 12px; align-items: stretch; }
+        .top-panel-grid { display: grid; grid-template-columns: 1fr; gap: 12px; align-items: stretch; }
+
     .card { background: var(--color-bg-1); border: 1px solid var(--color-border-2); border-radius: var(--radius-large); box-shadow: var(--shadow-card); }
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-width: 88px; height: 36px; padding: 0 16px; border-radius: var(--radius-small); border: 1px solid var(--color-border-1); background: #fff; color: var(--color-text-2); font-size: 14px; cursor: pointer; }
     .btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
@@ -53,16 +54,47 @@
     .tag-purchase-stopped { background: rgba(134, 144, 156, .18); color: #4e5969; }
     .tag-purchase-none { background: rgba(229, 230, 235, .9); color: #86909c; }
 
-        .summary-card, .section-card { padding: 12px; height: 100%; }
-    .summary-grid, .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 16px; }
+                                .summary-card, .section-card { padding: 10px; height: 100%; }
+                                .summary-card { position: relative; }
+                                                                                .order-info-layout { display: block; padding-right: 234px; }
 
-    .summary-item { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 20px; }
+
+
+
+
+                .summary-grid, .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 16px; }
+    .summary-grid { min-width: 0; }
+
+
+
+    .summary-item { display: grid; grid-template-columns: 92px minmax(0, 1fr); align-items: center; column-gap: 10px; min-height: 18px; }
+
+
     .summary-item.full { grid-column: 1 / -1; }
         .summary-label, .right-summary-name { color: var(--color-text-3); font-size: 13px; line-height: 20px; }
-    .summary-value { color: var(--color-text-1); font-size: 14px; line-height: 1.4; word-break: break-word; }
+        .summary-value { color: var(--color-text-1); font-size: 14px; line-height: 1.4; word-break: break-word; }
+    .summary-value.strong { font-size: 16px; font-weight: 700; }
+    .summary-value.danger { color: var(--color-danger); }
     .right-summary-value { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; min-height: 24px; color: var(--color-text-1); font-size: 14px; line-height: 24px; word-break: break-word; }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                .order-side-wrap { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); width: 210px; display: flex; align-items: center; justify-content: center; }
+                                                                .order-side-summary { width: 100%; max-width: 210px; padding: 12px 14px; border: 1px solid var(--color-border-2); border-radius: 10px; background: var(--color-fill-1); display: flex; align-items: center; }
+
+
+
+
+
+    .order-side-summary-grid { display: grid; gap: 10px; width: 100%; }
+
+
+    .order-side-item { display: grid; gap: 4px; }
+
+    .order-side-label { color: var(--color-text-3); font-size: 12px; line-height: 1.5; }
+    .order-side-value { color: var(--color-text-1); font-size: 14px; line-height: 1.5; display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .order-side-value.strong { font-size: 20px; font-weight: 700; }
+    .order-side-value.danger { color: var(--color-danger); }
 
     .mono { font-family: "JetBrains Mono", Consolas, monospace; }
+
     .copy-btn { border: 0; background: transparent; color: var(--color-text-3); cursor: pointer; padding: 0; margin-left: 6px; }
     .copy-icon { width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--color-border-1); border-radius: 4px; font-size: 10px; background: #fff; }
     .purchase-layout { display: block; margin-top: 12px; }
@@ -234,7 +266,10 @@
     .toast { position: fixed; top: 24px; left: 50%; transform: translateX(-50%) translateY(-12px); min-width: 220px; max-width: 520px; padding: 12px 16px; border-radius: 10px; background: rgba(29, 33, 41, .92); color: #fff; font-size: 14px; opacity: 0; pointer-events: none; transition: all .2s ease; z-index: 1000; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         @media (max-width: 1200px) { .top-panel-grid { grid-template-columns: 1fr; } .purchase-actions { justify-content: flex-start; } }
-                                                                @media (max-width: 768px) { .summary-grid, .detail-grid, .purchase-detail-grid, .right-summary-grid, .info-grid, .purchase-more-grid { grid-template-columns: 1fr; } .section-head, .purchase-order-top, .purchase-reason-box, .purchase-date-tab-row, .purchase-date-tab-meta { flex-direction: column; align-items: stretch; } .purchase-order-item { grid-template-columns: 1fr; } .purchase-order-time::after { display: none; } .purchase-date-tab { min-width: 100%; } .purchase-date-tab-status-group { justify-content: flex-start; } .purchase-order-content { padding-right: 0; } .purchase-order-status { position: static; transform: none; margin-left: auto; } .purchase-order-side { position: static; top: auto; width: auto; margin-top: 10px; align-items: flex-start; } .purchase-bottom-actions { width: auto; margin-left: 0; margin-right: 0; align-items: flex-start; } }
+                                                                                                                                                                                                                                                                @media (max-width: 768px) { .order-info-layout { display: block; padding-right: 0; } .order-side-wrap { position: static; transform: none; width: 100%; margin-top: 10px; } .order-side-summary { max-width: none; } .summary-grid, .detail-grid, .purchase-detail-grid, .right-summary-grid, .info-grid, .purchase-more-grid { grid-template-columns: 1fr; } .section-head, .purchase-order-top, .purchase-reason-box, .purchase-date-tab-row, .purchase-date-tab-meta { flex-direction: column; align-items: stretch; } .purchase-order-item { grid-template-columns: 1fr; } .purchase-order-time::after { display: none; } .purchase-date-tab { min-width: 100%; } .purchase-date-tab-status-group { justify-content: flex-start; } .purchase-order-content { padding-right: 0; } .purchase-order-status { position: static; transform: none; margin-left: auto; } .purchase-order-side { position: static; top: auto; width: auto; margin-top: 10px; align-items: flex-start; } .purchase-bottom-actions { width: auto; margin-left: 0; margin-right: 0; align-items: flex-start; } }
+
+
+
 
 
 
@@ -256,47 +291,40 @@
             <div class="section-title">订单信息</div>
           </div>
         </div>
-        <div class="summary-grid">
-                    <div class="summary-item"><div class="summary-label">系统</div><div class="summary-value mono">HTL202604228899<button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div></div>
-          <div class="summary-item"><div class="summary-label">外部</div><div class="summary-value mono">DOUYIN-OUT-8877349921<button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div></div>
+                <div class="order-info-layout">
+          <div class="summary-grid">
+                      <div class="summary-item"><div class="summary-label">系统</div><div class="summary-value mono">HTL202604228899<button class="copy-btn" data-copy="HTL202604228899"><span class="copy-icon">⧉</span></button></div></div>
+            <div class="summary-item"><div class="summary-label">外部</div><div class="summary-value mono">DOUYIN-OUT-8877349921<button class="copy-btn" data-copy="DOUYIN-OUT-8877349921"><span class="copy-icon">⧉</span></button></div></div>
 
-          <div class="summary-item"><div class="summary-label">酒店名称</div><div class="summary-value"><strong>杭州西湖万豪酒店</strong> <span class="tooltip-anchor"><span class="tooltip-item"><span class="id-info-icon">ID</span><span class="tooltip-popup"><span class="tooltip-row">聚合酒店ID：H-AI-330106-00028471</span><span class="tooltip-row">销售酒店ID：SALE-HOTEL-3301</span><span class="tooltip-row">平台酒店ID：DY-HOTEL-88921</span></span></span><span class="tooltip-item" aria-label="地址"><span class="meta-info-icon"><svg viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-11a6 6 0 1 1 12 0c0 5.8-6 11-6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></span><span class="tooltip-popup"><span class="tooltip-row">城市：杭州市</span><span class="tooltip-row">地址：杭州市西湖区曙光路188号</span></span></span><span class="tooltip-item" aria-label="电话"><span class="meta-info-icon"><svg viewBox="0 0 24 24"><path d="M21 16.2v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1A19.4 19.4 0 0 1 4 11.8 19.8 19.8 0 0 1 .9 3.2 2 2 0 0 1 2.9 1h3a2 2 0 0 1 2 1.7l.5 3a2 2 0 0 1-.6 1.8L6.6 8.6a16 16 0 0 0 8.8 8.8l1.1-1.2a2 2 0 0 1 1.8-.6l3 .5a2 2 0 0 1 1.7 2Z"></path></svg></span><span class="tooltip-popup"><span class="tooltip-row">电话：0571-32434243-0009</span></span></span></span></div></div>
-          <div class="summary-item center"><div class="summary-label">订单来源</div><div class="summary-value"><span class="platform-icon">抖</span> 抖音 · 江浙运营号</div></div>
-          <div class="summary-item"><div class="summary-label">房型名称</div><div class="summary-value">豪华大床房-双早</div></div>
-          <div class="summary-item full"><div class="summary-label">取消规则</div><div class="summary-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
-          <div class="summary-item"><div class="summary-label">入住人</div><div class="summary-value">张三</div></div>
-                    <div class="summary-item"><div class="summary-label">联系人</div><div class="summary-value">李四 / 15948552082</div></div>
-
-          <div class="summary-item"><div class="summary-label">入离时间</div><div class="summary-value">2026-04-27入住，2026-04-28离店　1间1晚</div></div>
-          <div class="summary-item"><div class="summary-label">预订时间</div><div class="summary-value">2026-04-22 16:29:51</div></div>
-          <div class="summary-item"><div class="summary-label">支付时间</div><div class="summary-value">2026-04-22 16:30:12</div></div>
-          <div class="summary-item"><div class="summary-label">取消时间</div><div class="summary-value">-</div></div>
-        </div>
-      </section>
-
-      <section class="card section-card">
-        <div class="info-block">
-          <div class="section-title" style="margin-bottom:8px;">金额信息</div>
-          <div class="info-grid">
-            <div class="right-summary-item"><div class="right-summary-name">支付金额</div><div class="right-summary-value strong danger">¥251.24</div></div>
-            <div class="right-summary-item"><div class="right-summary-name">结算金额</div><div class="right-summary-value strong warning">¥224.61</div></div>
-            <div class="right-summary-item"><div class="right-summary-name">佣金</div><div class="right-summary-value">¥26.63</div></div>
-            <div class="right-summary-item"><div class="right-summary-name">佣金比例</div><div class="right-summary-value">10.60%</div></div>
-            <div class="right-summary-item"><div class="right-summary-name">售卖模式</div><div class="right-summary-value"><span class="tag tag-blue">卖价</span></div></div>
-            <div class="right-summary-item"><div class="right-summary-name">退款金额</div><div class="right-summary-value">-</div></div>
-            <div class="right-summary-item"><div class="right-summary-name">取消罚金</div><div class="right-summary-value">-</div></div>
-          </div>
-        </div>
-        <div class="info-block">
-          <div class="section-title" style="margin-bottom:8px;">状态信息</div>
-          <div class="info-grid">
-            <div class="right-summary-item"><div class="right-summary-name">系统状态</div><div class="right-summary-value"><span class="tag tag-blue">预订中</span></div></div>
-            <div class="right-summary-item"><div class="right-summary-name">平台状态</div><div class="right-summary-value"><span class="tag tag-gray">已接单</span></div></div>
-                        <div class="right-summary-item full"><div class="right-summary-name">售后状态</div><div class="right-summary-value status-value"><span class="tag tag-gray">未进入售后</span><span class="tag tag-gray">协商退款</span><span class="tag tag-gray">已同意</span></div></div>
+            <div class="summary-item"><div class="summary-label">酒店名称</div><div class="summary-value"><strong>杭州西湖万豪酒店</strong> <span class="tooltip-anchor"><span class="tooltip-item"><span class="id-info-icon">ID</span><span class="tooltip-popup"><span class="tooltip-row">聚合酒店ID：H-AI-330106-00028471</span><span class="tooltip-row">销售酒店ID：SALE-HOTEL-3301</span><span class="tooltip-row">平台酒店ID：DY-HOTEL-88921</span></span></span><span class="tooltip-item" aria-label="地址"><span class="meta-info-icon"><svg viewBox="0 0 24 24"><path d="M12 21s-6-5.2-6-11a6 6 0 1 1 12 0c0 5.8-6 11-6 11Z"></path><circle cx="12" cy="10" r="2.5"></circle></svg></span><span class="tooltip-popup"><span class="tooltip-row">城市：杭州市</span><span class="tooltip-row">地址：杭州市西湖区曙光路188号</span></span></span><span class="tooltip-item" aria-label="电话"><span class="meta-info-icon"><svg viewBox="0 0 24 24"><path d="M21 16.2v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1A19.4 19.4 0 0 1 4 11.8 19.8 19.8 0 0 1 .9 3.2 2 2 0 0 1 2.9 1h3a2 2 0 0 1 2 1.7l.5 3a2 2 0 0 1-.6 1.8L6.6 8.6a16 16 0 0 0 8.8 8.8l1.1-1.2a2 2 0 0 1 1.8-.6l3 .5a2 2 0 0 1 1.7 2Z"></path></svg></span><span class="tooltip-popup"><span class="tooltip-row">电话：0571-32434243-0009</span></span></span></span></div></div>
+                        <div class="summary-item center"><div class="summary-label">订单来源</div><div class="summary-value"><span class="platform-icon">抖</span> 抖音 · 江浙运营号</div></div>
+            <div class="summary-item"><div class="summary-label">房型名称</div><div class="summary-value">豪华大床房-双早</div></div>
+            <div class="summary-item"><div class="summary-label">入离时间</div><div class="summary-value">2026-04-27入住，2026-04-28离店　1间1晚</div></div>
+            <div class="summary-item"><div class="summary-label">入住人</div><div class="summary-value">张三</div></div>
+                      <div class="summary-item"><div class="summary-label">联系人</div><div class="summary-value">李四 / 15948552082</div></div>
+            <div class="summary-item full"><div class="summary-label">取消规则</div><div class="summary-value">入住前1天18:00前可免费取消，之后取消收取首晚房费。</div></div>
 
           </div>
+                    <div class="order-side-wrap">
+            <div class="order-side-summary">
+              <div class="order-side-summary-grid">
+                <div class="order-side-item">
+                  <div class="order-side-label">支付金额</div>
+                  <div class="order-side-value strong danger">¥251.24</div>
+                </div>
+                <div class="order-side-item">
+                  <div class="order-side-label">系统状态</div>
+                  <div class="order-side-value"><span class="tag tag-blue">预订中</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
+
       </section>
+
+      
     </div>
 
     <div class="purchase-layout" style="margin-top:16px;">

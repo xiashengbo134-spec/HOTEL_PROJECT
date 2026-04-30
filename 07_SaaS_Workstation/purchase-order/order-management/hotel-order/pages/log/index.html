@@ -205,7 +205,9 @@
     .phase-accordion-action-btn:hover { border-color: #94A3B8; color: #0F172A; background: #F8FAFC; }
     .phase-accordion-action-btn.is-link { color: #165DFF; border-color: #BFD4FF; background: #F8FAFF; }
     .phase-accordion-action-btn.is-link:hover { border-color: #94B9FF; background: #EFF6FF; }
-    .phase-accordion-action-btn.is-expand { min-width: 92px; }
+    .phase-accordion-action-btn.is-expand { min-width: 72px; padding: 0 8px; border: none; background: #165DFF; color: #FFF; }
+    .phase-accordion-action-btn.is-expand:hover { border: none; background: #0E42D2; color: #FFF; }
+    .phase-accordion-action-btn.is-expand .el-icon { color: #FFF; }
     .phase-accordion-action-btn.is-toggle .el-icon { transition: transform .2s ease; }
     .phase-accordion-body { position: relative; padding: 0; background: #FFF; }
     .phase-accordion-body::before { content: ""; position: absolute; left: 123px; top: 0; bottom: 0; border-left: 2px solid #E2E8F0; }
@@ -317,7 +319,7 @@
                     <div class="phase-accordion-phase-wrap">
                       <div class="phase-accordion-content-top">
                         <div class="phase-accordion-content-main">{{ item.primaryLog.content }}</div>
-                        <span v-if="item.canExpand" class="phase-accordion-merge-tag">最后命中阶段，共 {{ item.mergedCount }} 条</span>
+                        <span v-if="item.canExpand" class="phase-accordion-merge-tag">相同阶段合并，共 {{ item.mergedCount }} 条</span>
                       </div>
                       <div class="phase-accordion-phase-sub">{{ item.primaryLog.phase }}</div>
                     </div>
@@ -326,7 +328,7 @@
                     <div class="phase-accordion-actions">
                       <button v-if="item.canExpand" type="button" class="phase-accordion-action-btn is-toggle is-expand" @click.stop="handlePhaseToggle(item.id)">
                         <el-icon><component :is="isPhaseExpanded(item.id) ? 'ArrowDown' : 'ArrowUp'" /></el-icon>
-                        <span>{{ isPhaseExpanded(item.id) ? '收起' : '展开查看' }}</span>
+                        <span>{{ isPhaseExpanded(item.id) ? '收起' : '展开' }}</span>
                       </button>
                       <button type="button" class="phase-accordion-action-btn is-link" @click.stop="openJsonDialogByRows(item.detailRows)">
                         <el-icon><Tickets /></el-icon>
